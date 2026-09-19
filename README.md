@@ -26,21 +26,6 @@ Arc Mainnet (Chain 5042) · Node.js & Viem · SQLite WAL · x402 v2 + EIP-3009
 
 > **Mainnet micro-service running on Arc Mainnet (Chain ID 5042).** ArcX uses Circle's native USDC gas architecture and EIP-3009 off-chain transfer authorizations to realize the x402 protocol specification. The caller pays zero gas; settlement transactions are relayed directly to Arc Mainnet by the x402 facilitator with $\ge 20\text{ Gwei}$ sequencer floor enforcement.
 
----
-
-## 📌 Arc Microgrants Submission Links
-
-| Resource | Destination | What it establishes |
-| :--- | :--- | :--- |
-| **Live Web App (Netlify)** | [`https://arccx.netlify.app`](https://arccx.netlify.app) | Production web application on Netlify Edge CDN |
-| **Backend API & x402 Relayer (Render)** | [`https://arcx-v2fs.onrender.com`](https://arcx-v2fs.onrender.com) | Live x402 facilitator & on-chain settlement service |
-| **Public x402 Telemetry GUI** | [`https://arccx.netlify.app/stats`](https://arccx.netlify.app/stats) | Real-time query counts, settled volume, and live latency |
-| **Admin Threat Center** | [`https://arccx.netlify.app/dashboard`](https://arccx.netlify.app/dashboard) | Audit ledger feed gated with Master Passkey |
-| **Arc Mainnet Settlement Address** | [`0x8b415aE3956992b0cbC6C78c485A4d099F6331cE`](https://explorer.arc.io/address/0x8b415aE3956992b0cbC6C78c485A4d099F6331cE) | Verifiable on-chain recipient on Arc Explorer |
-| **Public Builder Profile** | `[BUILDER PROFILE LINK - GitHub / X / Farcaster]` | Builder identity & submission handle |
-| **Submission Category** | **Experimental Infrastructure / Autonomous AI Agent Tooling** | Built natively for Circle's Arc Mainnet |
-
----
 
 ## Explore without a wallet
 
@@ -265,12 +250,12 @@ Every x402-unlocked response contains structured, machine-actionable data:
 
 | Endpoint | Method | Access / Cost | Description |
 | :--- | :---: | :---: | :--- |
-| `/api/v1/insight` | `GET` | 💳 $0.001 USDC (x402) | Random high-severity threat dossier from the active zero-day feed |
-| `/api/v1/lookup/:cveId` | `GET` | 💳 $0.001 USDC (x402) | Query specific CVE vulnerability by ID with live NVD fallback |
-| `/api/v1/stats` | `GET` | 🟢 Free | Public x402 protocol telemetry, settled volume, and network specs |
-| `/health` | `GET` | 🟢 Free | Server health, Arc RPC connectivity, and DB readiness |
-| `/api/v1/stats/admin/auth` | `POST` | 🟢 Free | Master passkey authentication for administrative access |
-| `/api/v1/stats/feed` | `GET` | 🔒 Gated | Real-time x402 audit log stream (requires `x-admin-key` header) |
+| `/api/v1/insight` | `GET` | $0.001 USDC (x402) | Random high-severity threat dossier from the active zero-day feed |
+| `/api/v1/lookup/:cveId` | `GET` | $0.001 USDC (x402) | Query specific CVE vulnerability by ID with live NVD fallback |
+| `/api/v1/stats` | `GET` | Free | Public x402 protocol telemetry, settled volume, and network specs |
+| `/health` | `GET` | Free | Server health, Arc RPC connectivity, and DB readiness |
+| `/api/v1/stats/admin/auth` | `POST` | Free | Master passkey authentication for administrative access |
+| `/api/v1/stats/feed` | `GET` | Gated | Real-time x402 audit log stream (requires `x-admin-key` header) |
 
 ---
 
@@ -289,9 +274,9 @@ npm test --prefix server
 ### Verified Output (12 of 12 Passing)
 
 ```text
-🧪 Starting ArcX verification & test suite...
+ Starting ArcX verification & test suite...
 
-✅ Dynamic EIP-712 domain: {
+ Dynamic EIP-712 domain: {
   name: 'USDC',
   version: '2',
   chainId: 5042,
@@ -319,9 +304,9 @@ Test 6: SQLite trigger immutability enforcement
   ✓ Tampering with nonce aborted by trigger
   ✓ Deletion prevented by trigger
 
-🎉 ALL 6 CRYPTOGRAPHIC TEST SUITES PASSED CLEANLY!
+ ALL 6 CRYPTOGRAPHIC TEST SUITES PASSED CLEANLY!
 
-🧪 Starting ArcX External Feeds & Synthesis test suite...
+ Starting ArcX External Feeds & Synthesis test suite...
 
 Test 1: Curated CVE lookup (CVE-2024-3094)
   ✓ Curated threat retrieved with complete intelligence
@@ -341,7 +326,7 @@ Test 5: Dynamic random insight generation
 Test 6: Feed telemetry stats
   ✓ Feed telemetry verified across all 4 supported upstream sources
 
-🎉 ALL 6 EXTERNAL FEED TEST SUITES PASSED CLEANLY!
+ ALL 6 EXTERNAL FEED TEST SUITES PASSED CLEANLY!
 ```
 
 ---
