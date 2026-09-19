@@ -2,9 +2,9 @@
 
 > **Autonomous AI-Agent Cyber Threat Intelligence API Powered by x402 Micropayments and Circle's Arc Mainnet.**
 
-> **ArcX is an autonomous, machine-to-machine cybersecurity intelligence API that serves actionable CVE vulnerability dossiers, CISA zero-day alerts, and MITRE ATT&CK remediation blueprints on a strict pay-per-query model ($0.001 USDC).
+**ArcX is an autonomous, machine-to-machine cybersecurity intelligence API that serves actionable CVE vulnerability dossiers, CISA zero-day alerts, and MITRE ATT&CK remediation blueprints on a strict pay-per-query model ($0.001 USDC).**
 
-**ArcX uses Circle’s **Arc Mainnet (Chain ID `5042`)** and its **native USDC gas architecture** alongside **EIP-3009 (`TransferWithAuthorization`)** to execute gasless micropayments for autonomous AI agents. The caller signs an off-chain authorization bound cryptographically to the requested endpoint; ArcX verifies the signature in under 2 milliseconds and settles the transfer directly on Arc mainnet using native USDC gas with sub-second finality.
+**ArcX uses Circle’s **Arc Mainnet (Chain ID `5042`)** and its **native USDC gas architecture** alongside **EIP-3009 (`TransferWithAuthorization`)** to execute gasless micropayments for autonomous AI agents. The caller signs an off-chain authorization bound cryptographically to the requested endpoint; ArcX verifies the signature in under 2 milliseconds and settles the transfer directly on Arc mainnet using native USDC gas with sub-second finality.**
 
 > Pay $0.001 USDC per CVE query. Zero API keys. Zero subscriptions. Instant cryptographic settlement.
 
