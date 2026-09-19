@@ -1,6 +1,11 @@
 # ArcX — x402 Threat Intelligence on Arc Mainnet
 
-> **Autonomous AI-Agent Cyber Threat Intelligence API Powered by x402 Micropayments and Circle's Arc Mainnet.**  
+> **Autonomous AI-Agent Cyber Threat Intelligence API Powered by x402 Micropayments and Circle's Arc Mainnet.**
+> 
+> **ArcX is an autonomous, machine-to-machine cybersecurity intelligence API that serves actionable CVE vulnerability dossiers, CISA zero-day alerts, and MITRE ATT&CK remediation blueprints on a strict pay-per-query model ($0.001 USDC).
+
+**ArcX uses Circle’s **Arc Mainnet (Chain ID `5042`)** and its **native USDC gas architecture** alongside **EIP-3009 (`TransferWithAuthorization`)** to execute gasless micropayments for autonomous AI agents. The caller signs an off-chain authorization bound cryptographically to the requested endpoint; ArcX verifies the signature in under 2 milliseconds and settles the transfer directly on Arc mainnet using native USDC gas with sub-second finality.
+
 > Pay $0.001 USDC per CVE query. Zero API keys. Zero subscriptions. Instant cryptographic settlement.
 
 [![Arc Mainnet](https://img.shields.io/badge/Network-Arc%20Mainnet%20(5042)-4f46e5?style=flat-square)](https://arc.io)
@@ -9,30 +14,8 @@
 [![Test Suite](https://img.shields.io/badge/Tests-12%2F12%20Passing-brightgreen?style=flat-square)](#-automated-test-suite)
 [![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](LICENSE)
 
----
 
-## 📌 Arc Microgrants Submission Links
-
-| Resource | Link | Description |
-| :--- | :--- | :--- |
-| **Live Mainnet App** | `[LIVE DEPLOYMENT LINK - COMING SOON]` | Production deployment accessible on the web |
-| **Public Telemetry GUI** | `[LIVE DEPLOYMENT LINK - COMING SOON]/stats` | Live protocol stats, query volumes, & capability metrics |
-| **Admin Threat Center** | `[LIVE DEPLOYMENT LINK - COMING SOON]/dashboard` | Real-time audit ledger gated with Master Passkey |
-| **Arc Mainnet Settlement Address** | [`0x8b415aE3956992b0cbC6C78c485A4d099F6331cE`](https://explorer.arc.io/address/0x8b415aE3956992b0cbC6C78c485A4d099F6331cE) | On-chain settlement recipient on Arc Mainnet |
-| **Public Builder Profile** | `[BUILDER PROFILE LINK - GitHub / X / Farcaster]` | Builder identity & submission handle |
-| **Submission Category** | **Experimental Infrastructure / Autonomous AI Agent Tooling** | Built natively for Circle's Arc Mainnet |
-
----
-
-## ⚡ 30-Second Summary (Submission Elevator Pitch)
-
-**What ArcX does:** ArcX is an autonomous, machine-to-machine cybersecurity intelligence API that serves actionable CVE vulnerability dossiers, CISA zero-day alerts, and MITRE ATT&CK remediation blueprints on a strict pay-per-query model ($0.001 USDC).
-
-**What it uses Arc for:** ArcX uses Circle’s **Arc Mainnet (Chain ID `5042`)** and its **native USDC gas architecture** alongside **EIP-3009 (`TransferWithAuthorization`)** to execute gasless micropayments for autonomous AI agents. The caller signs an off-chain authorization bound cryptographically to the requested endpoint; ArcX verifies the signature in under 2 milliseconds and settles the transfer directly on Arc mainnet using native USDC gas with sub-second finality.
-
----
-
-## 🎯 The Core Problems ArcX Solves
+## The Core Problems ArcX Solves
 
 ### 1. The Autonomous AI Agent Billing Dilemma
 Autonomous software agents (LangChain, AutoGPT, CrewAI, automated smart contract auditors) are taking over software engineering and vulnerability scanning. However, **agents cannot hold credit cards, pass Stripe KYC, solve CAPTCHA puzzles, or commit to monthly corporate invoices**. Web2 SaaS billing architectures fundamentally break autonomous agent workflows.
@@ -122,7 +105,7 @@ Settled payments are recorded in a local SQLite ledger in WAL (Write-Ahead Loggi
 
 ---
 
-## 🖥️ Live User Interface & Telemetry Suite
+## Live User Interface & Telemetry Suite
 
 ArcX features a full-stack, cyber-brutalist user interface designed for both human operators and autonomous systems:
 
@@ -130,12 +113,11 @@ ArcX features a full-stack, cyber-brutalist user interface designed for both hum
 | :--- | :--- | :--- | :--- |
 | **Main Portal** | `/` | Cyber-brutalist interactive showcase, live code simulator, capability matrix, and terminal curl tester. | Public |
 | **Protocol Explorer** | `/stats` | Public telemetry GUI featuring total USDC settled, queries served, active CISA zero-days, and latency. | Public |
-| **Admin Threat Center** | `/dashboard` | Operations console displaying live audit logs and transaction hashes. Gated behind Master Passkey. | Passkey Gated |
 | **Telemetry JSON API** | `/api/v1/stats` | Machine-readable metrics endpoint for monitoring dashboards and Grafana integrations. | Public |
 
 ---
 
-## 📡 Complete API Reference
+## Complete API Reference
 
 ### 1. `GET /api/v1/insight`
 Fetches a high-severity, actionable threat intelligence entry selected dynamically from the active zero-day feed.
@@ -181,7 +163,7 @@ Verifies the administrative master passkey to unlock the privileged live audit f
 
 ---
 
-## 🤖 Developer & AI Agent SDK Integration
+##  Developer & AI Agent SDK Integration
 
 ### 1. Autonomous Agent (Node.js & Viem)
 Autonomous AI agents can use the included lightweight client script to handle the 402 challenge, sign the authorization, and consume threat data automatically:
@@ -297,7 +279,7 @@ curl -i http://localhost:4402/api/v1/insight
 
 ---
 
-## 🧪 Automated Test Suite
+## Automated Test Suite
 
 ArcX contains comprehensive automated test suites verifying all cryptographic operations, security protections, and live upstream feed integrations.
 
@@ -317,7 +299,7 @@ npm test
 
 ---
 
-## 🚀 Quickstart & Local Setup
+## Quickstart & Local Setup
 
 ### Prerequisites
 - Node.js `>= 18.0.0`
@@ -360,36 +342,7 @@ cp client/.env.example client/.env
 npm start --prefix client
 ```
 
----
 
-## ☁️ Deployment Guide
-
-### Deploying to Render (Full-Stack Web Service)
-This repository includes a native [`render.yaml`](render.yaml) specification:
-1. Fork or push this repository to your GitHub account.
-2. In the Render Dashboard, select **New + → Blueprint**.
-3. Connect your repository. Render will automatically detect `render.yaml`.
-4. Set your `FACILITATOR_PRIVATE_KEY` and `PAYTO_ADDRESS` under Environment Variables.
-5. Click **Apply**. Your API, landing page, and explorer will be live immediately.
-
-### Deploying to Netlify (Static Frontend)
-This repository includes a [`netlify.toml`](netlify.toml) configuration for serving the brutalist landing page and telemetry UI as a static decoupled frontend:
-```bash
-npm run build:netlify
-```
-
----
-
-## 🏆 Arc Microgrants Alignment Matrix
-
-| Evaluation Criterion | How ArcX Satisfies It |
-| :--- | :--- |
-| **Relevance to Arc** | ArcX cannot function efficiently on standard EVM chains. It leverages Arc’s **native USDC gas**, **unified 1-balance 2-interface model**, and **deterministic sub-second finality** to enable real-time sub-cent API billing. |
-| **Technical Credibility** | ArcX is not a slide deck or mockup. It is a functional codebase featuring 12 passing automated test suites, in-memory cryptographic verification, SQLite trigger-enforced immutability, and live synchronization with CISA KEV and NIST NVD APIs. |
-| **Quality of Build** | Includes a cyber-brutalist landing page, a public telemetry explorer, an encrypted passkey-gated admin console, and production SDKs for Node.js, Python, and LangChain. |
-| **Path to Circle Grant Program** | The microgrant funds our initial mainnet deployment. From here, ArcX is expanding into a decentralized, multi-tenant cybersecurity oracle network where autonomous AI agents buy and sell real-time threat intelligence. |
-
----
 
 ## ⚖️ License & Disclosures
 
