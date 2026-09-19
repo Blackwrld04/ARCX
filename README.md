@@ -2,28 +2,29 @@
 
 # ArcX
 
-### Machine-payable cybersecurity threat intelligence on Arc Mainnet.
+### Machine-payable cybersecurity threat intelligence powered by the x402 protocol on Arc Mainnet.
 
-[![Arc Mainnet](https://img.shields.io/badge/network-Arc_Mainnet_(5042)-4f46e5?style=flat-square)](https://arc.io)
+[![x402 Protocol: v2 Standard](https://img.shields.io/badge/x402%20Protocol-v2%20Standard-00ff66?style=flat-square)](https://eips.ethereum.org/EIPS/eip-3009)
+[![x402 Micropayments: $0.001 USDC](https://img.shields.io/badge/x402%20Price-%240.001000%20USDC-2775ca?style=flat-square)](https://arc.io)
+[![Arc Mainnet: 5042](https://img.shields.io/badge/network-Arc_Mainnet_(5042)-4f46e5?style=flat-square)](https://arc.io)
 [![USDC Native Gas](https://img.shields.io/badge/gas-Native_USDC-2775ca?style=flat-square)](https://arc.io)
-[![Protocol: x402 v2 + EIP-3009](https://img.shields.io/badge/protocol-x402_v2_%2B_EIP--3009-00ff66?style=flat-square)](https://eips.ethereum.org/EIPS/eip-3009)
 [![Automated Test Suite: 12 passing](https://img.shields.io/badge/automated_tests-12_passing-brightgreen?style=flat-square)](#verify-it-yourself)
 [![CISA KEV Zero-Days: 1,716 synced](https://img.shields.io/badge/cisa_kev-1%2C716_zero--days-orange?style=flat-square)](#threat-intelligence-synthesis)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](LICENSE)
 
-ArcX is an autonomous, machine-to-machine cybersecurity intelligence API. Software agents pay a fraction of a cent (**$0.001 USDC**) per query for enriched CVE vulnerability dossiers, CISA zero-day alerts, and actionable MITRE ATT&CK hardening recommendations—settled instantly on **Arc Mainnet**.
+ArcX is an autonomous, machine-to-machine cybersecurity intelligence API built natively on the **x402 payment standard**. Autonomous AI agents pay a fraction of a cent (**$0.001 USDC**) per query for enriched CVE vulnerability dossiers, CISA zero-day alerts, and actionable MITRE ATT&CK hardening recommendations—settled on **Arc Mainnet**.
 
-**Challenge first. Authorize off-chain. Settle directly from native USDC gas.**
+**Challenge first with x402. Authorize off-chain with EIP-3009. Settle directly with Arc native USDC gas.**
 
-[Live App (Netlify)](https://arccx.netlify.app) · [Protocol Telemetry GUI](https://arccx.netlify.app/stats) · [Verify it yourself](#verify-it-yourself) · [Arc Explorer](https://explorer.arc.io/address/0x8b415aE3956992b0cbC6C78c485A4d099F6331cE)
+[Live App (Netlify)](https://arccx.netlify.app) · [x402 Telemetry GUI](https://arccx.netlify.app/stats) · [Backend Facilitator (Render)](https://arcx-v2fs.onrender.com) · [Verify it yourself](#verify-it-yourself) · [Arc Explorer](https://explorer.arc.io/address/0x8b415aE3956992b0cbC6C78c485A4d099F6331cE)
 
-**Autonomous AI Agent Infrastructure — Sub-cent intelligence without API keys.**
+**Autonomous AI Agent Infrastructure — x402 Sub-cent intelligence without accounts or API keys.**
 
 Arc Mainnet (Chain 5042) · Node.js & Viem · SQLite WAL · x402 v2 + EIP-3009
 
 </div>
 
-> **Mainnet micro-service running on Arc Mainnet (Chain ID 5042).** ArcX uses Circle's native USDC gas architecture and EIP-3009 off-chain transfer authorizations. The caller pays zero gas; settlement transactions are relayed directly to Arc Mainnet by the facilitator with $\ge 20\text{ Gwei}$ sequencer floor enforcement.
+> **Mainnet micro-service running on Arc Mainnet (Chain ID 5042).** ArcX uses Circle's native USDC gas architecture and EIP-3009 off-chain transfer authorizations to realize the x402 protocol specification. The caller pays zero gas; settlement transactions are relayed directly to Arc Mainnet by the x402 facilitator with $\ge 20\text{ Gwei}$ sequencer floor enforcement.
 
 ---
 
@@ -32,8 +33,8 @@ Arc Mainnet (Chain 5042) · Node.js & Viem · SQLite WAL · x402 v2 + EIP-3009
 | Resource | Destination | What it establishes |
 | :--- | :--- | :--- |
 | **Live Web App (Netlify)** | [`https://arccx.netlify.app`](https://arccx.netlify.app) | Production web application on Netlify Edge CDN |
-| **Backend API (Render)** | [`https://arcx-v2fs.onrender.com`](https://arcx-v2fs.onrender.com) | Live x402 facilitator & on-chain settlement service |
-| **Public Telemetry GUI** | [`https://arccx.netlify.app/stats`](https://arccx.netlify.app/stats) | Real-time query counts, settled volume, and live latency |
+| **Backend API & x402 Relayer (Render)** | [`https://arcx-v2fs.onrender.com`](https://arcx-v2fs.onrender.com) | Live x402 facilitator & on-chain settlement service |
+| **Public x402 Telemetry GUI** | [`https://arccx.netlify.app/stats`](https://arccx.netlify.app/stats) | Real-time query counts, settled volume, and live latency |
 | **Admin Threat Center** | [`https://arccx.netlify.app/dashboard`](https://arccx.netlify.app/dashboard) | Audit ledger feed gated with Master Passkey |
 | **Arc Mainnet Settlement Address** | [`0x8b415aE3956992b0cbC6C78c485A4d099F6331cE`](https://explorer.arc.io/address/0x8b415aE3956992b0cbC6C78c485A4d099F6331cE) | Verifiable on-chain recipient on Arc Explorer |
 | **Public Builder Profile** | `[BUILDER PROFILE LINK - GitHub / X / Farcaster]` | Builder identity & submission handle |
@@ -45,24 +46,25 @@ Arc Mainnet (Chain 5042) · Node.js & Viem · SQLite WAL · x402 v2 + EIP-3009
 
 | Route | Look for | What it establishes |
 | :--- | :--- | :--- |
-| **[`/`](#)** | Cyber-brutalist landing page, cURL interactive tester, capability matrix | Public web interface and developer onboarding |
-| **[`/stats`](#)** | Live USDC volume, query count, active CISA zero-days, and latency | Real-time protocol metrics without authentication |
+| **[`/`](#)** | Cyber-brutalist landing page, interactive x402 simulator, capability matrix | Public web interface and developer onboarding |
+| **[`/stats`](#)** | Live USDC volume, query count, active CISA zero-days, and latency | Real-time x402 protocol metrics without authentication |
 | **[`/api/v1/stats`](#)** | Machine-readable JSON telemetry and network constants | Automation telemetry for monitoring daemons |
-| **[`/dashboard`](#)** | Master Passkey challenge modal and live payment audit feed | Secure administrative visibility into settlement records |
-| **[`/health`](#)** | JSON health report with Arc RPC connectivity and DB status | Operational liveness of facilitator and RPC transport |
+| **[`/dashboard`](#)** | Master Passkey challenge modal and live payment audit feed | Secure administrative visibility into x402 settlement records |
+| **[`/health`](#)** | JSON health report with Arc RPC connectivity and DB status | Operational liveness of x402 facilitator and RPC transport |
 
 ---
 
 ## Contents
 
+- [What is x402?](#what-is-x402)
 - [Why ArcX exists](#why-arcx-exists)
-- [How it works](#how-it-works)
-- [Why Arc Mainnet is load-bearing](#why-arc-mainnet-is-load-bearing)
+- [How x402 works in ArcX](#how-x402-works-in-arcx)
+- [Why Arc Mainnet is load-bearing for x402](#why-arc-mainnet-is-load-bearing-for-x402)
 - [Security properties & cryptographic invariants](#security-properties--cryptographic-invariants)
 - [Threat intelligence synthesis](#threat-intelligence-synthesis)
-- [Contract & wire interface](#contract--wire-interface)
+- [The x402 wire specification & contract interface](#the-x402-wire-specification--contract-interface)
 - [Verify it yourself](#verify-it-yourself)
-- [Autonomous agent integration (SDK)](#autonomous-agent-integration-sdk)
+- [Autonomous agent integration (x402 SDK)](#autonomous-agent-integration-x402-sdk)
 - [What is implemented vs trust boundaries](#what-is-implemented-vs-trust-boundaries)
 - [Live deployments](#live-deployments)
 - [Run locally](#run-locally)
@@ -74,6 +76,20 @@ Arc Mainnet (Chain 5042) · Node.js & Viem · SQLite WAL · x402 v2 + EIP-3009
 
 ---
 
+## What is x402?
+
+**HTTP Status 402 ("Payment Required")** was reserved in 1997 in RFC 2068 for digital payment systems. For over 25 years, it remained unusable on the public Internet because Web2 lacked native, programmable, low-friction digital currency. Web2 developers were forced to invent bloated workarounds: mandatory account registration, OAuth flows, credit card tokenization, Stripe KYC, API key provisioning, and monthly subscription tiers.
+
+**The x402 protocol brings the original vision of the Web to life:**
+1. **The Request**: A machine or agent queries a protected URL (`GET /api/v1/insight`).
+2. **The x402 Challenge**: The server replies with `HTTP 402 Payment Required`, specifying the price (`$0.001 USDC`), network (`eip155:5042`), asset contract, and recipient in the `PAYMENT-REQUIRED` header.
+3. **The Cryptographic Payment**: The agent signs an off-chain authorization (EIP-3009) bound to the endpoint and resends the request with the `PAYMENT-SIGNATURE` header.
+4. **Instant Settlement & Access**: The server verifies the signature in memory ($<2\text{ms}$), relays the settlement to Arc Mainnet using native USDC gas, and immediately responds with `HTTP 200 OK` and the paid data.
+
+In the x402 paradigm, **the cryptographic payment signature *is* the authorization**. There are no API keys, no logins, no credit cards, and no billing contracts.
+
+---
+
 ## Why ArcX exists
 
 Modern software security and AI code generation are shifting to autonomous software agents (e.g. LangChain, CrewAI, AutoGPT, automated CI/CD auditors). These agents need real-time, actionable vulnerability data to patch code and assess zero-day risks.
@@ -82,11 +98,11 @@ However, **traditional payment and API rails cannot serve autonomous software:**
 
 | Role | Provides | Receives |
 | :--- | :--- | :--- |
-| **Autonomous AI Agent** | EIP-712 cryptographic payment permit bound to the URI | Instant, enriched CVE dossier and MITRE ATT&CK remediation |
+| **Autonomous AI Agent** | EIP-712 cryptographic x402 payment permit bound to the URI | Instant, enriched CVE dossier and MITRE ATT&CK remediation |
 | **ArcX Facilitator** | Real-time threat synthesis, sub-2ms signature verification, on-chain relay | $0.001 USDC micropayment per query, settled on Arc Mainnet |
 | **Arc Mainnet L1** | Sub-second settlement finality and native USDC gas | Micro-transaction throughput and fee burn |
 
-### The Failures ArcX Overcomes:
+### The Failures ArcX Overcomes with x402:
 
 1. **The Agent Billing Dilemma**: Autonomous bots cannot hold credit cards, submit government IDs for Stripe KYC, solve CAPTCHA challenges, or commit to recurring monthly billing agreements.
 2. **The 5-Figure Enterprise SaaS Tax**: Enterprise threat feeds (Mandiant, CrowdStrike) require annual contracts starting at $10,000–$50,000+. A CI/CD security bot that only needs to check a single vulnerability during a build is locked out.
@@ -98,23 +114,23 @@ However, **traditional payment and API rails cannot serve autonomous software:**
 
 ---
 
-## How it works
+## How x402 works in ArcX
 
 ArcX implements the **x402 v2 standard** over HTTP, combining off-chain EIP-712 signing with on-chain EIP-3009 settlement.
 
-### The Request, Authorization, and Settlement Path
+### The x402 Protocol Flow
 
 ```mermaid
 sequenceDiagram
     autonumber
     participant Agent as Autonomous AI Agent
-    participant ArcX as ArcX Server (Facilitator)
+    participant ArcX as ArcX Server (x402 Facilitator)
     participant Engine as Threat Synthesis Engine
     participant Arc as Circle Arc Mainnet (5042)
 
     Agent->>ArcX: GET /api/v1/insight
     ArcX-->>Agent: HTTP 402 Payment Required (PAYMENT-REQUIRED header)
-    Note over Agent: Compute bound nonce:<br/>keccak256(salt, "GET:/api/v1/insight")<br/>Sign EIP-3009 TransferWithAuthorization
+    Note over Agent: Parse x402 parameters<br/>Compute bound nonce: keccak256(salt, "GET:/api/v1/insight")<br/>Sign EIP-3009 TransferWithAuthorization
     Agent->>ArcX: GET /api/v1/insight + PAYMENT-SIGNATURE Header
     ArcX->>ArcX: Verify EIP-712 signature in-memory (<2ms)
     ArcX->>ArcX: Enforce cryptographic request binding
@@ -126,7 +142,7 @@ sequenceDiagram
     ArcX-->>Agent: HTTP 200 OK + Threat Dossier + PAYMENT-RESPONSE
 ```
 
-### Protocol State Progression
+### The x402 State Machine
 
 ```mermaid
 stateDiagram-v2
@@ -145,16 +161,16 @@ stateDiagram-v2
 
 ---
 
-## Why Arc Mainnet is load-bearing
+## Why Arc Mainnet is load-bearing for x402
 
-ArcX cannot function on standard EVM chains. Circle's Arc Mainnet (`eip155:5042`) provides fundamental architectural primitives that make sub-second micropayments viable:
+The x402 standard cannot function at commercial scale on standard EVM chains. Circle's Arc Mainnet (`eip155:5042`) provides the fundamental architectural primitives that make sub-second, sub-cent x402 micropayments viable:
 
-| Arc Native Feature | How ArcX Leverages It | What Breaks Without It |
+| Arc Native Feature | How ArcX Leverages It for x402 | What Breaks Without It |
 | :--- | :--- | :--- |
-| **Unified USDC Gas Architecture** | USDC is the native gas token (18 decimals) while sharing a balance with ERC-20 USDC (6 decimals). | On Ethereum/Arbitrum, agents must maintain secondary token balances (ETH) just to spend USDC. |
+| **Unified USDC Gas Architecture** | USDC is the native gas token (18 decimals) while sharing a balance with ERC-20 USDC (6 decimals). | On Ethereum/Arbitrum, agents must maintain secondary token balances (ETH) just to spend USDC via x402. |
 | **Native EIP-3009 Support** | The canonical USDC contract on Arc (`0x3600...0000`) natively implements `transferWithAuthorization`. | Legacy stablecoins require two transactions: an on-chain `approve` followed by `transferFrom`. |
-| **Sub-Second Finality** | Fast block times and deterministic inclusion allow the entire HTTP challenge-sign-relay loop to finish in $<1$ second. | 12–30s confirmation latency causes HTTP client timeouts in automated pipelines. |
-| **Sequencer Gas Floor Enforced** | Arc enforces a $\ge 20\text{ Gwei}$ sequencer floor; ArcX sets dynamic priority fees to ensure zero stuck transactions. | Fluctuating gas spikes cause transactions to stall in the mempool indefinitely. |
+| **Sub-Second Finality** | Fast block times and deterministic inclusion allow the entire x402 challenge-sign-relay loop to finish in $<1$ second. | 12–30s confirmation latency causes HTTP client timeouts in automated agent pipelines. |
+| **Sequencer Gas Floor Enforced** | Arc enforces a $\ge 20\text{ Gwei}$ sequencer floor; ArcX sets dynamic priority fees to ensure zero stuck transactions. | Fluctuating gas spikes cause x402 settlements to stall in the mempool indefinitely. |
 
 ---
 
@@ -169,10 +185,10 @@ endpointString = uppercase(METHOD) + ":" + cleanPath
 nonce = keccak256(abi.encodePacked(salt, endpointString))
 ```
 
-If an attacker intercepts a valid signature for `GET /api/v1/insight`, they **cannot** replay it against `GET /api/v1/lookup/CVE-2024-3094`. The server derives the expected nonce from the current HTTP context; any discrepancy immediately triggers an unhandled verification failure before touching the chain.
+If an attacker intercepts a valid signature for `GET /api/v1/insight`, they **cannot** replay it against `GET /api/v1/lookup/CVE-2024-3094`. The server derives the expected nonce from the current HTTP context; any discrepancy immediately triggers an unhandled x402 verification failure before touching the chain.
 
 ### 2. Trigger-Enforced Ledger Immutability
-All payments are committed to a Write-Ahead Log (WAL) SQLite ledger. Immutability is enforced at the database engine layer via SQL triggers:
+All x402 payments are committed to a Write-Ahead Log (WAL) SQLite ledger. Immutability is enforced at the database engine layer via SQL triggers:
 
 ```sql
 CREATE TRIGGER prevent_payment_update BEFORE UPDATE ON payments
@@ -227,7 +243,7 @@ ArcX does not serve synthetic mocks. It synthesizes intelligence across 4 synchr
 └────────────────────────────────────────────────────────┘
 ```
 
-Every response contains structured, machine-actionable data:
+Every x402-unlocked response contains structured, machine-actionable data:
 - **CVSS v3.1 Metrics**: Base score, exploitability, and exact vector string.
 - **MITRE ATT&CK Mapping**: Specific enterprise tactics and techniques (e.g. `T1195.001`).
 - **Remediation Blueprints**: Explicit commands and version upgrades for automated patching.
@@ -235,26 +251,26 @@ Every response contains structured, machine-actionable data:
 
 ---
 
-## Contract & wire interface
+## The x402 wire specification & contract interface
 
-### HTTP Wire Specification
+### HTTP Wire Protocol Specification
 
 | Status | Header / Field | Value / Structure |
 | :--- | :--- | :--- |
-| **`402 Payment Required`** | `PAYMENT-REQUIRED` | Base64-encoded payment terms JSON |
+| **`402 Payment Required`** | `PAYMENT-REQUIRED` | Base64-encoded x402 payment specifications JSON |
 | **`Client Retry`** | `PAYMENT-SIGNATURE` | Base64-encoded EIP-3009 authorization payload |
-| **`200 OK`** | `PAYMENT-RESPONSE` | Base64-encoded settlement confirmation with `txHash` |
+| **`200 OK`** | `PAYMENT-RESPONSE` | Base64-encoded settlement confirmation with Arc `txHash` |
 
 ### API Endpoints
 
-| Endpoint | Method | Cost | Description |
+| Endpoint | Method | Access / Cost | Description |
 | :--- | :---: | :---: | :--- |
-| `/api/v1/insight` | `GET` | 💳 $0.001 USDC | Random high-severity threat dossier from the active zero-day feed |
-| `/api/v1/lookup/:cveId` | `GET` | 💳 $0.001 USDC | Query specific CVE vulnerability by ID with live NVD fallback |
-| `/api/v1/stats` | `GET` | 🟢 Free | Public protocol telemetry, settled volume, and network specs |
+| `/api/v1/insight` | `GET` | 💳 $0.001 USDC (x402) | Random high-severity threat dossier from the active zero-day feed |
+| `/api/v1/lookup/:cveId` | `GET` | 💳 $0.001 USDC (x402) | Query specific CVE vulnerability by ID with live NVD fallback |
+| `/api/v1/stats` | `GET` | 🟢 Free | Public x402 protocol telemetry, settled volume, and network specs |
 | `/health` | `GET` | 🟢 Free | Server health, Arc RPC connectivity, and DB readiness |
 | `/api/v1/stats/admin/auth` | `POST` | 🟢 Free | Master passkey authentication for administrative access |
-| `/api/v1/stats/feed` | `GET` | 🔒 Gated | Real-time audit log stream (requires `x-admin-key` header) |
+| `/api/v1/stats/feed` | `GET` | 🔒 Gated | Real-time x402 audit log stream (requires `x-admin-key` header) |
 
 ---
 
@@ -283,7 +299,7 @@ npm test --prefix server
 }
 
 Test 1: Valid EIP-3009 signature with request binding
-  ✓ Valid payment with bound nonce verified successfully
+  ✓ Valid x402 payment with bound nonce verified successfully
 
 Test 2: Nonce binding mismatch (replay across endpoints)
   ✓ Endpoint replay rejected by cryptographic binding
@@ -330,7 +346,7 @@ Test 6: Feed telemetry stats
 
 ---
 
-## Autonomous agent integration (SDK)
+## Autonomous agent integration (x402 SDK)
 
 ### 1. Node.js / TypeScript (Viem)
 
@@ -344,9 +360,9 @@ const account = privateKeyToAccount(process.env.AGENT_PRIVATE_KEY);
 const client = createWalletClient({ account, chain: arc, transport: http() });
 
 async function queryArcX(endpoint = '/api/v1/insight') {
-  const url = `http://localhost:4402${endpoint}`;
+  const url = `https://arccx.netlify.app${endpoint}`;
   
-  // 1. Initial GET -> 402 Payment Required
+  // 1. Initial GET -> Receive HTTP 402 Payment Required
   const challenge = await fetch(url);
   if (challenge.status !== 402) return challenge.json();
   
@@ -358,7 +374,7 @@ async function queryArcX(endpoint = '/api/v1/insight') {
   const nonce = keccak256(encodePacked(['bytes16', 'string'], [salt.slice(0, 34), `GET:${endpoint}`]));
   const now = BigInt(Math.floor(Date.now() / 1000));
 
-  // 3. Sign EIP-3009 TransferWithAuthorization
+  // 3. Sign EIP-3009 TransferWithAuthorization for x402 challenge
   const signature = await client.signTypedData({
     domain: {
       name: spec.extra?.name || 'USDC',
@@ -387,7 +403,7 @@ async function queryArcX(endpoint = '/api/v1/insight') {
     },
   });
 
-  // 4. Retry with PAYMENT-SIGNATURE
+  // 4. Retry request with x402 PAYMENT-SIGNATURE header
   const payload = Buffer.from(JSON.stringify({
     from: account.address,
     to: spec.payTo,
@@ -413,8 +429,8 @@ from web3 import Web3
 
 @tool
 def get_cve_threat_intel(cve_id: str) -> str:
-    """Query verified zero-day threat intelligence from ArcX on Arc Mainnet."""
-    url = f"https://arcx.onrender.com/api/v1/lookup/{cve_id}"
+    """Query verified zero-day threat intelligence from ArcX via x402 micropayments."""
+    url = f"https://arccx.netlify.app/api/v1/lookup/{cve_id}"
     res = requests.get(url)
     if res.status_code == 200:
         return res.text
@@ -477,9 +493,9 @@ cp server/.env.example server/.env
 
 | Variable | Required | Default | Description |
 | :--- | :---: | :--- | :--- |
-| `FACILITATOR_PRIVATE_KEY` | ✅ | — | Private key of wallet relaying settlements to Arc Mainnet |
-| `PAYTO_ADDRESS` | ✅ | — | Recipient address receiving the $0.001 USDC micropayments |
-| `ADMIN_SECRET` | ❌ | `arcx-master-passkey-2026` | Master passkey used to unlock the `/dashboard` audit ledger |
+| `FACILITATOR_PRIVATE_KEY` | ✅ | — | Private key of wallet relaying x402 settlements to Arc Mainnet |
+| `PAYTO_ADDRESS` | ✅ | — | Recipient address receiving the $0.001 USDC x402 micropayments |
+| `ADMIN_KEY` | ❌ | `arcx-admin-2026` | Master passkey used to unlock the `/dashboard` audit ledger |
 | `ARC_RPC_URL` | ❌ | `https://rpc.mainnet.arc.io` | Arc Mainnet JSON-RPC endpoint |
 | `PRICE_PER_CALL` | ❌ | `1000` | Price per call in 6-decimal units (`1000` = $0.001 USDC) |
 | `PORT` | ❌ | `4402` | HTTP listening port |
@@ -502,6 +518,7 @@ npm start --prefix client
 
 ## Engineering decisions
 
+- **The x402 Standard over API Key Gateways**: Rather than requiring developers to create accounts, generate API keys, and set up credit card payment methods, x402 lets any HTTP client or autonomous software agent pay on-the-fly per request.
 - **EIP-3009 over EIP-2612 `permit`**: EIP-2612 still requires the caller or relayer to execute `transferFrom` in a separate state mutation. EIP-3009 executes both authorization and transfer atomically in a single contract call with a specific nonce.
 - **In-Memory Verification before Relay**: Evaluating EIP-712 recovery in Node.js takes $<2\text{ms}$. Invalid signatures, expired deadlines, or wrong recipients are rejected before sending a transaction to Arc RPC, saving facilitator gas.
 - **Cryptographic Request Binding inside the Nonce**: Rather than trusting HTTP headers, the URI and HTTP method are packed and hashed into the 32-byte authorization nonce. This makes signature replay across different endpoints mathematically impossible.
@@ -530,7 +547,7 @@ npm start --prefix client
 | [`server/src/middleware/x402Gate.js`](server/src/middleware/x402Gate.js) | Core x402 payment gate, EIP-712 verifier, and Arc on-chain relayer |
 | [`server/src/services/threatFeedService.js`](server/src/services/threatFeedService.js) | CISA KEV catalog sync, NIST NVD live query, and CVE synthesis |
 | [`server/src/db/`](server/src/db/) | Numbered SQLite migrations and trigger-enforced immutable ledger |
-| [`server/public/`](server/public/) | Cyber-brutalist landing page and public telemetry GUI (`/stats`) |
+| [`server/public/`](server/public/) | Cyber-brutalist landing page and public x402 telemetry GUI (`/stats`) |
 | [`server/dashboard/`](server/dashboard/) | Admin audit center with Master Passkey authentication modal |
 | [`server/test/`](server/test/) | Automated cryptographic verification and external feed test suites |
 | [`client/src/agent.js`](client/src/agent.js) | Reference autonomous AI agent implementation using Viem |
@@ -543,9 +560,9 @@ npm start --prefix client
 
 | Evaluation Criterion | How ArcX Satisfies It |
 | :--- | :--- |
-| **Relevance to Arc** | ArcX cannot function efficiently on standard EVM chains. It leverages Arc’s **native USDC gas**, **unified 1-balance 2-interface model**, and **deterministic sub-second finality** to enable real-time sub-cent API billing. |
+| **Relevance to Arc** | ArcX cannot function efficiently on standard EVM chains. It leverages Arc’s **native USDC gas**, **unified 1-balance 2-interface model**, and **deterministic sub-second finality** to enable real-time sub-cent x402 API billing. |
 | **Technical Credibility** | ArcX is not a slide deck or mockup. It is a functional codebase featuring 12 passing automated test suites, in-memory cryptographic verification, SQLite trigger-enforced immutability, and live synchronization with CISA KEV and NIST NVD APIs. |
-| **Quality of Build** | Includes a cyber-brutalist landing page, a public telemetry explorer, an encrypted passkey-gated admin console, and production SDKs for Node.js, Python, and LangChain. |
+| **Quality of Build** | Includes a cyber-brutalist landing page, a public x402 telemetry explorer, an encrypted passkey-gated admin console, and production SDKs for Node.js, Python, and LangChain. |
 | **Path to Circle Grant Program** | The microgrant funds our initial mainnet deployment. From here, ArcX is expanding into a decentralized, multi-tenant cybersecurity oracle network where autonomous AI agents buy and sell real-time threat intelligence. |
 
 ---
