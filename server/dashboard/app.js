@@ -1,5 +1,5 @@
-// ArcX Dashboard — Live Telemetry & Payment Feed
-const POLL_INTERVAL = 4000; // 4 seconds
+
+const POLL_INTERVAL = 4000;
 let previousPaymentCount = 0;
 
 async function fetchData() {
@@ -10,11 +10,10 @@ async function fetchData() {
   }
 
   try {
-    // 1. Fetch public stats
+
     const statsRes = await fetch('/api/v1/stats');
     const stats = await statsRes.json();
 
-    // Update metrics
     const revEl = document.getElementById('total-revenue');
     if (revEl && stats?.stats?.totalRevenue) {
       revEl.textContent = stats.stats.totalRevenue.replace(' USDC', '');
@@ -32,7 +31,6 @@ async function fetchData() {
       h24El.textContent = stats.stats.paymentsLast24h;
     }
 
-    // Update Threat Feeds telemetry
     const cisaKevEl = document.getElementById('cisa-kev-count');
     if (cisaKevEl && stats?.threatFeeds?.cisaKevCount) {
       cisaKevEl.textContent = `${stats.threatFeeds.cisaKevCount.toLocaleString()}+`;
@@ -42,14 +40,12 @@ async function fetchData() {
       cachedEl.textContent = stats.threatFeeds.cachedExternalCvesCount ?? 0;
     }
 
-    // Update status badge
     const badge = document.getElementById('status-badge');
     if (badge) {
       badge.innerHTML = '<span class="pulse-dot"></span>LIVE';
       badge.className = 'font-mono-custom text-xs uppercase tracking-wider bg-emerald-950/80 border border-emerald-500/40 text-emerald-400 px-3 py-1.5 rounded-lg flex items-center gap-2';
     }
 
-    // Update CLI command URLs
     const base = window.location.origin;
     const statsUrlEl = document.getElementById('api-url-stats');
     if (statsUrlEl) statsUrlEl.textContent = `${base}/api/v1/stats`;
@@ -57,7 +53,6 @@ async function fetchData() {
     const insightUrlEl = document.getElementById('api-url-insight');
     if (insightUrlEl) insightUrlEl.textContent = `${base}/api/v1/insight`;
 
-    // 2. Fetch payment ledger feed
     const feedRes = await fetch('/api/v1/stats/feed?limit=20');
     const feedData = await feedRes.json();
 
@@ -110,7 +105,6 @@ function renderFeed(payments) {
     const statusText = isSettled ? 'SETTLED' : 'PENDING';
     const rowClass = isNew && i === 0 ? 'new-row' : '';
 
-    // Convert amount to human readable USDC if in micro-units
     const amountVal = Number(p.amount);
     const displayAmount = amountVal >= 1000
       ? `${(amountVal / 1e6).toFixed(6)} USDC`
@@ -181,6 +175,5 @@ function formatTime(isoString) {
   }
 }
 
-// Initial fetch + interval polling
 fetchData();
 setInterval(fetchData, POLL_INTERVAL);

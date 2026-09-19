@@ -3,10 +3,8 @@ import { keccak256, encodePacked } from 'viem';
 import { config } from '../config.js';
 import { logger } from './logger.js';
 
-// Export Arc chain configuration directly from viem built-in
 export { arc };
 
-// USDC ERC-20 contract ABI on Arc (0x3600000000000000000000000000000000000000)
 export const USDC_ABI = [
   {
     name: 'transferWithAuthorization',
@@ -58,7 +56,6 @@ export const USDC_ABI = [
   },
 ];
 
-// EIP-3009 TransferWithAuthorization typed data definition
 export const TRANSFER_WITH_AUTH_TYPES = {
   TransferWithAuthorization: [
     { name: 'from',        type: 'address' },
@@ -70,8 +67,6 @@ export const TRANSFER_WITH_AUTH_TYPES = {
   ],
 };
 
-// Cached dynamic EIP-712 domain (Correction 3)
-// Verified on Arc mainnet: contract name is "USDC", version is "2", chain ID is 5042.
 let cachedDomain = {
   name: 'USDC',
   version: '2',
@@ -79,10 +74,6 @@ let cachedDomain = {
   verifyingContract: config.usdcAddress,
 };
 
-/**
- * Initializes and dynamically verifies EIP-712 domain against the live USDC contract.
- * @param {import('viem').PublicClient} publicClient
- */
 export async function initUsdcDomain(publicClient) {
   try {
     const [name, version] = await Promise.all([
@@ -113,18 +104,10 @@ export async function initUsdcDomain(publicClient) {
   }
 }
 
-/**
- * Returns the current EIP-712 domain separator object.
- */
 export function getUsdcDomain() {
   return cachedDomain;
 }
 
-/**
- * Computes a cryptographically bound EIP-3009 nonce.
- * Binds a 16-byte random salt to the HTTP method and endpoint path.
- * (Correction 6: Request binding)
- */
 export function computeBoundNonce(saltHex, method, path) {
   const cleanPath = path.split('?')[0].replace(/\/$/, '') || '/';
   const cleanSalt = saltHex.startsWith('0x') ? saltHex.slice(0, 34) : `0x${saltHex}`.slice(0, 34);

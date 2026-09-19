@@ -1,5 +1,4 @@
--- ArcX Schema v002 — CVE cache & CISA KEV tables
--- Applied by migrate.js.
+
 
 CREATE TABLE IF NOT EXISTS cve_cache (
   cve_id               TEXT PRIMARY KEY,

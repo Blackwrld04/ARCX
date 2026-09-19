@@ -7,16 +7,8 @@ import { logger } from '../utils/logger.js';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const MIGRATIONS_DIR = join(__dirname, 'migrations');
 
-/**
- * Run all pending migrations in order, inside exclusive transactions.
- *
- * - Reads numbered .sql files from migrations/
- * - Checks schema_migrations table for already-applied versions
- * - Applies pending migrations in a single transaction each
- * - Uses BEGIN EXCLUSIVE to prevent concurrent migration runs
- */
 export function runMigrations(db) {
-  // Ensure schema_migrations table exists (bootstrap)
+
   db.exec(`
     CREATE TABLE IF NOT EXISTS schema_migrations (
       version    INTEGER PRIMARY KEY,
@@ -25,7 +17,6 @@ export function runMigrations(db) {
     );
   `);
 
-  // Read migration files, sorted by version number
   const files = readdirSync(MIGRATIONS_DIR)
     .filter((f) => f.endsWith('.sql'))
     .sort((a, b) => {
@@ -39,7 +30,6 @@ export function runMigrations(db) {
     return;
   }
 
-  // Get already-applied versions
   const applied = new Set(
     db.prepare('SELECT version FROM schema_migrations').all().map((r) => r.version)
   );
@@ -60,7 +50,6 @@ export function runMigrations(db) {
     const sql = readFileSync(join(MIGRATIONS_DIR, file), 'utf-8');
     const name = file.replace('.sql', '');
 
-    // BEGIN EXCLUSIVE prevents any other connection from writing during migration
     const migrate = db.transaction(() => {
       db.exec(sql);
       db.prepare('INSERT INTO schema_migrations (version, name) VALUES (?, ?)').run(version, name);

@@ -1,10 +1,6 @@
 import { getDb } from './init.js';
 import { logger } from '../utils/logger.js';
 
-/**
- * Record a pending payment before attempting on-chain settlement.
- * Returns the payment ID.
- */
 export function recordPending({ nonce, bindingSalt = '', fromAddress, toAddress, amount, endpoint, method = 'GET' }) {
   const db = getDb();
   const stmt = db.prepare(`
@@ -25,10 +21,6 @@ export function recordPending({ nonce, bindingSalt = '', fromAddress, toAddress,
   return result.lastInsertRowid;
 }
 
-/**
- * Record a successful settlement linked to a pending payment.
- * Updates the existing payment record (compliant with immutability triggers).
- */
 export function recordSettlement(paymentId, txHash, blockNumber, gasUsed, responseData) {
   const db = getDb();
   const stmt = db.prepare(`
@@ -52,9 +44,6 @@ export function recordSettlement(paymentId, txHash, blockNumber, gasUsed, respon
   logger.info({ paymentId, txHash }, 'Settlement recorded in ledger');
 }
 
-/**
- * Record a failed settlement attempt.
- */
 export function recordFailure(paymentId, errorMessage) {
   const db = getDb();
   db.prepare(`
@@ -66,9 +55,6 @@ export function recordFailure(paymentId, errorMessage) {
   logger.info({ paymentId, errorMessage }, 'Payment failure recorded in ledger');
 }
 
-/**
- * Reset a failed payment record back to PENDING for retry.
- */
 export function resetPending(paymentId) {
   const db = getDb();
   db.prepare(`
@@ -78,10 +64,6 @@ export function resetPending(paymentId) {
   `).run(paymentId);
 }
 
-/**
- * Look up a payment by its EIP-3009 nonce (idempotency key).
- * Returns the payment row if it exists.
- */
 export function findByNonce(nonce) {
   const db = getDb();
   const payment = db.prepare(`
@@ -93,9 +75,6 @@ export function findByNonce(nonce) {
   return payment || null;
 }
 
-/**
- * Get aggregate stats for the public stats endpoint.
- */
 export function getStats() {
   const db = getDb();
 
@@ -127,15 +106,12 @@ export function getStats() {
     totalPayments: totals.total_payments,
     totalSettled: totals.total_settled,
     uniqueWallets: totals.unique_wallets,
-    totalRevenue: (totals.total_amount_raw / 1_000_000).toFixed(6), // Convert from 6-decimal to human-readable USDC
+    totalRevenue: (totals.total_amount_raw / 1_000_000).toFixed(6),
     paymentsLast24h: last24h.count,
     lastPayment: lastPayment || null,
   };
 }
 
-/**
- * Get recent payments for the dashboard feed.
- */
 export function getRecentPayments(limit = 20) {
   const db = getDb();
   return db.prepare(`

@@ -5,14 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ArcX — Autonomous Threat Intelligence on Arc Mainnet</title>
   <meta name="description" content="x402-gated cybersecurity intelligence settled on Circle's Arc mainnet (Chain 5042). Pay $0.001 USDC per query with EIP-3009 off-chain authorizations.">
-  
-  <!-- Tailwind CSS & Icons -->
+
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
-  <!-- Typography: Silkscreen (Pixel/Brutalist), Inter, JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Inter:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@100;300;400;500;600;700&display=swap" rel="stylesheet">
@@ -98,19 +96,16 @@
     .mobile-nav a:last-child {
       border-bottom: none;
     }
-  </style>
+</style>
 </head>
 <body class="antialiased min-h-screen relative overflow-x-hidden selection:bg-[#8b3a2a] selection:text-[#c8c4bc]">
 
-  <!-- Outer Architectural Guide Lines -->
   <div class="fixed top-0 bottom-0 left-4 sm:left-12 w-[1px] bg-[#c8c4bc]/10 z-0 pointer-events-none"></div>
   <div class="fixed top-0 bottom-0 right-4 sm:right-12 w-[1px] bg-[#c8c4bc]/10 z-0 pointer-events-none"></div>
 
-  <!-- NAV -->
   <nav class="sticky top-0 z-50 backdrop-blur-md bg-[#121316]/85 border-b border-[#c8c4bc]/10">
     <div class="max-w-[1440px] mx-auto px-4 sm:px-10 lg:px-16 h-16 flex items-center justify-between">
-      
-      <!-- Brand Logo (Text Only) -->
+
       <div class="flex items-center gap-3">
         <span class="font-pixel text-2xl tracking-wider text-[#c8c4bc]">
           ARC<span class="text-[#8b3a2a]">X</span>
@@ -120,7 +115,6 @@
         </span>
       </div>
 
-      <!-- Links -->
       <div class="hidden md:flex items-center gap-5 lg:gap-7 font-mono-custom text-xs uppercase tracking-widest text-[#c8c4bc]/60">
         <a href="#playground" class="hover:text-[#8b3a2a] transition-colors whitespace-nowrap">Playground</a>
         <a href="#feed" class="hover:text-[#8b3a2a] transition-colors whitespace-nowrap">Threat Feed</a>
@@ -133,7 +127,6 @@
         </a>
       </div>
 
-      <!-- Network Status Tag & Mobile Menu Toggle -->
       <div class="flex items-center gap-3">
         <span class="hidden sm:flex items-center gap-2 font-mono-custom text-[0.7rem] uppercase text-[#c8c4bc]/50 bg-[#1a1a1a] px-3 py-1.5 rounded-md border border-[#c8c4bc]/10">
           <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -142,14 +135,13 @@
         <a href="#playground" class="hidden sm:inline-flex font-mono-custom text-xs uppercase tracking-widest text-[#c8c4bc] border border-[#8b3a2a] px-4 py-2 rounded-lg hover:bg-[#8b3a2a] transition-colors whitespace-nowrap">
           Launch App
         </a>
-        <!-- Mobile Menu Button -->
+
         <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="md:hidden flex items-center justify-center w-9 h-9 rounded-lg border border-[#c8c4bc]/20 text-[#c8c4bc]/60 hover:text-[#8b3a2a] hover:border-[#8b3a2a] transition-colors">
           <iconify-icon icon="solar:hamburger-menu-linear" class="text-xl"></iconify-icon>
         </button>
       </div>
     </div>
 
-    <!-- Mobile Navigation Dropdown -->
     <div id="mobile-nav" class="mobile-nav">
       <a href="#playground" onclick="closeMobileMenu()">Playground</a>
       <a href="#feed" onclick="closeMobileMenu()">Threat Feed</a>
@@ -163,16 +155,13 @@
     </div>
   </nav>
 
-  <!-- HERO SECTION -->
   <main class="max-w-[1440px] mx-auto px-4 sm:px-10 lg:px-16 pt-10 relative z-20">
     <div class="poster-shell p-[1px] rounded-2xl shadow-2xl shadow-black/80 gs-reveal opacity-0">
       <div class="bg-[#121316]/95 backdrop-blur-sm rounded-2xl relative overflow-hidden">
-        
-        <!-- Subtle Matrix Texture -->
+
         <div class="absolute inset-0 pointer-events-none opacity-[0.03]" style="background-image: linear-gradient(to right, #c8c4bc 1px, transparent 1px); background-size: 48px 100%;"></div>
         <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-[#8b3a2a]/10 rounded-full blur-[120px] pointer-events-none"></div>
 
-        <!-- Technical Header Bar -->
         <header class="flex justify-between items-center p-6 border-b border-[#c8c4bc]/10 relative z-30">
           <div class="flex items-center gap-4">
             <iconify-icon icon="solar:cpu-linear" class="text-xl text-[#8b3a2a]"></iconify-icon>
@@ -186,23 +175,20 @@
           </div>
         </header>
 
-        <!-- Interactive 3D Sphere Stage (User's Exact Background WebGL) -->
         <section id="hero-stage" class="relative min-h-[620px] flex items-center justify-center overflow-hidden">
           <div id="webgl-container" class="absolute inset-0 z-0 mix-blend-screen opacity-75"></div>
-          
-          <!-- Corner Reticles -->
+
           <div class="absolute top-6 left-6 w-4 h-4 border-t border-l border-[#8b3a2a] z-20"></div>
           <div class="absolute top-6 right-6 w-4 h-4 border-t border-r border-[#8b3a2a] z-20"></div>
           <div class="absolute bottom-6 left-6 w-4 h-4 border-b border-l border-[#8b3a2a] z-20"></div>
           <div class="absolute bottom-6 right-6 w-4 h-4 border-b border-r border-[#8b3a2a] z-20"></div>
 
-          <!-- Centered Content Inspired by EX8 & Arc.io -->
           <div class="relative z-10 text-center flex flex-col items-center max-w-3xl px-4 py-20">
             <div class="font-mono-custom text-xs text-[#8b3a2a] tracking-[0.3em] uppercase mb-6 gs-text-up flex items-center gap-2">
               <span class="w-2 h-2 rounded-full bg-[#8b3a2a] inline-block animate-ping"></span>
               x402-Native Threat Intelligence Rail
             </div>
-            
+
             <h1 class="font-pixel text-3xl sm:text-5xl lg:text-6xl tracking-tight uppercase text-[#c8c4bc] leading-[1.1] gs-text-up">
               DEVELOPING BETTER
               <br>
@@ -230,7 +216,6 @@
           </div>
         </section>
 
-        <!-- Brutalist Stats Bar (Clickable Link to /stats) -->
         <a href="/stats" title="Click to view live public telemetry & protocol explorer" class="grid grid-cols-2 md:grid-cols-4 border-t border-[#c8c4bc]/10 relative z-30 bg-[#121316] group hover:bg-[#181a20] transition-colors">
           <div class="p-6 border-r border-b md:border-b-0 border-[#c8c4bc]/10 text-center">
             <div class="font-pixel text-2xl sm:text-3xl tracking-tight text-[#c8c4bc] group-hover:text-white transition-colors">$0.001</div>
@@ -260,7 +245,6 @@
       </div>
     </div>
 
-    <!-- 01 // RECENTLY RELEASED / CURATED THREAT CATALOG (EX8 Style) -->
     <section id="feed" class="mt-28">
       <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
         <div>
@@ -276,10 +260,8 @@
         </p>
       </div>
 
-      <!-- Threat Cards Grid -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-px bg-[#c8c4bc]/10 rounded-2xl overflow-hidden border border-[#c8c4bc]/10">
-        
-        <!-- Card 1: XZ Utils -->
+
         <div class="bg-[#1a1a1a] p-8 flex flex-col justify-between group hover:bg-[#c8c4bc]/[0.02] transition-colors relative overflow-hidden">
           <div class="absolute top-0 left-0 w-full h-[1px] bg-[#8b3a2a] scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-500"></div>
           <div>
@@ -304,7 +286,6 @@
           </button>
         </div>
 
-        <!-- Card 2: Log4Shell -->
         <div class="bg-[#1a1a1a] p-8 flex flex-col justify-between group hover:bg-[#c8c4bc]/[0.02] transition-colors relative overflow-hidden">
           <div class="absolute top-0 left-0 w-full h-[1px] bg-[#8b3a2a] scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-500"></div>
           <div>
@@ -329,7 +310,6 @@
           </button>
         </div>
 
-        <!-- Card 3: MOVEit Transfer -->
         <div class="bg-[#1a1a1a] p-8 flex flex-col justify-between group hover:bg-[#c8c4bc]/[0.02] transition-colors relative overflow-hidden">
           <div class="absolute top-0 left-0 w-full h-[1px] bg-[#8b3a2a] scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-500"></div>
           <div>
@@ -357,7 +337,6 @@
       </div>
     </section>
 
-    <!-- 02 // PLAYGROUND SECTION -->
     <section id="playground" class="mt-28">
       <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
         <div>
@@ -373,26 +352,24 @@
         </p>
       </div>
 
-      <!-- Playground Card -->
       <div class="poster-shell p-[1px] rounded-2xl shadow-2xl">
         <div class="bg-[#1a1a1a] rounded-2xl p-6 sm:p-10 border border-[#c8c4bc]/10">
-          
-          <!-- Input Controls -->
+
           <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
             <div class="lg:col-span-7">
               <label class="block font-mono-custom text-xs uppercase tracking-widest text-[#c8c4bc]/50 mb-2">
                 Target CVE Identifier or Random Endpoint
               </label>
               <div class="relative">
-                <input 
-                  type="text" 
-                  id="cve-input" 
+                <input
+                  type="text"
+                  id="cve-input"
                   value="CVE-2024-3094"
                   placeholder="e.g. Any CVE (e.g. CVE-2024-38063) or /api/v1/insight"
                   class="w-full bg-[#121316] border border-[#c8c4bc]/20 rounded-xl px-4 py-3.5 text-[#c8c4bc] font-mono-custom text-sm focus:outline-none focus:border-[#8b3a2a] transition-colors"
                 />
               </div>
-              <!-- Quick Chips -->
+
               <div class="flex flex-wrap gap-2 mt-3 items-center">
                 <span class="font-mono-custom text-[0.65rem] uppercase text-[#c8c4bc]/40 mr-1">Live Feeds:</span>
                 <button onclick="setQuery('CVE-2024-3094')" class="font-mono-custom text-[0.65rem] px-2.5 py-1 rounded bg-[#121316] border border-[#c8c4bc]/10 hover:border-[#8b3a2a] text-[#c8c4bc]/70 cursor-pointer">XZ Utils</button>
@@ -403,17 +380,16 @@
               </div>
             </div>
 
-            <!-- Action Buttons -->
             <div class="lg:col-span-5 flex flex-col sm:flex-row lg:flex-col gap-3">
-              <button 
-                onclick="fetchChallenge()" 
+              <button
+                onclick="fetchChallenge()"
                 id="btn-challenge"
                 class="w-full font-mono-custom text-xs uppercase tracking-widest bg-[#121316] border border-[#8b3a2a] text-[#c8c4bc] px-5 py-3.5 rounded-xl hover:bg-[#8b3a2a]/20 transition-all flex items-center justify-center gap-2">
                 <iconify-icon icon="solar:shield-warning-linear" class="text-base text-[#8b3a2a]"></iconify-icon>
                 1. Test 402 Paywall Challenge
               </button>
-              <button 
-                onclick="simulateUnlock()" 
+              <button
+                onclick="simulateUnlock()"
                 id="btn-unlock"
                 class="w-full font-mono-custom text-xs uppercase tracking-widest bg-[#8b3a2a] text-[#c8c4bc] px-5 py-3.5 rounded-xl hover:bg-[#8b3a2a]/80 transition-all flex items-center justify-center gap-2 glow-accent">
                 <iconify-icon icon="solar:lock-unlocked-linear" class="text-base"></iconify-icon>
@@ -422,10 +398,8 @@
             </div>
           </div>
 
-          <!-- Console & Output Window -->
           <div class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
-            
-            <!-- Left Panel: Protocol Wire Console -->
+
             <div class="bg-[#121316] rounded-xl p-5 border border-[#c8c4bc]/10">
               <div class="flex justify-between items-center pb-3 border-b border-[#c8c4bc]/10">
                 <span class="font-mono-custom text-xs uppercase text-[#c8c4bc]/60 flex items-center gap-2">
@@ -437,7 +411,6 @@
               <pre id="wire-output" class="font-mono-custom text-xs text-[#c8c4bc]/70 mt-4 h-[280px] overflow-y-auto code-scroll leading-relaxed whitespace-pre-wrap">Click "1. Test 402 Paywall Challenge" to inspect the live response from the ArcX gateway...</pre>
             </div>
 
-            <!-- Right Panel: Unlocked Threat Intelligence Report -->
             <div class="bg-[#121316] rounded-xl p-5 border border-[#c8c4bc]/10 relative overflow-hidden" id="intel-panel">
               <div class="flex justify-between items-center pb-3 border-b border-[#c8c4bc]/10">
                 <span class="font-mono-custom text-xs uppercase text-[#c8c4bc]/60 flex items-center gap-2">
@@ -449,7 +422,6 @@
                 </span>
               </div>
 
-              <!-- Unlocked Card Details -->
               <div id="intel-content" class="mt-4 h-[280px] overflow-y-auto code-scroll pr-2 flex flex-col justify-center text-center">
                 <iconify-icon icon="solar:lock-keyhole-linear" class="text-4xl text-[#8b3a2a]/40 mx-auto mb-3"></iconify-icon>
                 <div class="font-mono-custom text-xs text-[#c8c4bc]/40 uppercase tracking-widest">
@@ -467,7 +439,6 @@
       </div>
     </section>
 
-    <!-- 03 // WHY AND HOW? (EX8 Style & Arc.io Thesis) -->
     <section id="architecture" class="mt-28">
       <div class="font-mono-custom text-xs text-[#8b3a2a] tracking-[0.3em] uppercase mb-3">
         [ 03 // ARCHITECTURE ]
@@ -480,8 +451,7 @@
       </p>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-px mt-10 bg-[#c8c4bc]/10 rounded-2xl overflow-hidden border border-[#c8c4bc]/10">
-        
-        <!-- Pillar 1 -->
+
         <div class="bg-[#1a1a1a] p-8 group hover:bg-[#c8c4bc]/[0.02] transition-colors relative">
           <div class="font-pixel text-base text-[#8b3a2a]">01</div>
           <h3 class="font-sans font-light text-base tracking-tight uppercase text-white mt-4">
@@ -492,7 +462,6 @@
           </p>
         </div>
 
-        <!-- Pillar 2 -->
         <div class="bg-[#1a1a1a] p-8 group hover:bg-[#c8c4bc]/[0.02] transition-colors relative">
           <div class="font-pixel text-base text-[#8b3a2a]">02</div>
           <h3 class="font-sans font-light text-base tracking-tight uppercase text-white mt-4">
@@ -503,7 +472,6 @@
           </p>
         </div>
 
-        <!-- Pillar 3 -->
         <div class="bg-[#1a1a1a] p-8 group hover:bg-[#c8c4bc]/[0.02] transition-colors relative">
           <div class="font-pixel text-base text-[#8b3a2a]">03</div>
           <h3 class="font-sans font-light text-base tracking-tight uppercase text-white mt-4">
@@ -517,7 +485,6 @@
       </div>
     </section>
 
-    <!-- 04 // SDK INTEGRATION CODE MATRIX (Nikita Khvatov Pill Tabs Style) -->
     <section id="integration" class="mt-28">
       <div class="font-mono-custom text-xs text-[#8b3a2a] tracking-[0.3em] uppercase mb-3">
         [ 04 // DEVELOPER SDK &amp; AGENT INTEGRATION ]
@@ -529,11 +496,9 @@
         Ready-to-use snippets for AI agents, Python pipelines, and Node.js microservices.
       </p>
 
-      <!-- Code Box -->
       <div class="mt-8 poster-shell p-[1px] rounded-2xl shadow-2xl">
         <div class="bg-[#1a1a1a] rounded-2xl p-6 sm:p-8 border border-[#c8c4bc]/10">
-          
-          <!-- Code Tabs (Pill style from Nikita Khvatov portfolio) -->
+
           <div class="flex flex-wrap items-center justify-between border-b border-[#c8c4bc]/10 pb-4 gap-4">
             <div class="flex flex-wrap items-center gap-2 font-mono-custom text-xs uppercase tracking-wider">
               <button onclick="switchTab('ts')" id="tab-ts" class="px-4 py-2 rounded-full bg-white text-black font-semibold transition-all cursor-pointer shadow-md">Node.js (viem)</button>
@@ -547,7 +512,6 @@
             </button>
           </div>
 
-          <!-- Code Snippet Output -->
           <div class="mt-6">
             <pre id="code-block" class="font-mono-custom text-xs text-[#c8c4bc] overflow-x-auto code-scroll leading-relaxed p-4 bg-[#121316] rounded-xl border border-[#c8c4bc]/10"></pre>
           </div>
@@ -556,7 +520,6 @@
       </div>
     </section>
 
-    <!-- 05 // PRODUCTION ENDPOINTS TABLE (Nikita Khvatov Table Style) -->
     <section id="endpoints" class="mt-28">
       <div class="font-mono-custom text-xs text-[#8b3a2a] tracking-[0.3em] uppercase mb-3">
         [ 05 // API ENDPOINTS SPECIFICATION ]
@@ -619,7 +582,6 @@
       </div>
     </section>
 
-    <!-- FOOTER -->
     <footer class="mt-28 mb-12 border-t border-[#c8c4bc]/10 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
       <div class="flex items-center gap-3">
         <span class="font-pixel text-lg tracking-wider text-[#c8c4bc]">
@@ -643,11 +605,8 @@
     </footer>
   </main>
 
-  <!-- JAVASCRIPT: Three.js 3D Background & Interactive Playground Logic -->
   <script>
-    // -----------------------------------------------------------------
-    // 0. Mobile Menu Toggle
-    // -----------------------------------------------------------------
+
     function toggleMobileMenu() {
       const nav = document.getElementById('mobile-nav');
       nav.classList.toggle('active');
@@ -657,9 +616,6 @@
       nav.classList.remove('active');
     }
 
-    // -----------------------------------------------------------------
-    // 1. Three.js 3D Background (Metallic Icosahedron with Wireframe Overlay)
-    // -----------------------------------------------------------------
     const container = document.getElementById('webgl-container');
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
@@ -670,7 +626,6 @@
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     container.appendChild(renderer.domElement);
 
-    // Geometric Icosahedron with Dual Shells
     const geometry = new THREE.IcosahedronGeometry(3, 2);
     const material = new THREE.MeshPhysicalMaterial({
       color: 0x1a1a1a,
@@ -689,7 +644,6 @@
     globe.add(wireframe);
     scene.add(globe);
 
-    // Lighting
     scene.add(new THREE.AmbientLight(0xc8c4bc, 0.4));
     const d1 = new THREE.DirectionalLight(0x8b3a2a, 3.2);
     d1.position.set(5, 3, 4);
@@ -699,7 +653,6 @@
     d2.position.set(-5, -4, -2);
     scene.add(d2);
 
-    // Mouse parallax interaction
     let mouseX = 0, mouseY = 0;
     const heroStage = document.getElementById('hero-stage');
     if (heroStage) {
@@ -733,11 +686,9 @@
       }
     });
 
-    // GSAP Intro
     gsap.to(".gs-reveal", { opacity: 1, duration: 1.5, ease: "power2.inOut", delay: 0.2 });
     gsap.from(".gs-text-up", { y: 30, opacity: 0, duration: 1.2, stagger: 0.15, ease: "expo.out", delay: 0.6 });
 
-    // Live System Clock
     setInterval(() => {
       const now = new Date();
       const timeStr = now.toISOString().split('T')[1].split('.')[0] + 'Z';
@@ -745,9 +696,6 @@
       if (el) el.innerText = `SYS.SYNC // ${timeStr}`;
     }, 1000);
 
-    // -----------------------------------------------------------------
-    // 2. Telemetry Polling from ArcX API
-    // -----------------------------------------------------------------
     async function updateTelemetry() {
       try {
         const res = await fetch('/api/v1/stats');
@@ -756,15 +704,12 @@
           document.getElementById('metric-settled').innerText = data.stats.totalSettled || 0;
         }
       } catch (err) {
-        // Fallback gracefully
+
       }
     }
     updateTelemetry();
     setInterval(updateTelemetry, 5000);
 
-    // -----------------------------------------------------------------
-    // 3. Interactive Playground Controls
-    // -----------------------------------------------------------------
     function setQuery(cve) {
       document.getElementById('cve-input').value = cve;
       const el = document.getElementById('playground');
@@ -782,7 +727,7 @@
 
       const consoleEl = document.getElementById('wire-output');
       const statusEl = document.getElementById('wire-status');
-      
+
       statusEl.innerText = "QUERYING...";
       statusEl.className = "font-mono-custom text-[0.65rem] text-amber-400";
       consoleEl.innerText = `→ Sending GET ${url}...\n→ Expecting x402 Payment Challenge...`;
@@ -831,7 +776,6 @@
         `→ [Client] Resending with PAYMENT-SIGNATURE header...\n` +
         `→ Settle on Arc Mainnet (Sequencer floor >= 20 Gwei)...`;
 
-      // Presentation of unlocked intelligence
       setTimeout(async () => {
         statusEl.innerText = "200 OK SETTLED";
         statusEl.className = "font-mono-custom text-[0.65rem] text-emerald-400 font-bold";
@@ -917,9 +861,6 @@
       }, 700);
     }
 
-    // -----------------------------------------------------------------
-    // 4. Code Matrix Switcher
-    // -----------------------------------------------------------------
     const snippets = {
       ts: `// Node.js / TypeScript Agent using viem & x402
 import { createWalletClient, http, toHex, keccak256, encodePacked } from 'viem';
@@ -1061,21 +1002,21 @@ export const arcxThreatTool = new DynamicStructuredTool({
   }),
   func: async ({ cveId }) => {
     const url = \`http://localhost:4402/api/v1/lookup/\${cveId}\`;
-    
+
     // 1. Trigger x402 Payment Challenge
     const challengeRes = await fetch(url);
     if (challengeRes.status === 402) {
       const challenge = await challengeRes.json();
-      
+
       // 2. Sign EIP-3009 payment authorization header off-chain
       const paymentSignature = await signArcXAuthorization(challenge.accepts[0], \`GET:/api/v1/lookup/\${cveId}\`);
-      
+
       // 3. Unlock full intelligence dossier
       const intelRes = await fetch(url, {
         headers: { 'PAYMENT-SIGNATURE': paymentSignature }
       });
       const data = await intelRes.json();
-      
+
       return JSON.stringify({
         title: data.insight.title,
         severity: data.insight.severity,
@@ -1085,7 +1026,7 @@ export const arcxThreatTool = new DynamicStructuredTool({
         receipt: data.payment.txHash
       }, null, 2);
     }
-    
+
     return challengeRes.text();
   },
 });`,
@@ -1130,7 +1071,7 @@ curl http://localhost:4402/api/v1/stats`
     function switchTab(tab) {
       if (!snippets[tab]) return;
       activeTab = tab;
-      
+
       const codeBlock = document.getElementById('code-block');
       if (codeBlock) {
         codeBlock.textContent = getSnippet(tab);
@@ -1196,7 +1137,6 @@ curl http://localhost:4402/api/v1/stats`
       }
     }
 
-    // Attach listeners and expose globally
     window.switchTab = switchTab;
     window.copyCode = copyCode;
     window.setQuery = setQuery;
@@ -1205,7 +1145,6 @@ curl http://localhost:4402/api/v1/stats`
     window.toggleMobileMenu = toggleMobileMenu;
     window.closeMobileMenu = closeMobileMenu;
 
-    // Explicit event listener bindings for complete CSP resilience
     function attachEventListeners() {
       ['ts', 'python', 'eliza', 'curl'].forEach(t => {
         const el = document.getElementById('tab-' + t);
@@ -1221,8 +1160,7 @@ curl http://localhost:4402/api/v1/stats`
       attachEventListeners();
     }
 
-    // Initialize with TypeScript snippet
     switchTab('ts');
-  </script>
+</script>
 </body>
 </html>

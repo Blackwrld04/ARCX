@@ -4,17 +4,9 @@ import { logger } from '../utils/logger.js';
 
 const router = Router();
 
-/**
- * GET /api/v1/lookup/:cveId
- *
- * Returns enriched data for a specific CVE from curated threats, local cache,
- * or live external feeds (NIST NVD 2.0, CISA KEV, OSV.dev).
- * This endpoint is paywalled via x402Gate middleware.
- */
 router.get('/:cveId', async (req, res) => {
   const cveId = req.params.cveId.toUpperCase().trim();
 
-  // Validate CVE format
   if (!/^CVE-\d{4}-\d{4,}$/.test(cveId)) {
     return res.status(400).json({
       error: 'INVALID_CVE_FORMAT',

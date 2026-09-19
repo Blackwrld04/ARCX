@@ -5,14 +5,6 @@ import { recordPending, recordSettlement, recordFailure, resetPending, findByNon
 import { getUsdcDomain } from '../utils/arc.js';
 import { logger } from '../utils/logger.js';
 
-/**
- * ArcX x402 payment gate middleware.
- *
- * Implements the x402 protocol specification:
- * - If no payment header present: responds 402 with PAYMENT-REQUIRED challenge and payment requirements.
- * - If PAYMENT-SIGNATURE (or X-PAYMENT) header present: verifies signature, settles on Arc mainnet, and passes through.
- * - If payment nonce was already settled: returns cached response immediately (idempotent, no double-settlement).
- */
 export function x402Gate(options = {}) {
   const {
     price = config.pricePerCall,
@@ -20,12 +12,11 @@ export function x402Gate(options = {}) {
   } = options;
 
   return async (req, res, next) => {
-    // Check both standard v2 header and legacy x-payment header
+
     const paymentHeader = req.headers['payment-signature'] || req.headers['x-payment'];
 
     const domain = getUsdcDomain();
 
-    // Helper to build 402 challenge terms
     const buildChallenge = (errorMessage = null) => {
       const requirements = {
         x402Version: 2,
@@ -58,7 +49,6 @@ export function x402Gate(options = {}) {
       return requirements;
     };
 
-    // --- 1. No payment header: Return 402 challenge ---
     if (!paymentHeader) {
       const challenge = buildChallenge();
       const challengeJson = JSON.stringify(challenge);
@@ -67,10 +57,9 @@ export function x402Gate(options = {}) {
       return res.status(402).json(challenge);
     }
 
-    // --- 2. Decode payment payload ---
     let payment;
     try {
-      // Can be base64-encoded JSON or direct JSON string
+
       const raw = paymentHeader.trim().startsWith('{')
         ? paymentHeader.trim()
         : Buffer.from(paymentHeader, 'base64').toString('utf-8');
@@ -85,7 +74,6 @@ export function x402Gate(options = {}) {
 
     const { from, to, value, validAfter, validBefore, nonce, signature, bindingSalt } = payment;
 
-    // Validate required fields
     if (!from || !to || !value || !nonce || !signature) {
       return res.status(400).json({
         error: 'MISSING_FIELDS',
@@ -93,7 +81,6 @@ export function x402Gate(options = {}) {
       });
     }
 
-    // --- 3. Idempotency & status check: has this nonce already been processed? ---
     const existing = findByNonce(nonce);
     let paymentId;
 
@@ -117,7 +104,7 @@ export function x402Gate(options = {}) {
           try {
             return res.status(200).json(JSON.parse(existing.response_data));
           } catch {
-            // Fall through if json parse fails
+
           }
         }
 
@@ -132,7 +119,7 @@ export function x402Gate(options = {}) {
         paymentId = existing.id;
         resetPending(paymentId);
       } else {
-        // Status is PENDING
+
         logger.warn({ nonce }, 'Duplicate nonce — payment currently being processed');
         return res.status(409).json({
           error: 'DUPLICATE_NONCE',
@@ -141,7 +128,6 @@ export function x402Gate(options = {}) {
       }
     }
 
-    // --- 4. Pre-chain verification (Signature, timestamps, amounts, request binding) ---
     const verification = await verifyPayment(payment, {
       endpoint: req.originalUrl,
       method: req.method,
@@ -153,7 +139,6 @@ export function x402Gate(options = {}) {
       return res.status(402).json(challenge);
     }
 
-    // --- 5. Record pending payment in ledger if not already existing ---
     if (!paymentId) {
       try {
         paymentId = recordPending({
@@ -177,7 +162,6 @@ export function x402Gate(options = {}) {
       }
     }
 
-    // --- 6. On-chain settlement on Arc mainnet ---
     let settlement;
     try {
       settlement = await settleOnChain(payment);
@@ -190,7 +174,6 @@ export function x402Gate(options = {}) {
       });
     }
 
-    // --- 7. Attach payment details and intercept response to cache ---
     req.paymentId = paymentId;
     req.paymentTxHash = settlement.txHash;
     req.paymentBlockNumber = settlement.blockNumber;
@@ -212,7 +195,6 @@ export function x402Gate(options = {}) {
         logger.error({ err: err.message, paymentId }, 'Failed to update settlement record in database');
       }
 
-      // Standard v2 and legacy receipt headers
       const receipt = {
         txHash: settlement.txHash,
         network: 'eip155:5042',

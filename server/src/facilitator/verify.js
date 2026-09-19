@@ -3,21 +3,9 @@ import { config } from '../config.js';
 import { getUsdcDomain, TRANSFER_WITH_AUTH_TYPES, computeBoundNonce } from '../utils/arc.js';
 import { logger } from '../utils/logger.js';
 
-/**
- * Validates an EIP-3009 payment authorization before submitting on-chain.
- * This catches bad signatures, tampering, and expired nonces early, saving gas.
- *
- * @param {Object} payment - The payment object from the x402 header
- * @param {Object} [expectedRequest] - Optional request context for binding validation
- * @param {string} [expectedRequest.endpoint] - Target URL path
- * @param {string} [expectedRequest.method] - HTTP method
- *
- * Returns { valid: true } or { valid: false, reason: string }
- */
 export async function verifyPayment(payment, expectedRequest = null) {
   const { from, to, value, validAfter, validBefore, nonce, signature, bindingSalt } = payment;
 
-  // 1. Check the recipient matches our configured payTo address
   if (!to || to.toLowerCase() !== config.payToAddress.toLowerCase()) {
     return {
       valid: false,
@@ -25,7 +13,6 @@ export async function verifyPayment(payment, expectedRequest = null) {
     };
   }
 
-  // 2. Check the amount meets minimum required price
   if (BigInt(value) < BigInt(config.pricePerCall)) {
     return {
       valid: false,
@@ -33,7 +20,6 @@ export async function verifyPayment(payment, expectedRequest = null) {
     };
   }
 
-  // 3. Check timestamp validity window
   const now = BigInt(Math.floor(Date.now() / 1000));
 
   if (BigInt(validAfter) > now) {
@@ -50,7 +36,6 @@ export async function verifyPayment(payment, expectedRequest = null) {
     };
   }
 
-  // 4. Validate cryptographic request binding if bindingSalt is provided (Correction 6)
   if (bindingSalt && expectedRequest?.endpoint && expectedRequest?.method) {
     const expectedNonce = computeBoundNonce(
       bindingSalt,
@@ -69,7 +54,6 @@ export async function verifyPayment(payment, expectedRequest = null) {
     }
   }
 
-  // 5. Verify the EIP-712 signature recovers to the claimed `from` address
   try {
     const message = {
       from,

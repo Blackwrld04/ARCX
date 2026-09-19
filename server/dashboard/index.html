@@ -6,31 +6,25 @@
   <title>ArcX — Admin Telemetry &amp; Payment Ledger</title>
   <meta name="description" content="Real-time payment monitoring and on-chain settlement ledger for ArcX x402 on Circle's Arc Mainnet (Chain 5042).">
 
-  <!-- Tailwind CSS, Icons & 3D WebGL -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
-  <!-- Typography: Silkscreen (Pixel), Inter, JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Inter:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@100;300;400;500;600;700&display=swap" rel="stylesheet">
-  
-  <!-- Dashboard Custom Styles -->
+
   <link rel="stylesheet" href="styles.css">
 </head>
 <body class="antialiased min-h-screen relative overflow-x-hidden selection:bg-[#8b3a2a] selection:text-[#c8c4bc]">
 
-  <!-- Architectural Outer Guide Lines -->
   <div class="fixed top-0 bottom-0 left-4 sm:left-12 w-[1px] bg-[#c8c4bc]/10 z-0 pointer-events-none"></div>
   <div class="fixed top-0 bottom-0 right-4 sm:right-12 w-[1px] bg-[#c8c4bc]/10 z-0 pointer-events-none"></div>
 
-  <!-- NAVIGATION -->
   <nav class="sticky top-0 z-50 backdrop-blur-md bg-[#121316]/85 border-b border-[#c8c4bc]/10">
     <div class="max-w-[1240px] mx-auto px-6 sm:px-16 h-16 flex items-center justify-between">
-      
-      <!-- Logo & Brand (Text Only) -->
+
       <div class="flex items-center gap-3">
         <span class="font-pixel text-2xl tracking-wider text-[#c8c4bc]">
           ARC<span class="text-[#8b3a2a]">X</span>
@@ -40,7 +34,6 @@
         </span>
       </div>
 
-      <!-- Navigation Links -->
       <div class="hidden md:flex items-center gap-8 font-mono-custom text-xs uppercase tracking-widest text-[#c8c4bc]/60">
         <a href="/" class="hover:text-[#8b3a2a] transition-colors flex items-center gap-1.5">
           <iconify-icon icon="solar:arrow-left-linear"></iconify-icon>
@@ -53,7 +46,6 @@
         </a>
       </div>
 
-      <!-- Status & Network Badges -->
       <div class="flex items-center gap-3">
         <span class="hidden sm:flex items-center gap-2 font-mono-custom text-[0.7rem] uppercase text-[#c8c4bc]/50 bg-[#1a1a1a] px-3 py-1.5 rounded-md border border-[#c8c4bc]/10">
           <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -67,18 +59,14 @@
     </div>
   </nav>
 
-  <!-- MAIN DASHBOARD CONTENT -->
   <main class="max-w-[1240px] mx-auto px-6 sm:px-16 pt-8 pb-20 relative z-20">
-    
-    <!-- HERO / TELEMETRY BANNER WITH 3D WEBGL -->
+
     <div class="poster-shell p-[1px] rounded-2xl shadow-2xl shadow-black/80 mb-12">
       <div class="bg-[#121316]/95 backdrop-blur-sm rounded-2xl relative overflow-hidden">
-        
-        <!-- Background Grid Texture & Radial Ambient -->
+
         <div class="absolute inset-0 pointer-events-none opacity-[0.03]" style="background-image: linear-gradient(to right, #c8c4bc 1px, transparent 1px); background-size: 48px 100%;"></div>
         <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#8b3a2a]/10 rounded-full blur-[100px] pointer-events-none"></div>
 
-        <!-- Telemetry Header -->
         <header class="flex justify-between items-center p-6 border-b border-[#c8c4bc]/10 relative z-30">
           <div class="flex items-center gap-4">
             <iconify-icon icon="solar:server-square-linear" class="text-xl text-[#8b3a2a]"></iconify-icon>
@@ -92,17 +80,14 @@
           </div>
         </header>
 
-        <!-- Stage with Embedded 3D Metallic Icosahedron -->
         <section class="relative min-h-[360px] flex items-center justify-between px-8 py-10 overflow-hidden">
           <div id="webgl-container" class="absolute inset-0 z-0 mix-blend-screen opacity-60"></div>
-          
-          <!-- Corner Reticles -->
+
           <div class="absolute top-6 left-6 w-4 h-4 border-t border-l border-[#8b3a2a] z-20"></div>
           <div class="absolute top-6 right-6 w-4 h-4 border-t border-r border-[#8b3a2a] z-20"></div>
           <div class="absolute bottom-6 left-6 w-4 h-4 border-b border-l border-[#8b3a2a] z-20"></div>
           <div class="absolute bottom-6 right-6 w-4 h-4 border-b border-r border-[#8b3a2a] z-20"></div>
 
-          <!-- Hero Text -->
           <div class="relative z-10 max-w-xl">
             <div class="font-mono-custom text-[0.7rem] text-[#8b3a2a] tracking-[0.25em] uppercase mb-3 flex items-center gap-2">
               <span class="w-2 h-2 rounded-full bg-[#8b3a2a] inline-block animate-ping"></span>
@@ -118,7 +103,6 @@
             </p>
           </div>
 
-          <!-- Quick Action Buttons -->
           <div class="relative z-10 hidden lg:flex flex-col gap-3">
             <button onclick="fetchData()" class="font-mono-custom text-xs uppercase tracking-widest bg-[#1a1a1a] border border-[#8b3a2a] text-[#c8c4bc] px-5 py-3 rounded-xl hover:bg-[#8b3a2a] hover:text-white transition-all flex items-center gap-2">
               <iconify-icon icon="solar:restart-linear" class="text-base text-[#8b3a2a]"></iconify-icon>
@@ -131,7 +115,6 @@
           </div>
         </section>
 
-        <!-- BRUTALIST METRICS BAR (Matches Landing Page Style) -->
         <section class="grid grid-cols-2 md:grid-cols-4 border-t border-[#c8c4bc]/10 relative z-30 bg-[#121316]">
           <div class="p-6 border-r border-b md:border-b-0 border-[#c8c4bc]/10 text-center">
             <div class="font-pixel text-2xl sm:text-3xl tracking-tight text-[#c8c4bc] flex items-center justify-center gap-1">
@@ -142,7 +125,7 @@
               Total Revenue
             </div>
           </div>
-          
+
           <div class="p-6 border-r border-b md:border-b-0 border-[#c8c4bc]/10 text-center">
             <div class="font-pixel text-2xl sm:text-3xl tracking-tight text-[#c8c4bc]" id="total-payments">
               0
@@ -171,7 +154,6 @@
           </div>
         </section>
 
-        <!-- LIVE THREAT FEEDS INTEGRATION BAR -->
         <div class="border-t border-[#c8c4bc]/10 px-6 py-3 bg-[#0d0e11] flex flex-wrap items-center justify-between gap-4 text-xs font-mono-custom">
           <div class="flex items-center gap-2">
             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
@@ -191,7 +173,6 @@
       </div>
     </div>
 
-    <!-- 01 // x402 PROTOCOL FLOW SECTION -->
     <section class="mb-16">
       <div class="font-mono-custom text-xs text-[#8b3a2a] tracking-[0.3em] uppercase mb-3">
         [ 01 // ARCHITECTURE &amp; CIRCUIT ]
@@ -204,8 +185,7 @@
       </p>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
-        
-        <!-- Step 1 -->
+
         <div class="bg-[#1a1a1a] p-6 rounded-xl border border-[#c8c4bc]/10 relative group hover:border-[#8b3a2a]/50 transition-colors">
           <div class="flex items-center justify-between mb-4">
             <span class="font-pixel text-xs text-[#8b3a2a]">01</span>
@@ -217,7 +197,6 @@
           </p>
         </div>
 
-        <!-- Step 2 -->
         <div class="bg-[#1a1a1a] p-6 rounded-xl border border-[#8b3a2a]/40 relative group shadow-lg shadow-[#8b3a2a]/10">
           <div class="flex items-center justify-between mb-4">
             <span class="font-pixel text-xs text-[#8b3a2a]">402</span>
@@ -229,7 +208,6 @@
           </p>
         </div>
 
-        <!-- Step 3 -->
         <div class="bg-[#1a1a1a] p-6 rounded-xl border border-[#c8c4bc]/10 relative group hover:border-[#8b3a2a]/50 transition-colors">
           <div class="flex items-center justify-between mb-4">
             <span class="font-pixel text-xs text-[#8b3a2a]">03</span>
@@ -241,7 +219,6 @@
           </p>
         </div>
 
-        <!-- Step 4 -->
         <div class="bg-[#1a1a1a] p-6 rounded-xl border border-emerald-500/40 relative group shadow-lg shadow-emerald-500/10">
           <div class="flex items-center justify-between mb-4">
             <span class="font-pixel text-xs text-emerald-400">200</span>
@@ -256,7 +233,6 @@
       </div>
     </section>
 
-    <!-- 02 // LIVE PAYMENT LEDGER FEED -->
     <section class="mb-16">
       <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-6 gap-4">
         <div>
@@ -267,18 +243,16 @@
             Settlement Ledger
           </h2>
         </div>
-        
-        <!-- Refresh Action Button -->
-        <button 
-          id="refresh-btn" 
-          onclick="fetchData()" 
+
+        <button
+          id="refresh-btn"
+          onclick="fetchData()"
           class="font-mono-custom text-xs uppercase tracking-wider bg-[#1a1a1a] hover:bg-[#8b3a2a] text-[#c8c4bc] hover:text-white px-4 py-2.5 rounded-lg border border-[#c8c4bc]/20 transition-all flex items-center gap-2 self-start sm:self-auto">
           <iconify-icon icon="solar:restart-linear" class="text-base"></iconify-icon>
           <span>Refresh Feed</span>
         </button>
       </div>
 
-      <!-- Ledger Table Container in Poster Shell -->
       <div class="poster-shell p-[1px] rounded-2xl shadow-2xl">
         <div class="bg-[#1a1a1a] rounded-2xl overflow-hidden border border-[#c8c4bc]/10">
           <div class="overflow-x-auto">
@@ -309,7 +283,6 @@
       </div>
     </section>
 
-    <!-- 03 // QUICK START & GATEWAY TESTING -->
     <section class="mb-16">
       <div class="font-mono-custom text-xs text-[#8b3a2a] tracking-[0.3em] uppercase mb-3">
         [ 03 // DIAGNOSTIC &amp; CLI HARNESS ]
@@ -319,8 +292,7 @@
       </h2>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-        
-        <!-- Command 1 -->
+
         <div class="bg-[#1a1a1a] p-6 rounded-xl border border-[#c8c4bc]/10 flex flex-col justify-between">
           <div>
             <div class="font-mono-custom text-xs text-[#8b3a2a] uppercase tracking-wider">1. Check Public Stats</div>
@@ -333,7 +305,6 @@
           </div>
         </div>
 
-        <!-- Command 2 -->
         <div class="bg-[#1a1a1a] p-6 rounded-xl border border-[#c8c4bc]/10 flex flex-col justify-between">
           <div>
             <div class="font-mono-custom text-xs text-[#8b3a2a] uppercase tracking-wider">2. Test 402 Paywall</div>
@@ -346,7 +317,6 @@
           </div>
         </div>
 
-        <!-- Command 3 -->
         <div class="bg-[#1a1a1a] p-6 rounded-xl border border-[#c8c4bc]/10 flex flex-col justify-between">
           <div>
             <div class="font-mono-custom text-xs text-[#8b3a2a] uppercase tracking-wider">3. Run Automated Agent</div>
@@ -362,7 +332,6 @@
       </div>
     </section>
 
-    <!-- FOOTER -->
     <footer class="border-t border-[#c8c4bc]/10 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
       <div class="flex items-center gap-3">
         <span class="font-pixel text-lg tracking-wider text-[#c8c4bc]">
@@ -384,11 +353,8 @@
 
   </main>
 
-  <!-- JAVASCRIPT: Three.js 3D Background & Dashboard Telemetry -->
   <script>
-    // -----------------------------------------------------------------
-    // 1. Three.js 3D Background (Metallic Icosahedron with Wireframe Overlay)
-    // -----------------------------------------------------------------
+
     const container = document.getElementById('webgl-container');
     if (container) {
       const scene = new THREE.Scene();
@@ -418,7 +384,6 @@
       globe.add(wireframe);
       scene.add(globe);
 
-      // Ambient & Directional Lighting
       scene.add(new THREE.AmbientLight(0xc8c4bc, 0.4));
       const d1 = new THREE.DirectionalLight(0x8b3a2a, 3.2);
       d1.position.set(5, 3, 4);
@@ -448,18 +413,14 @@
       });
     }
 
-    // -----------------------------------------------------------------
-    // 2. Live System Timestamp
-    // -----------------------------------------------------------------
     setInterval(() => {
       const now = new Date();
       const timeStr = now.toISOString().split('T')[1].split('.')[0] + 'Z';
       const el = document.getElementById('live-time');
       if (el) el.innerText = `SYS.SYNC // ${timeStr}`;
     }, 1000);
-  </script>
+</script>
 
-  <!-- Dashboard Application Logic -->
   <script src="app.js"></script>
 </body>
 </html>

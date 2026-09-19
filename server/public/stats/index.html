@@ -6,11 +6,9 @@
   <title>ArcX — Public Telemetry &amp; Protocol Specs</title>
   <meta name="description" content="Public real-time metrics, settlement telemetry, and live threat feed coverage for ArcX on Circle's Arc Mainnet (Chain 5042).">
 
-  <!-- Tailwind CSS & Icons -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
 
-  <!-- Typography: Silkscreen (Pixel/Brutalist), Inter, JetBrains Mono (Identical to Main Page) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Inter:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@100;300;400;500;600;700&display=swap" rel="stylesheet">
@@ -61,25 +59,21 @@
       scroll-behavior: smooth;
     }
 
-    /* JSON syntax highlighter */
     .json-key { color: #93c5fd; }
     .json-string { color: #86efac; }
     .json-number { color: #fca5a5; }
     .json-boolean { color: #fcd34d; }
     .json-null { color: #cbd5e1; }
-  </style>
+</style>
 </head>
 <body class="antialiased min-h-screen relative overflow-x-hidden selection:bg-[#8b3a2a] selection:text-[#c8c4bc]">
 
-  <!-- Outer Architectural Guide Lines (Identical to Main Page) -->
   <div class="fixed top-0 bottom-0 left-4 sm:left-12 w-[1px] bg-[#c8c4bc]/10 z-0 pointer-events-none"></div>
   <div class="fixed top-0 bottom-0 right-4 sm:right-12 w-[1px] bg-[#c8c4bc]/10 z-0 pointer-events-none"></div>
 
-  <!-- NAV (Identical to Main Page) -->
   <nav class="sticky top-0 z-50 backdrop-blur-md bg-[#121316]/85 border-b border-[#c8c4bc]/10">
     <div class="max-w-[1440px] mx-auto px-4 sm:px-10 lg:px-16 h-16 flex items-center justify-between">
-      
-      <!-- Brand Logo -->
+
       <div class="flex items-center gap-3">
         <a href="/" class="font-pixel text-2xl tracking-wider text-[#c8c4bc] hover:text-white transition-colors">
           ARC<span class="text-[#8b3a2a]">X</span>
@@ -89,7 +83,6 @@
         </span>
       </div>
 
-      <!-- Links -->
       <div class="hidden md:flex items-center gap-5 lg:gap-7 font-mono-custom text-xs uppercase tracking-widest text-[#c8c4bc]/60">
         <a href="/" class="hover:text-[#8b3a2a] transition-colors flex items-center gap-1.5">
           <iconify-icon icon="solar:arrow-left-linear"></iconify-icon>
@@ -102,7 +95,6 @@
         <a href="#json-section" class="hover:text-[#8b3a2a] transition-colors">Raw JSON</a>
       </div>
 
-      <!-- Network Status Tag & View Switcher -->
       <div class="flex items-center gap-3">
         <span class="hidden sm:flex items-center gap-2 font-mono-custom text-[0.7rem] uppercase text-[#c8c4bc]/50 bg-[#1a1a1a] px-3 py-1.5 rounded-md border border-[#c8c4bc]/10">
           <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -116,18 +108,14 @@
     </div>
   </nav>
 
-  <!-- MAIN CONTAINER -->
   <main class="max-w-[1440px] mx-auto px-4 sm:px-10 lg:px-16 pt-10 pb-20 relative z-20">
 
-    <!-- HERO POSTER SHELL (Identical Brutalist Container as Main Page) -->
     <div class="poster-shell p-[1px] rounded-2xl shadow-2xl shadow-black/80">
       <div class="bg-[#121316]/95 backdrop-blur-sm rounded-2xl relative overflow-hidden">
-        
-        <!-- Subtle Matrix Grid Texture -->
+
         <div class="absolute inset-0 pointer-events-none opacity-[0.03]" style="background-image: linear-gradient(to right, #c8c4bc 1px, transparent 1px); background-size: 48px 100%;"></div>
         <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[650px] bg-[#8b3a2a]/10 rounded-full blur-[120px] pointer-events-none"></div>
 
-        <!-- Technical Header Bar -->
         <header class="flex justify-between items-center p-6 border-b border-[#c8c4bc]/10 relative z-30">
           <div class="flex items-center gap-4">
             <iconify-icon icon="solar:pulse-2-linear" class="text-xl text-[#8b3a2a]"></iconify-icon>
@@ -141,10 +129,8 @@
           </div>
         </header>
 
-        <!-- Centered Banner with Corner Reticles -->
         <div class="relative py-16 px-6 sm:px-12 text-center flex flex-col items-center">
-          
-          <!-- Corner Reticles (Iconic ArcX Style) -->
+
           <div class="absolute top-6 left-6 w-4 h-4 border-t border-l border-[#8b3a2a] z-20"></div>
           <div class="absolute top-6 right-6 w-4 h-4 border-t border-r border-[#8b3a2a] z-20"></div>
           <div class="absolute bottom-6 left-6 w-4 h-4 border-b border-l border-[#8b3a2a] z-20"></div>
@@ -165,7 +151,6 @@
             Real-time on-chain settlement ledger on Circle's Arc Mainnet, live multi-tiered threat feed synchronizations, and public x402 payment specifications.
           </p>
 
-          <!-- Action Buttons -->
           <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
             <button onclick="fetchStats()" id="btn-refresh" class="font-mono-custom text-xs uppercase tracking-widest bg-[#8b3a2a] text-[#c8c4bc] px-6 py-3 rounded-xl hover:bg-[#8b3a2a]/80 transition-all glow-accent flex items-center justify-center gap-2">
               <iconify-icon icon="solar:refresh-linear" id="icon-refresh" class="text-base"></iconify-icon>
@@ -182,7 +167,6 @@
           </div>
         </div>
 
-        <!-- Brutalist Stats Bar (Identical 4-Col Grid from Main Page) -->
         <section class="grid grid-cols-2 md:grid-cols-4 border-t border-[#c8c4bc]/10 relative z-30 bg-[#121316]">
           <div class="p-6 border-r border-b md:border-b-0 border-[#c8c4bc]/10 text-center">
             <div id="stat-price" class="font-pixel text-2xl sm:text-3xl tracking-tight text-[#c8c4bc]">$0.001</div>
@@ -213,7 +197,6 @@
       </div>
     </div>
 
-    <!-- 01 // SMART CONTRACT & SETTLEMENT SPECS -->
     <section id="architecture" class="mt-24">
       <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
         <div>
@@ -230,8 +213,7 @@
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        
-        <!-- Card 1: Network Descriptor -->
+
         <div class="bg-[#1a1a1a] border border-[#c8c4bc]/10 rounded-xl p-6 border-glow transition-all">
           <div class="flex items-center justify-between mb-4">
             <span class="font-mono-custom text-xs text-[#8b3a2a] uppercase tracking-widest">[ NETWORK SPEC ]</span>
@@ -245,7 +227,6 @@
           </div>
         </div>
 
-        <!-- Card 2: USDC Asset Contract -->
         <div class="bg-[#1a1a1a] border border-[#c8c4bc]/10 rounded-xl p-6 border-glow transition-all">
           <div class="flex items-center justify-between mb-4">
             <span class="font-mono-custom text-xs text-[#8b3a2a] uppercase tracking-widest">[ SETTLEMENT ASSET ]</span>
@@ -262,7 +243,6 @@
           </div>
         </div>
 
-        <!-- Card 3: Pay-To Facilitator Address -->
         <div class="bg-[#1a1a1a] border border-[#c8c4bc]/10 rounded-xl p-6 border-glow transition-all">
           <div class="flex items-center justify-between mb-4">
             <span class="font-mono-custom text-xs text-[#8b3a2a] uppercase tracking-widest">[ VERIFIED RECIPIENT ]</span>
@@ -279,7 +259,6 @@
           </div>
         </div>
 
-        <!-- Card 4: Ledger Immutability & Trigger -->
         <div class="bg-[#1a1a1a] border border-[#c8c4bc]/10 rounded-xl p-6 border-glow transition-all">
           <div class="flex items-center justify-between mb-4">
             <span class="font-mono-custom text-xs text-[#8b3a2a] uppercase tracking-widest">[ LEDGER SECURITY ]</span>
@@ -296,7 +275,6 @@
       </div>
     </section>
 
-    <!-- 02 // LIVE THREAT INTELLIGENCE FEEDS -->
     <section id="feeds" class="mt-24">
       <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
         <div>
@@ -313,8 +291,7 @@
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        
-        <!-- Source 1: CISA KEV -->
+
         <div class="bg-[#1a1a1a] border border-[#c8c4bc]/10 rounded-xl p-6 border-glow transition-all flex flex-col justify-between">
           <div>
             <div class="flex items-center justify-between mb-3">
@@ -332,7 +309,6 @@
           </div>
         </div>
 
-        <!-- Source 2: NIST NVD 2.0 -->
         <div class="bg-[#1a1a1a] border border-[#c8c4bc]/10 rounded-xl p-6 border-glow transition-all flex flex-col justify-between">
           <div>
             <div class="flex items-center justify-between mb-3">
@@ -350,7 +326,6 @@
           </div>
         </div>
 
-        <!-- Source 3: OSV.dev -->
         <div class="bg-[#1a1a1a] border border-[#c8c4bc]/10 rounded-xl p-6 border-glow transition-all flex flex-col justify-between">
           <div>
             <div class="flex items-center justify-between mb-3">
@@ -368,7 +343,6 @@
           </div>
         </div>
 
-        <!-- Source 4: ArcX Curated -->
         <div class="bg-[#1a1a1a] border border-[#c8c4bc]/10 rounded-xl p-6 border-glow transition-all flex flex-col justify-between">
           <div>
             <div class="flex items-center justify-between mb-3">
@@ -389,7 +363,6 @@
       </div>
     </section>
 
-    <!-- 03 // PUBLIC ENDPOINTS MATRIX (Identical Table Styling to Main Page) -->
     <section id="endpoints" class="mt-24">
       <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
         <div>
@@ -418,8 +391,7 @@
               </tr>
             </thead>
             <tbody class="divide-y divide-[#c8c4bc]/10">
-              
-              <!-- /api/v1/stats -->
+
               <tr class="hover:bg-[#c8c4bc]/[0.03] transition-colors">
                 <td class="py-4 px-6 font-bold text-white flex items-center gap-2">
                   <span class="px-2 py-0.5 rounded bg-emerald-950/80 border border-emerald-500/40 text-emerald-400 text-[0.65rem]">GET</span>
@@ -436,7 +408,6 @@
                 </td>
               </tr>
 
-              <!-- /health -->
               <tr class="hover:bg-[#c8c4bc]/[0.03] transition-colors">
                 <td class="py-4 px-6 font-bold text-white flex items-center gap-2">
                   <span class="px-2 py-0.5 rounded bg-emerald-950/80 border border-emerald-500/40 text-emerald-400 text-[0.65rem]">GET</span>
@@ -452,7 +423,6 @@
                 </td>
               </tr>
 
-              <!-- /api/v1/insight -->
               <tr class="hover:bg-[#c8c4bc]/[0.03] transition-colors">
                 <td class="py-4 px-6 font-bold text-white flex items-center gap-2">
                   <span class="px-2 py-0.5 rounded bg-[#8b3a2a]/20 border border-[#8b3a2a]/40 text-[#8b3a2a] text-[0.65rem]">GET</span>
@@ -468,7 +438,6 @@
                 </td>
               </tr>
 
-              <!-- /api/v1/lookup/:cveId -->
               <tr class="hover:bg-[#c8c4bc]/[0.03] transition-colors">
                 <td class="py-4 px-6 font-bold text-white flex items-center gap-2">
                   <span class="px-2 py-0.5 rounded bg-[#8b3a2a]/20 border border-[#8b3a2a]/40 text-[#8b3a2a] text-[0.65rem]">GET</span>
@@ -490,7 +459,6 @@
       </div>
     </section>
 
-    <!-- 04 // MACHINE-READABLE API PAYLOAD (Raw JSON Inspector) -->
     <section id="json-section" class="mt-24">
       <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
         <div>
@@ -515,7 +483,7 @@
 
       <div class="bg-[#1a1a1a] border border-[#c8c4bc]/10 rounded-xl p-6 shadow-xl relative">
         <pre id="json-display" class="bg-[#121316] border border-[#c8c4bc]/10 rounded-lg p-6 font-mono-custom text-xs text-[#c8c4bc] overflow-x-auto leading-relaxed max-h-[550px]">Loading live JSON response from /api/v1/stats...</pre>
-        
+
         <div class="mt-4 pt-4 border-t border-[#c8c4bc]/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 font-mono-custom text-xs text-[#c8c4bc]/50">
           <div>
             💡 <strong class="text-white">AI Agent Integration:</strong> Clients passing <code class="text-amber-300">Accept: application/json</code> or <code class="text-amber-300">?format=json</code> receive pure machine-readable JSON directly.
@@ -527,7 +495,6 @@
       </div>
     </section>
 
-    <!-- FOOTER (Identical to Main Page) -->
     <footer class="mt-28 mb-12 border-t border-[#c8c4bc]/10 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
       <div class="flex items-center gap-3">
         <span class="font-pixel text-lg tracking-wider text-[#c8c4bc]">
@@ -553,11 +520,9 @@
 
   </main>
 
-  <!-- LIVE SCRIPT LOGIC -->
   <script>
     let rawStatsData = null;
 
-    // Live clock in technical header
     function updateClock() {
       const now = new Date();
       const timeStr = now.toISOString().substring(11, 19) + 'Z';
@@ -567,7 +532,6 @@
     setInterval(updateClock, 1000);
     updateClock();
 
-    // Syntax highlight JSON output
     function syntaxHighlight(json) {
       if (typeof json !== 'string') {
         json = JSON.stringify(json, undefined, 2);
@@ -590,7 +554,6 @@
       });
     }
 
-    // Fetch stats from API
     async function fetchStats() {
       const icon = document.getElementById('icon-refresh');
       if (icon) icon.classList.add('animate-spin');
@@ -601,10 +564,9 @@
         const data = await res.json();
         rawStatsData = data;
 
-        // Update Brutalist Stats Bar
         document.getElementById('stat-settled').innerText = (data.stats.totalSettled || 0).toLocaleString();
         document.getElementById('stat-revenue').innerText = data.stats.totalRevenue || '0.000000 USDC';
-        
+
         if (data.pricing) {
           document.getElementById('stat-price').innerText = '$' + data.pricing.perQuery.replace(' USDC', '');
           document.getElementById('txt-asset-addr').innerText = data.pricing.asset;
@@ -615,7 +577,7 @@
           const cisaCount = data.threatFeeds.cisaKevCount || 0;
           document.getElementById('stat-cisa').innerText = cisaCount.toLocaleString() + '+';
           document.getElementById('badge-kev-val').innerText = cisaCount.toLocaleString() + ' ACTIVE';
-          
+
           if (data.threatFeeds.lastCisaSync) {
             const date = new Date(data.threatFeeds.lastCisaSync);
             document.getElementById('txt-last-sync').innerText = date.toLocaleTimeString() + ' (' + date.toLocaleDateString() + ')';
@@ -628,7 +590,6 @@
           document.getElementById('footer-uptime').innerText = 'UPTIME // ' + data.uptime.toUpperCase();
         }
 
-        // Render formatted JSON
         document.getElementById('json-display').innerHTML = syntaxHighlight(data);
 
       } catch (err) {
@@ -640,7 +601,6 @@
       }
     }
 
-    // Copy helper
     function copyToClipboard(text, btn) {
       navigator.clipboard.writeText(text).then(() => {
         const originalText = btn.innerHTML;
@@ -651,21 +611,18 @@
       });
     }
 
-    // Copy raw JSON
     function copyRawJson(btn) {
       if (!rawStatsData) return;
       copyToClipboard(JSON.stringify(rawStatsData, null, 2), btn);
     }
 
-    // Copy cURL command
     function copyCurlCommand(btn) {
       const curl = 'curl -s http://' + window.location.host + '/api/v1/stats';
       copyToClipboard(curl, btn);
     }
 
-    // Initial fetch and auto-refresh every 6 seconds
     fetchStats();
     setInterval(fetchStats, 6000);
-  </script>
+</script>
 </body>
 </html>

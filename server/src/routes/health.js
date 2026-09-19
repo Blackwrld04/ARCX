@@ -6,17 +6,10 @@ import { config } from '../config.js';
 const router = Router();
 const startTime = Date.now();
 
-/**
- * GET /health
- *
- * Free endpoint — system health check.
- * Reports server status, DB connectivity, RPC status, uptime.
- */
 router.get('/', async (req, res) => {
   const uptimeSeconds = Math.floor((Date.now() - startTime) / 1000);
   const checks = {};
 
-  // Database check
   try {
     const db = getDb();
     db.prepare('SELECT 1').get();
@@ -25,7 +18,6 @@ router.get('/', async (req, res) => {
     checks.database = { status: 'unhealthy', error: err.message };
   }
 
-  // RPC check
   try {
     const balance = await getFacilitatorBalance();
     checks.rpc = {

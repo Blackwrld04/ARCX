@@ -4,11 +4,8 @@ import { config } from '../config.js';
 import { arc, USDC_ABI } from '../utils/arc.js';
 import { logger } from '../utils/logger.js';
 
-// Minimum fee floor for Arc mainnet transactions (20 Gwei)
-// Arc sequencer drops transactions with fee parameters below 20 Gwei.
-const ARC_MIN_FEE_FLOOR = 20_000_000_000n; // 20 Gwei
+const ARC_MIN_FEE_FLOOR = 20_000_000_000n;
 
-// Initialize viem clients once at module load
 const account = privateKeyToAccount(config.facilitatorPrivateKey);
 
 export const walletClient = createWalletClient({
@@ -25,21 +22,11 @@ export const publicClient = createPublicClient({
 const MAX_RETRIES = 3;
 const BASE_DELAY_MS = 1000;
 
-/**
- * Submit an EIP-3009 transferWithAuthorization to the USDC contract on Arc.
- *
- * The facilitator wallet pays gas; the USDC moves from `from` to `to`.
- *
- * Returns { txHash, blockNumber, gasUsed } on success.
- * Throws on failure after retries.
- */
 export async function settleOnChain(payment) {
   const { from, to, value, validAfter, validBefore, nonce, signature } = payment;
 
-  // Split signature into v, r, s
   const { v, r, s } = hexToSignature(signature);
 
-  // Normalize v: ensure v is 27 or 28 for EVM ecrecover compatibility
   const normalizedV = Number(v) < 27 ? Number(v) + 27 : Number(v);
 
   let lastError;
@@ -51,7 +38,6 @@ export async function settleOnChain(payment) {
         'Submitting transferWithAuthorization to Arc'
       );
 
-      // Estimate / get gas price and enforce 20 Gwei minimum floor
       let currentGasPrice;
       try {
         currentGasPrice = await publicClient.getGasPrice();
@@ -60,7 +46,6 @@ export async function settleOnChain(payment) {
       }
       const effectiveGasFee = currentGasPrice > ARC_MIN_FEE_FLOOR ? currentGasPrice : ARC_MIN_FEE_FLOOR;
 
-      // Submit the transaction with the floor gas price
       const txHash = await walletClient.writeContract({
         address: config.usdcAddress,
         abi: USDC_ABI,
@@ -80,7 +65,6 @@ export async function settleOnChain(payment) {
         maxPriorityFeePerGas: effectiveGasFee,
       });
 
-      // Wait for receipt — Arc has sub-second finality
       const receipt = await publicClient.waitForTransactionReceipt({
         hash: txHash,
         timeout: 30_000,
@@ -106,7 +90,6 @@ export async function settleOnChain(payment) {
         'Settlement attempt failed'
       );
 
-      // Don't retry if reverted on-chain (contract state rejected it)
       if (err.message?.includes('reverted')) {
         throw err;
       }
@@ -121,9 +104,6 @@ export async function settleOnChain(payment) {
   throw new Error(`Settlement failed after ${MAX_RETRIES} attempts: ${lastError?.message}`);
 }
 
-/**
- * Check facilitator wallet gas balance on Arc.
- */
 export async function getFacilitatorBalance() {
   try {
     const balance = await publicClient.getBalance({

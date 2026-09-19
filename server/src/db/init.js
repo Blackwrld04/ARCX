@@ -16,14 +16,12 @@ export function initDatabase(customPath) {
 
   db = new Database(dbPath);
 
-  // Performance + safety pragmas
   if (dbPath !== ':memory:') {
     db.pragma('journal_mode = WAL');
   }
   db.pragma('synchronous = NORMAL');
   db.pragma('foreign_keys = ON');
 
-  // Run versioned migrations
   runMigrations(db);
 
   logger.info({ dbPath }, 'Database initialized');

@@ -1,7 +1,4 @@
-/* ============================================================
-   ArcX Admin Dashboard — Cyber-Brutalist Arc Theme
-   Palette: #121316 (deep black), #1a1a1a (card), #c8c4bc (platinum), #8b3a2a (crimson)
-   ============================================================ */
+
 
 :root {
   --bg-main: #121316;
@@ -63,7 +60,6 @@ body {
   box-shadow: 0 0 30px -5px var(--accent-red-glow);
 }
 
-/* Status badges inside table */
 .status-badge {
   display: inline-flex;
   align-items: center;
@@ -95,7 +91,6 @@ body {
   border: 1px solid rgba(239, 68, 68, 0.35);
 }
 
-/* Pulse dot */
 .pulse-dot {
   width: 6px;
   height: 6px;
@@ -111,7 +106,6 @@ body {
   100% { transform: scale(0.9); opacity: 0.7; }
 }
 
-/* Table styling */
 .ledger-table {
   width: 100%;
   border-collapse: collapse;
@@ -157,7 +151,6 @@ body {
   font-family: 'JetBrains Mono', monospace;
 }
 
-/* Empty State */
 .empty-state {
   padding: 48px 24px;
   text-align: center;

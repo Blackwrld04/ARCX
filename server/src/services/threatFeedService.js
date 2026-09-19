@@ -7,7 +7,6 @@ import { config } from '../config.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-// Load local baseline curated threats
 let curatedThreats = [];
 try {
   curatedThreats = JSON.parse(readFileSync(join(__dirname, '../data/threats.json'), 'utf-8'));
@@ -22,13 +21,9 @@ for (const entry of curatedThreats) {
   }
 }
 
-// In-memory cache of CISA KEV CVE IDs for O(1) checks
 const cisaKevSet = new Set();
 let lastCisaSync = null;
 
-/**
- * Categorize a vulnerability based on CWE ID and text descriptions.
- */
 function deduceCategory(cwe, text = '') {
   const t = (text + ' ' + (cwe || '')).toLowerCase();
   if (t.includes('remote code') || t.includes('rce') || t.includes('execute arbitrary code') || cwe === 'CWE-94') {
@@ -58,9 +53,6 @@ function deduceCategory(cwe, text = '') {
   return 'general-vulnerability';
 }
 
-/**
- * Deduce MITRE ATT&CK techniques based on category.
- */
 function deduceMitreAttack(category) {
   switch (category) {
     case 'rce':
@@ -82,15 +74,12 @@ function deduceMitreAttack(category) {
   }
 }
 
-/**
- * Synthesize concrete actionable remediation steps based on CVE details.
- */
 function synthesizeRemediation(cveId, category, isKev, kevAction, text = '') {
   const parts = [];
   if (isKev && kevAction) {
     parts.push(`CISA MANDATE: ${kevAction}.`);
   }
-  
+
   if (category === 'rce') {
     parts.push(`Apply the official vendor security patch for ${cveId} immediately. Restrict public network ingress to affected ports and deploy Web Application Firewall (WAF) virtual patching rules.`);
   } else if (category === 'sqli') {
@@ -108,9 +97,6 @@ function synthesizeRemediation(cveId, category, isKev, kevAction, text = '') {
   return parts.join(' ');
 }
 
-/**
- * Fetch and sync the CISA KEV (Known Exploited Vulnerabilities) catalog.
- */
 export async function syncCisaKev() {
   const db = getDb();
   logger.info('Syncing CISA KEV catalog...');
@@ -166,7 +152,7 @@ export async function syncCisaKev() {
     return vulnerabilities.length;
   } catch (err) {
     logger.error({ err: err.message }, 'Failed to sync CISA KEV catalog');
-    // Load existing CISA KEV IDs from database into memory
+
     try {
       const rows = db.prepare('SELECT cve_id FROM cisa_kev').all();
       for (const row of rows) {
@@ -176,7 +162,7 @@ export async function syncCisaKev() {
     } catch (dbErr) {
       logger.error({ err: dbErr.message }, 'Failed to load CISA KEV from DB');
     }
-    // If still empty (e.g. offline/network blocked/test environment), seed from curatedThreats
+
     if (cisaKevSet.size === 0) {
       for (const t of curatedThreats) {
         if (t.cve) cisaKevSet.add(t.cve.toUpperCase());
@@ -187,9 +173,6 @@ export async function syncCisaKev() {
   }
 }
 
-/**
- * Fetch external vulnerability details from NIST NVD 2.0 API.
- */
 async function fetchFromNvd(cveId) {
   const url = `https://services.nvd.nist.gov/rest/json/cves/2.0?cveId=${encodeURIComponent(cveId)}`;
   const headers = {
@@ -213,10 +196,8 @@ async function fetchFromNvd(cveId) {
   const cveItem = data.vulnerabilities?.[0]?.cve;
   if (!cveItem) return null;
 
-  // Extract English description
   const enDesc = cveItem.descriptions?.find(d => d.lang === 'en')?.value || 'No description available.';
 
-  // Extract CVSS metrics
   let cvssScore = 7.5;
   let severity = 'high';
 
@@ -235,12 +216,10 @@ async function fetchFromNvd(cveId) {
     severity = cvssScore >= 9.0 ? 'critical' : cvssScore >= 7.0 ? 'high' : cvssScore >= 4.0 ? 'medium' : 'low';
   }
 
-  // Extract CWE
   const cwe = cveItem.weaknesses?.[0]?.description?.[0]?.value || '';
   const category = deduceCategory(cwe, enDesc);
   const mitreAttack = deduceMitreAttack(category);
 
-  // Extract vendor/product or title
   const sourceId = cveItem.sourceIdentifier || 'NIST NVD';
   const title = `${cveId} — ${category.replace('-', ' ').toUpperCase()} (${sourceId})`;
 
@@ -257,9 +236,6 @@ async function fetchFromNvd(cveId) {
   };
 }
 
-/**
- * Fallback to OSV.dev (Google Open Source Vulnerabilities)
- */
 async function fetchFromOsv(cveId) {
   const url = `https://api.osv.dev/v1/vulns/${encodeURIComponent(cveId)}`;
   const res = await fetch(url, {
@@ -287,9 +263,6 @@ async function fetchFromOsv(cveId) {
   };
 }
 
-/**
- * Check and retrieve from SQLite cve_cache table.
- */
 function getFromCache(cveId) {
   const db = getDb();
   const row = db.prepare('SELECT * FROM cve_cache WHERE cve_id = ?').get(cveId);
@@ -311,9 +284,6 @@ function getFromCache(cveId) {
   };
 }
 
-/**
- * Save synthesized entry into SQLite cve_cache table.
- */
 function saveToCache(entry) {
   const db = getDb();
   try {
@@ -351,16 +321,9 @@ function saveToCache(entry) {
   }
 }
 
-/**
- * Primary lookup function:
- * 1. Curated baseline (threats.json)
- * 2. SQLite local cache
- * 3. Live external feeds (NVD 2.0 -> OSV.dev)
- */
 export async function lookupCve(cveId) {
   const id = cveId.toUpperCase().trim();
 
-  // Check CISA KEV state
   const db = getDb();
   let kevRecord = null;
   try {
@@ -368,7 +331,6 @@ export async function lookupCve(cveId) {
   } catch (e) {}
   const isKev = Boolean(kevRecord || cisaKevSet.has(id));
 
-  // Tier 1: Local curated threats.json
   const curated = curatedIndex.get(id);
   if (curated) {
     return {
@@ -384,7 +346,6 @@ export async function lookupCve(cveId) {
     };
   }
 
-  // Tier 2: Local SQLite cache
   const cached = getFromCache(id);
   if (cached) {
     if (isKev && !cached.is_actively_exploited) {
@@ -393,7 +354,6 @@ export async function lookupCve(cveId) {
     return cached;
   }
 
-  // Tier 3: Fetch from Live External Feeds
   let external = null;
   try {
     external = await fetchFromNvd(id);
@@ -410,7 +370,7 @@ export async function lookupCve(cveId) {
   }
 
   if (!external) {
-    // If not found in NVD or OSV, check if it's listed in CISA KEV
+
     if (kevRecord) {
       external = {
         cve: id,
@@ -427,7 +387,6 @@ export async function lookupCve(cveId) {
     }
   }
 
-  // Synthesize remediation and IoCs
   const remediation = synthesizeRemediation(
     id,
     external.category,
@@ -466,19 +425,15 @@ export async function lookupCve(cveId) {
     source: `${external.source} + ArcX Synthesis`
   };
 
-  // Cache in SQLite
   saveToCache(enrichedDossier);
 
   return enrichedDossier;
 }
 
-/**
- * Return random threat intelligence entry (curated or CISA KEV zero-day).
- */
 export async function getRandomInsight() {
   const db = getDb();
   const cveThreats = curatedThreats.filter(t => t.cve);
-  // 50% chance to return a curated entry, 50% chance to return an actively exploited CISA KEV entry
+
   const useCurated = Math.random() < 0.5 || cisaKevSet.size === 0;
 
   if (useCurated && cveThreats.length > 0) {
@@ -490,7 +445,6 @@ export async function getRandomInsight() {
     };
   }
 
-  // Sample a random CISA KEV entry
   try {
     const row = db.prepare('SELECT * FROM cisa_kev ORDER BY RANDOM() LIMIT 1').get();
     if (row && row.cve_id) {
@@ -503,7 +457,6 @@ export async function getRandomInsight() {
     logger.warn({ err: err.message }, 'Failed to sample random CISA KEV entry');
   }
 
-  // Fallback to curated baseline
   const fallback = cveThreats[0] || curatedThreats[0];
   return {
     ...fallback,
@@ -511,9 +464,6 @@ export async function getRandomInsight() {
   };
 }
 
-/**
- * Get feed statistics for /api/v1/stats.
- */
 export function getFeedStats() {
   const db = getDb();
   let cachedCount = 0;
@@ -540,16 +490,12 @@ export function getFeedStats() {
   };
 }
 
-/**
- * Initialize threat feeds service on server startup.
- */
 export function initThreatFeedService() {
-  // Sync CISA KEV catalog on startup in background
+
   syncCisaKev().catch((err) => {
     logger.warn({ err: err.message }, 'Initial CISA KEV sync failed');
   });
 
-  // Schedule periodic CISA KEV refresh
   const refreshIntervalMs = (config.cisaKevRefreshHours || 12) * 60 * 60 * 1000;
   setInterval(() => {
     syncCisaKev().catch((err) => {

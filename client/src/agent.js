@@ -4,7 +4,6 @@ import { arc } from 'viem/chains';
 import { privateKeyToAccount } from 'viem/accounts';
 import { randomBytes } from 'crypto';
 
-// --- Configuration ---
 const AGENT_KEY = process.env.AGENT_PRIVATE_KEY;
 const API_URL = process.env.API_URL || 'http://localhost:4402';
 const NUM_QUERIES = parseInt(process.env.NUM_QUERIES || '1', 10);
@@ -14,7 +13,6 @@ if (!AGENT_KEY) {
   process.exit(1);
 }
 
-// --- Wallet setup using viem built-in Arc chain (Correction 5) ---
 const account = privateKeyToAccount(AGENT_KEY);
 const walletClient = createWalletClient({
   account,
@@ -28,7 +26,6 @@ console.log(`   Target:  ${API_URL}`);
 console.log(`   Network: Arc Mainnet (Chain ${arc.id})`);
 console.log(`   Queries: ${NUM_QUERIES}\n`);
 
-// --- EIP-712 types for TransferWithAuthorization ---
 const EIP3009_TYPES = {
   TransferWithAuthorization: [
     { name: 'from',        type: 'address' },
@@ -40,9 +37,6 @@ const EIP3009_TYPES = {
   ],
 };
 
-/**
- * Computes cryptographically bound nonce for the request (Correction 6).
- */
 function computeBoundNonce(saltHex, method, path) {
   const cleanPath = path.split('?')[0].replace(/\/$/, '') || '/';
   const cleanSalt = saltHex.startsWith('0x') ? saltHex.slice(0, 34) : `0x${saltHex}`.slice(0, 34);
@@ -54,13 +48,9 @@ function computeBoundNonce(saltHex, method, path) {
   );
 }
 
-/**
- * Execute a paid API call via x402 with idempotent retry support (Correction 7).
- */
 async function queryEndpoint(path = '/api/v1/insight') {
   const url = `${API_URL}${path}`;
 
-  // Step 1: Initial request — expect 402 challenge
   console.log(`→ GET ${url}`);
   const challenge = await fetch(url);
 
@@ -70,7 +60,6 @@ async function queryEndpoint(path = '/api/v1/insight') {
     return body;
   }
 
-  // Step 2: Parse payment requirements from 402 response
   const terms = await challenge.json();
   const offer = terms.accepts?.[0];
 
@@ -85,7 +74,6 @@ async function queryEndpoint(path = '/api/v1/insight') {
   console.log(`     Pay to:   ${offer.payTo}`);
   console.log(`     Asset:    ${offer.asset}`);
 
-  // Step 3: Build cryptographic request binding and sign authorization
   const salt = toHex(randomBytes(16));
   const nonce = computeBoundNonce(salt, 'GET', path);
   const now = BigInt(Math.floor(Date.now() / 1000));
@@ -95,11 +83,10 @@ async function queryEndpoint(path = '/api/v1/insight') {
     to:          offer.payTo,
     value:       BigInt(requiredAmount),
     validAfter:  0n,
-    validBefore: now + 3600n, // Valid for 1 hour
+    validBefore: now + 3600n,
     nonce,
   };
 
-  // Dynamic domain separator from challenge (Correction 3)
   const domain = {
     name:              offer.extra?.name || 'USDC',
     version:           offer.extra?.version || '2',
@@ -116,7 +103,6 @@ async function queryEndpoint(path = '/api/v1/insight') {
     message,
   });
 
-  // Step 4: Build payment payload
   const paymentPayload = {
     from:        account.address,
     to:          offer.payTo,
@@ -130,7 +116,6 @@ async function queryEndpoint(path = '/api/v1/insight') {
 
   const encoded = Buffer.from(JSON.stringify(paymentPayload)).toString('base64');
 
-  // Step 5: Send with retry loop using cached payload (Correction 7: Idempotent retry)
   const MAX_ATTEMPTS = 3;
   let lastResult;
 
@@ -141,7 +126,7 @@ async function queryEndpoint(path = '/api/v1/insight') {
       const paid = await fetch(url, {
         headers: {
           'PAYMENT-SIGNATURE': encoded,
-          'X-PAYMENT': encoded, // Backwards compatibility
+          'X-PAYMENT': encoded,
         },
       });
 
@@ -163,7 +148,6 @@ async function queryEndpoint(path = '/api/v1/insight') {
       console.log(`  ← ${paid.status} Response:`, result);
       lastResult = result;
 
-      // If client-side error (4xx) other than 409, do not retry
       if (paid.status >= 400 && paid.status < 500 && paid.status !== 409) {
         break;
       }
@@ -182,7 +166,6 @@ async function queryEndpoint(path = '/api/v1/insight') {
   return lastResult;
 }
 
-// --- Main execution ---
 async function main() {
   for (let i = 0; i < NUM_QUERIES; i++) {
     if (i > 0) console.log('---');

@@ -1,17 +1,9 @@
 import { config } from '../config.js';
 import { logger } from '../utils/logger.js';
 
-/**
- * Global error handler.
- *
- * - Never leaks stack traces in production.
- * - Returns structured JSON error responses.
- * - Logs full error details server-side.
- */
 export function errorHandler(err, req, res, _next) {
   const isProduction = config.nodeEnv === 'production';
 
-  // Log the full error
   logger.error({
     err: {
       message: err.message,
@@ -23,10 +15,8 @@ export function errorHandler(err, req, res, _next) {
     ip: req.ip,
   }, 'Unhandled error');
 
-  // Determine status code
   const statusCode = err.statusCode || err.status || 500;
 
-  // Build response
   const response = {
     error: 'INTERNAL_ERROR',
     message: isProduction
@@ -34,7 +24,6 @@ export function errorHandler(err, req, res, _next) {
       : err.message,
   };
 
-  // Add stack trace in development
   if (!isProduction) {
     response.stack = err.stack;
   }

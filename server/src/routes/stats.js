@@ -9,15 +9,6 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const router = Router();
 const startTime = Date.now();
 
-/**
- * GET /api/v1/stats
- *
- * Free endpoint — no payment required.
- * Returns public metrics about the API: total queries, revenue, unique wallets,
- * and live threat feed coverage (CISA KEV, NIST NVD, OSV, and cached CVEs).
- * If requested from a browser (Accept: text/html), serves the sleek Explorer GUI.
- * If requested via curl/SDK/agents (Accept: application/json or ?format=json), returns pure JSON.
- */
 router.get('/', (req, res) => {
   const wantsJson = req.query.format === 'json' ||
                     (req.headers.accept && req.headers.accept.includes('application/json') && !req.headers.accept.includes('text/html')) ||
@@ -89,12 +80,6 @@ router.get('/', (req, res) => {
   });
 });
 
-/**
- * GET /api/internal/feed
- *
- * Internal endpoint for the dashboard — returns recent payment feed.
- * Not paywalled, but not publicly documented.
- */
 router.get('/feed', (req, res) => {
   const limit = Math.min(parseInt(req.query.limit) || 20, 100);
   const payments = getRecentPayments(limit);

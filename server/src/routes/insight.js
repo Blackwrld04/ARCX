@@ -4,13 +4,6 @@ import { logger } from '../utils/logger.js';
 
 const router = Router();
 
-/**
- * GET /api/v1/insight
- *
- * Returns a random enriched threat intelligence entry from curated threats
- * or actively exploited CISA KEV zero-day entries.
- * This endpoint is paywalled via x402Gate middleware.
- */
 router.get('/', async (req, res) => {
   try {
     const entry = await getRandomInsight();

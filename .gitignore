@@ -5,8 +5,10 @@ node_modules/
 *.db
 *.db-wal
 *.db-shm
-data/
-server/data/
+/data/
+/server/data/
+!server/src/data/
+!server/src/data/**
 .DS_Store
 Thumbs.db
 dist/
