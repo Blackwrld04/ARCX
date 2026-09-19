@@ -16,7 +16,7 @@ ArcX is an autonomous, machine-to-machine cybersecurity intelligence API built n
 
 **Challenge first with x402. Authorize off-chain with EIP-3009. Settle directly with Arc native USDC gas.**
 
-[Live App (Netlify)](https://arccx.netlify.app) · [x402 Telemetry GUI](https://arccx.netlify.app/stats) · [Backend Facilitator (Render)](https://arcx-v2fs.onrender.com) · [Verify it yourself](#verify-it-yourself) · [Arc Explorer](https://explorer.arc.io/address/0x8b415aE3956992b0cbC6C78c485A4d099F6331cE)
+[Live App (Netlify)](https://arccx.netlify.app) · [x402 Telemetry GUI](https://arccx.netlify.app/stats) · [Backend Facilitator (Render)](https://arcx-v2fs.onrender.com) · [Verify it yourself](#verify-it-yourself) · [Arc Explorer](https://explorer.arc.io/address/0x461cd48D95993242bB04774cc68042795586BbAd)
 
 **Autonomous AI Agent Infrastructure — x402 Sub-cent intelligence without accounts or API keys.**
 
@@ -453,7 +453,7 @@ Transparency is paramount for infrastructure software.
 | **API & Settlement Engine** | Arc Mainnet (5042) | [`https://arcx-v2fs.onrender.com`](https://arcx-v2fs.onrender.com) | Live Web Service on Render |
 | **Protocol Explorer GUI** | Browser | [`https://arccx.netlify.app/stats`](https://arccx.netlify.app/stats) | Live Telemetry Dashboard |
 | **USDC Contract** | Arc Mainnet (5042) | [`0x3600000000000000000000000000000000000000`](https://explorer.arc.io/address/0x3600000000000000000000000000000000000000) | Canonical Circle USDC |
-| **Settlement Recipient** | Arc Mainnet (5042) | [`0x8b415aE3956992b0cbC6C78c485A4d099F6331cE`](https://explorer.arc.io/address/0x8b415aE3956992b0cbC6C78c485A4d099F6331cE) | Active on Arc Mainnet |
+| **Settlement Recipient** | Arc Mainnet (5042) | [`0x461cd48D95993242bB04774cc68042795586BbAd`](https://explorer.arc.io/address/0x461cd48D95993242bB04774cc68042795586BbAd) | Active on Arc Mainnet |
 
 ---
 
