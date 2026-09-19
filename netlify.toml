@@ -1,0 +1,23 @@
+[build]
+  command = "npm run build:netlify"
+  publish = "dist"
+
+# Dashboard route rewrite
+[[redirects]]
+  from = "/dashboard"
+  to = "/dashboard/index.html"
+  status = 200
+
+# Proxy API calls to your Render backend
+# Once your Render web service is live, update the URL below to match your Render domain (e.g. https://arcx-xxxx.onrender.com)
+[[redirects]]
+  from = "/api/*"
+  to = "https://arcx.onrender.com/api/:splat"
+  status = 200
+  force = false
+
+[[redirects]]
+  from = "/health"
+  to = "https://arcx.onrender.com/health"
+  status = 200
+  force = false

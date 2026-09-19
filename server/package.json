@@ -1,0 +1,25 @@
+{
+  "name": "arcx-server",
+  "version": "1.0.0",
+  "description": "ArcX — x402-powered cybersecurity threat intelligence API on Arc mainnet",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "test": "node test/verify.test.js && node test/feed.test.js"
+  },
+  "keywords": ["x402", "arc", "usdc", "threat-intelligence", "api", "paywall"],
+  "license": "MIT",
+  "dependencies": {
+    "better-sqlite3": "^11.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.0",
+    "express": "^4.21.0",
+    "express-rate-limit": "^7.4.0",
+    "helmet": "^8.0.0",
+    "pino": "^9.0.0",
+    "pino-pretty": "^11.0.0",
+    "viem": "^2.21.0"
+  }
+}

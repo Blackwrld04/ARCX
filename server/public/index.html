@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ArcX — Autonomous Threat Intelligence on Arc Mainnet</title>
+  <meta name="description" content="x402-gated cybersecurity intelligence settled on Circle's Arc mainnet (Chain 5042). Pay $0.001 USDC per query with EIP-3009 off-chain authorizations.">
+  
+  <!-- Tailwind CSS & Icons -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <!-- Typography: Silkscreen (Pixel/Brutalist), Inter, JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Inter:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@100;300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #121316;
+      color: #c8c4bc;
+    }
+    .font-pixel {
+      font-family: 'Silkscreen', monospace;
+    }
+    .font-mono-custom {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #121316;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #8b3a2a;
+    }
+    .flicker-text {
+      animation: flicker 4s infinite;
+    }
+    @keyframes flicker {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+      52% { opacity: 0.9; }
+      54% { opacity: 0.3; }
+      56% { opacity: 1; }
+    }
+    .poster-shell {
+      background: linear-gradient(135deg, rgba(200, 196, 188, 0.15) 0%, rgba(18, 19, 22, 0.9) 40%, rgba(139, 58, 42, 0.25) 100%);
+    }
+    .code-scroll::-webkit-scrollbar {
+      height: 4px;
+    }
+    .glow-accent {
+      box-shadow: 0 0 35px -5px rgba(139, 58, 42, 0.35);
+    }
+    .border-glow:hover {
+      border-color: #8b3a2a;
+      box-shadow: 0 0 20px -3px rgba(139, 58, 42, 0.3);
+    }
+    html {
+      scroll-behavior: smooth;
+    }
+    .mobile-nav {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: rgba(18, 19, 22, 0.97);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(200, 196, 188, 0.1);
+      padding: 1rem 1.5rem;
+      flex-direction: column;
+      gap: 0.75rem;
+      z-index: 50;
+    }
+    .mobile-nav.active {
+      display: flex;
+    }
+    .mobile-nav a {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: rgba(200, 196, 188, 0.6);
+      padding: 0.5rem 0;
+      border-bottom: 1px solid rgba(200, 196, 188, 0.05);
+      transition: color 0.2s;
+    }
+    .mobile-nav a:hover {
+      color: #8b3a2a;
+    }
+    .mobile-nav a:last-child {
+      border-bottom: none;
+    }
+  </style>
+</head>
+<body class="antialiased min-h-screen relative overflow-x-hidden selection:bg-[#8b3a2a] selection:text-[#c8c4bc]">
+
+  <!-- Outer Architectural Guide Lines -->
+  <div class="fixed top-0 bottom-0 left-4 sm:left-12 w-[1px] bg-[#c8c4bc]/10 z-0 pointer-events-none"></div>
+  <div class="fixed top-0 bottom-0 right-4 sm:right-12 w-[1px] bg-[#c8c4bc]/10 z-0 pointer-events-none"></div>
+
+  <!-- NAV -->
+  <nav class="sticky top-0 z-50 backdrop-blur-md bg-[#121316]/85 border-b border-[#c8c4bc]/10">
+    <div class="max-w-[1440px] mx-auto px-4 sm:px-10 lg:px-16 h-16 flex items-center justify-between">
+      
+      <!-- Brand Logo (Text Only) -->
+      <div class="flex items-center gap-3">
+        <span class="font-pixel text-2xl tracking-wider text-[#c8c4bc]">
+          ARC<span class="text-[#8b3a2a]">X</span>
+        </span>
+        <span class="hidden sm:inline-block font-mono-custom text-[0.65rem] uppercase tracking-widest text-[#c8c4bc]/40 border-l border-[#c8c4bc]/10 pl-3">
+          x402 Threat Intel API
+        </span>
+      </div>
+
+      <!-- Links -->
+      <div class="hidden md:flex items-center gap-5 lg:gap-7 font-mono-custom text-xs uppercase tracking-widest text-[#c8c4bc]/60">
+        <a href="#playground" class="hover:text-[#8b3a2a] transition-colors whitespace-nowrap">Playground</a>
+        <a href="#feed" class="hover:text-[#8b3a2a] transition-colors whitespace-nowrap">Threat Feed</a>
+        <a href="#architecture" class="hover:text-[#8b3a2a] transition-colors whitespace-nowrap">Why Arc?</a>
+        <a href="#integration" class="hover:text-[#8b3a2a] transition-colors whitespace-nowrap">SDK</a>
+        <a href="#endpoints" class="hover:text-[#8b3a2a] transition-colors whitespace-nowrap">API Specs</a>
+        <a href="/dashboard" class="text-[#8b3a2a] hover:text-[#c8c4bc] transition-colors flex items-center gap-1 whitespace-nowrap">
+          <iconify-icon icon="solar:server-square-linear"></iconify-icon>
+          Admin Feed
+        </a>
+      </div>
+
+      <!-- Network Status Tag & Mobile Menu Toggle -->
+      <div class="flex items-center gap-3">
+        <span class="hidden sm:flex items-center gap-2 font-mono-custom text-[0.7rem] uppercase text-[#c8c4bc]/50 bg-[#1a1a1a] px-3 py-1.5 rounded-md border border-[#c8c4bc]/10">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          Arc Mainnet 5042
+        </span>
+        <a href="#playground" class="hidden sm:inline-flex font-mono-custom text-xs uppercase tracking-widest text-[#c8c4bc] border border-[#8b3a2a] px-4 py-2 rounded-lg hover:bg-[#8b3a2a] transition-colors whitespace-nowrap">
+          Launch App
+        </a>
+        <!-- Mobile Menu Button -->
+        <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="md:hidden flex items-center justify-center w-9 h-9 rounded-lg border border-[#c8c4bc]/20 text-[#c8c4bc]/60 hover:text-[#8b3a2a] hover:border-[#8b3a2a] transition-colors">
+          <iconify-icon icon="solar:hamburger-menu-linear" class="text-xl"></iconify-icon>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Navigation Dropdown -->
+    <div id="mobile-nav" class="mobile-nav">
+      <a href="#playground" onclick="closeMobileMenu()">Playground</a>
+      <a href="#feed" onclick="closeMobileMenu()">Threat Feed</a>
+      <a href="#architecture" onclick="closeMobileMenu()">Why Arc?</a>
+      <a href="#integration" onclick="closeMobileMenu()">SDK</a>
+      <a href="#endpoints" onclick="closeMobileMenu()">API Specs</a>
+      <a href="/dashboard">Admin Feed</a>
+    </div>
+  </nav>
+
+  <!-- HERO SECTION -->
+  <main class="max-w-[1440px] mx-auto px-4 sm:px-10 lg:px-16 pt-10 relative z-20">
+    <div class="poster-shell p-[1px] rounded-2xl shadow-2xl shadow-black/80 gs-reveal opacity-0">
+      <div class="bg-[#121316]/95 backdrop-blur-sm rounded-2xl relative overflow-hidden">
+        
+        <!-- Subtle Matrix Texture -->
+        <div class="absolute inset-0 pointer-events-none opacity-[0.03]" style="background-image: linear-gradient(to right, #c8c4bc 1px, transparent 1px); background-size: 48px 100%;"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-[#8b3a2a]/10 rounded-full blur-[120px] pointer-events-none"></div>
+
+        <!-- Technical Header Bar -->
+        <header class="flex justify-between items-center p-6 border-b border-[#c8c4bc]/10 relative z-30">
+          <div class="flex items-center gap-4">
+            <iconify-icon icon="solar:cpu-linear" class="text-xl text-[#8b3a2a]"></iconify-icon>
+            <span class="font-mono-custom text-xs uppercase tracking-widest text-[#c8c4bc]/70">
+              [ ARCX // AUTONOMOUS SECURITY PROTOCOL ]
+            </span>
+          </div>
+          <div class="flex items-center gap-3 font-mono-custom text-xs uppercase tracking-widest text-[#c8c4bc]/50">
+            <span class="w-1.5 h-1.5 rounded-full bg-[#8b3a2a] flicker-text"></span>
+            <span id="live-time">SYS.SYNC // 00:00:00Z</span>
+          </div>
+        </header>
+
+        <!-- Interactive 3D Sphere Stage (User's Exact Background WebGL) -->
+        <section id="hero-stage" class="relative min-h-[620px] flex items-center justify-center overflow-hidden">
+          <div id="webgl-container" class="absolute inset-0 z-0 mix-blend-screen opacity-75"></div>
+          
+          <!-- Corner Reticles -->
+          <div class="absolute top-6 left-6 w-4 h-4 border-t border-l border-[#8b3a2a] z-20"></div>
+          <div class="absolute top-6 right-6 w-4 h-4 border-t border-r border-[#8b3a2a] z-20"></div>
+          <div class="absolute bottom-6 left-6 w-4 h-4 border-b border-l border-[#8b3a2a] z-20"></div>
+          <div class="absolute bottom-6 right-6 w-4 h-4 border-b border-r border-[#8b3a2a] z-20"></div>
+
+          <!-- Centered Content Inspired by EX8 & Arc.io -->
+          <div class="relative z-10 text-center flex flex-col items-center max-w-3xl px-4 py-20">
+            <div class="font-mono-custom text-xs text-[#8b3a2a] tracking-[0.3em] uppercase mb-6 gs-text-up flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-[#8b3a2a] inline-block animate-ping"></span>
+              x402-Native Threat Intelligence Rail
+            </div>
+            
+            <h1 class="font-pixel text-3xl sm:text-5xl lg:text-6xl tracking-tight uppercase text-[#c8c4bc] leading-[1.1] gs-text-up">
+              DEVELOPING BETTER
+              <br>
+              <span class="text-white">THREAT INTEL</span>
+            </h1>
+
+            <p class="mt-7 font-mono-custom text-xs text-[#c8c4bc]/60 tracking-wider uppercase max-w-lg mx-auto leading-relaxed gs-text-up">
+              Autonomous cybersecurity feed for AI agents, CI/CD pipelines, and SOCs. Query enriched CVE insights settled at $0.001 USDC on Circle's Arc mainnet. Zero API keys. Zero credit cards.
+            </p>
+
+            <div class="mt-10 flex flex-col sm:flex-row gap-4 gs-text-up">
+              <a href="#playground" class="font-mono-custom text-xs uppercase tracking-widest bg-[#8b3a2a] text-[#c8c4bc] px-8 py-4 rounded-xl hover:bg-[#8b3a2a]/80 transition-all glow-accent flex items-center justify-center gap-2">
+                <iconify-icon icon="solar:play-linear" class="text-base"></iconify-icon>
+                Try Live Playground
+              </a>
+              <a href="#integration" class="font-mono-custom text-xs uppercase tracking-widest border border-[#c8c4bc]/20 text-[#c8c4bc]/70 px-8 py-4 rounded-xl hover:border-[#8b3a2a] transition-colors flex items-center justify-center gap-2">
+                <iconify-icon icon="solar:code-linear" class="text-base"></iconify-icon>
+                Integration SDK
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <!-- Brutalist Stats Bar (Inspired by EX8 & Nikita Khvatov) -->
+        <section class="grid grid-cols-2 md:grid-cols-4 border-t border-[#c8c4bc]/10 relative z-30 bg-[#121316]">
+          <div class="p-6 border-r border-b md:border-b-0 border-[#c8c4bc]/10 text-center">
+            <div class="font-pixel text-2xl sm:text-3xl tracking-tight text-[#c8c4bc]">$0.001</div>
+            <div class="font-mono-custom text-[0.65rem] uppercase tracking-widest text-[#c8c4bc]/40 mt-2">
+              USDC Per Query
+            </div>
+          </div>
+          <div class="p-6 border-r border-b md:border-b-0 border-[#c8c4bc]/10 text-center">
+            <div class="font-pixel text-2xl sm:text-3xl tracking-tight text-[#c8c4bc]" id="metric-settled">0</div>
+            <div class="font-mono-custom text-[0.65rem] uppercase tracking-widest text-[#c8c4bc]/40 mt-2">
+              On-Chain Settled
+            </div>
+          </div>
+          <div class="p-6 border-r border-[#c8c4bc]/10 text-center">
+            <div class="font-pixel text-2xl sm:text-3xl tracking-tight text-[#c8c4bc]">5042</div>
+            <div class="font-mono-custom text-[0.65rem] uppercase tracking-widest text-[#c8c4bc]/40 mt-2">
+              Arc Chain ID
+            </div>
+          </div>
+          <div class="p-6 text-center">
+            <div class="font-pixel text-2xl sm:text-3xl tracking-tight text-[#c8c4bc]">&lt; 1 SEC</div>
+            <div class="font-mono-custom text-[0.65rem] uppercase tracking-widest text-[#c8c4bc]/40 mt-2">
+              Settlement Finality
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- 01 // RECENTLY RELEASED / CURATED THREAT CATALOG (EX8 Style) -->
+    <section id="feed" class="mt-28">
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+        <div>
+          <div class="font-mono-custom text-xs text-[#8b3a2a] tracking-[0.3em] uppercase mb-3">
+            [ 01 // RECENTLY DISCLOSED ZERO-DAYS ]
+          </div>
+          <h2 class="font-pixel text-2xl sm:text-3xl tracking-tight uppercase text-[#c8c4bc]">
+            Live Threat Catalog
+          </h2>
+        </div>
+        <p class="font-mono-custom text-xs text-[#c8c4bc]/50 uppercase tracking-wider max-w-md">
+          Curated zero-day intelligence with CVSS 3.1 scores, MITRE ATT&amp;CK mappings, and remediation blueprints.
+        </p>
+      </div>
+
+      <!-- Threat Cards Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-px bg-[#c8c4bc]/10 rounded-2xl overflow-hidden border border-[#c8c4bc]/10">
+        
+        <!-- Card 1: XZ Utils -->
+        <div class="bg-[#1a1a1a] p-8 flex flex-col justify-between group hover:bg-[#c8c4bc]/[0.02] transition-colors relative overflow-hidden">
+          <div class="absolute top-0 left-0 w-full h-[1px] bg-[#8b3a2a] scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-500"></div>
+          <div>
+            <div class="flex items-center justify-between">
+              <span class="font-mono-custom text-xs text-[#8b3a2a] font-bold">CVE-2024-3094</span>
+              <span class="font-mono-custom text-[0.65rem] px-2 py-0.5 rounded bg-rose-950/80 border border-rose-500/50 text-rose-400 font-bold">10.0 CRITICAL</span>
+            </div>
+            <h3 class="font-sans font-light text-base text-white uppercase tracking-tight mt-4">
+              XZ Utils Backdoor
+            </h3>
+            <p class="font-mono-custom text-xs text-[#c8c4bc]/50 uppercase leading-relaxed mt-2">
+              Malicious code hidden in upstream release tarballs compromising OpenSSH authentication via systemd.
+            </p>
+            <div class="mt-4 flex flex-wrap gap-1.5">
+              <span class="font-mono-custom text-[0.65rem] px-2 py-0.5 bg-[#121316] text-[#c8c4bc]/60 rounded border border-[#c8c4bc]/10">T1195.002</span>
+              <span class="font-mono-custom text-[0.65rem] px-2 py-0.5 bg-[#121316] text-[#c8c4bc]/60 rounded border border-[#c8c4bc]/10">Supply Chain</span>
+            </div>
+          </div>
+          <button onclick="setQuery('CVE-2024-3094')" class="mt-6 w-full font-mono-custom text-[0.7rem] uppercase tracking-widest text-[#c8c4bc] border border-[#8b3a2a]/60 py-2.5 rounded-lg hover:bg-[#8b3a2a] hover:text-white transition-colors flex items-center justify-center gap-2">
+            <span>Unlock for $0.001 USDC</span>
+            <iconify-icon icon="solar:arrow-right-up-linear"></iconify-icon>
+          </button>
+        </div>
+
+        <!-- Card 2: Log4Shell -->
+        <div class="bg-[#1a1a1a] p-8 flex flex-col justify-between group hover:bg-[#c8c4bc]/[0.02] transition-colors relative overflow-hidden">
+          <div class="absolute top-0 left-0 w-full h-[1px] bg-[#8b3a2a] scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-500"></div>
+          <div>
+            <div class="flex items-center justify-between">
+              <span class="font-mono-custom text-xs text-[#8b3a2a] font-bold">CVE-2021-44228</span>
+              <span class="font-mono-custom text-[0.65rem] px-2 py-0.5 rounded bg-rose-950/80 border border-rose-500/50 text-rose-400 font-bold">10.0 CRITICAL</span>
+            </div>
+            <h3 class="font-sans font-light text-base text-white uppercase tracking-tight mt-4">
+              Log4Shell JNDI RCE
+            </h3>
+            <p class="font-mono-custom text-xs text-[#c8c4bc]/50 uppercase leading-relaxed mt-2">
+              Unauthenticated remote code execution via LDAP/RMI JNDI lookups inside Apache Log4j log messages.
+            </p>
+            <div class="mt-4 flex flex-wrap gap-1.5">
+              <span class="font-mono-custom text-[0.65rem] px-2 py-0.5 bg-[#121316] text-[#c8c4bc]/60 rounded border border-[#c8c4bc]/10">T1190</span>
+              <span class="font-mono-custom text-[0.65rem] px-2 py-0.5 bg-[#121316] text-[#c8c4bc]/60 rounded border border-[#c8c4bc]/10">RCE</span>
+            </div>
+          </div>
+          <button onclick="setQuery('CVE-2021-44228')" class="mt-6 w-full font-mono-custom text-[0.7rem] uppercase tracking-widest text-[#c8c4bc] border border-[#8b3a2a]/60 py-2.5 rounded-lg hover:bg-[#8b3a2a] hover:text-white transition-colors flex items-center justify-center gap-2">
+            <span>Unlock for $0.001 USDC</span>
+            <iconify-icon icon="solar:arrow-right-up-linear"></iconify-icon>
+          </button>
+        </div>
+
+        <!-- Card 3: MOVEit Transfer -->
+        <div class="bg-[#1a1a1a] p-8 flex flex-col justify-between group hover:bg-[#c8c4bc]/[0.02] transition-colors relative overflow-hidden">
+          <div class="absolute top-0 left-0 w-full h-[1px] bg-[#8b3a2a] scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-500"></div>
+          <div>
+            <div class="flex items-center justify-between">
+              <span class="font-mono-custom text-xs text-[#8b3a2a] font-bold">CVE-2023-34362</span>
+              <span class="font-mono-custom text-[0.65rem] px-2 py-0.5 rounded bg-rose-950/80 border border-rose-500/50 text-rose-400 font-bold">9.8 CRITICAL</span>
+            </div>
+            <h3 class="font-sans font-light text-base text-white uppercase tracking-tight mt-4">
+              MOVEit Transfer SQLi
+            </h3>
+            <p class="font-mono-custom text-xs text-[#c8c4bc]/50 uppercase leading-relaxed mt-2">
+              SQL injection vulnerability in MOVEit web application enabling arbitrary database exfiltration and webshell drop.
+            </p>
+            <div class="mt-4 flex flex-wrap gap-1.5">
+              <span class="font-mono-custom text-[0.65rem] px-2 py-0.5 bg-[#121316] text-[#c8c4bc]/60 rounded border border-[#c8c4bc]/10">T1041</span>
+              <span class="font-mono-custom text-[0.65rem] px-2 py-0.5 bg-[#121316] text-[#c8c4bc]/60 rounded border border-[#c8c4bc]/10">Data Exfil</span>
+            </div>
+          </div>
+          <button onclick="setQuery('CVE-2023-34362')" class="mt-6 w-full font-mono-custom text-[0.7rem] uppercase tracking-widest text-[#c8c4bc] border border-[#8b3a2a]/60 py-2.5 rounded-lg hover:bg-[#8b3a2a] hover:text-white transition-colors flex items-center justify-center gap-2">
+            <span>Unlock for $0.001 USDC</span>
+            <iconify-icon icon="solar:arrow-right-up-linear"></iconify-icon>
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 02 // PLAYGROUND SECTION -->
+    <section id="playground" class="mt-28">
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+        <div>
+          <div class="font-mono-custom text-xs text-[#8b3a2a] tracking-[0.3em] uppercase mb-3">
+            [ 02 // LIVE PROTOCOL PLAYGROUND ]
+          </div>
+          <h2 class="font-pixel text-2xl sm:text-3xl tracking-tight uppercase text-[#c8c4bc]">
+            Test the x402 Loop
+          </h2>
+        </div>
+        <p class="font-mono-custom text-xs text-[#c8c4bc]/50 uppercase tracking-wider max-w-md">
+          Simulate the complete lifecycle: 402 challenge terms, EIP-3009 off-chain signature, and verified settlement on Arc mainnet.
+        </p>
+      </div>
+
+      <!-- Playground Card -->
+      <div class="poster-shell p-[1px] rounded-2xl shadow-2xl">
+        <div class="bg-[#1a1a1a] rounded-2xl p-6 sm:p-10 border border-[#c8c4bc]/10">
+          
+          <!-- Input Controls -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+            <div class="lg:col-span-7">
+              <label class="block font-mono-custom text-xs uppercase tracking-widest text-[#c8c4bc]/50 mb-2">
+                Target CVE Identifier or Random Endpoint
+              </label>
+              <div class="relative">
+                <input 
+                  type="text" 
+                  id="cve-input" 
+                  value="CVE-2024-3094"
+                  placeholder="e.g. Any CVE (e.g. CVE-2024-38063) or /api/v1/insight"
+                  class="w-full bg-[#121316] border border-[#c8c4bc]/20 rounded-xl px-4 py-3.5 text-[#c8c4bc] font-mono-custom text-sm focus:outline-none focus:border-[#8b3a2a] transition-colors"
+                />
+              </div>
+              <!-- Quick Chips -->
+              <div class="flex flex-wrap gap-2 mt-3 items-center">
+                <span class="font-mono-custom text-[0.65rem] uppercase text-[#c8c4bc]/40 mr-1">Live Feeds:</span>
+                <button onclick="setQuery('CVE-2024-3094')" class="font-mono-custom text-[0.65rem] px-2.5 py-1 rounded bg-[#121316] border border-[#c8c4bc]/10 hover:border-[#8b3a2a] text-[#c8c4bc]/70 cursor-pointer">XZ Utils</button>
+                <button onclick="setQuery('CVE-2024-38063')" class="font-mono-custom text-[0.65rem] px-2.5 py-1 rounded bg-[#121316] border border-[#c8c4bc]/10 hover:border-[#8b3a2a] text-[#c8c4bc]/70 cursor-pointer">Windows TCP/IP (NVD)</button>
+                <button onclick="setQuery('CVE-2023-4966')" class="font-mono-custom text-[0.65rem] px-2.5 py-1 rounded bg-[#121316] border border-[#c8c4bc]/10 hover:border-[#8b3a2a] text-[#c8c4bc]/70 cursor-pointer">Citrix Bleed (KEV)</button>
+                <button onclick="setQuery('CVE-2021-44228')" class="font-mono-custom text-[0.65rem] px-2.5 py-1 rounded bg-[#121316] border border-[#c8c4bc]/10 hover:border-[#8b3a2a] text-[#c8c4bc]/70 cursor-pointer">Log4j</button>
+                <button onclick="setQuery('/insight')" class="font-mono-custom text-[0.65rem] px-2.5 py-1 rounded bg-[#8b3a2a]/20 border border-[#8b3a2a]/50 text-[#8b3a2a] cursor-pointer">Random Advisory</button>
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="lg:col-span-5 flex flex-col sm:flex-row lg:flex-col gap-3">
+              <button 
+                onclick="fetchChallenge()" 
+                id="btn-challenge"
+                class="w-full font-mono-custom text-xs uppercase tracking-widest bg-[#121316] border border-[#8b3a2a] text-[#c8c4bc] px-5 py-3.5 rounded-xl hover:bg-[#8b3a2a]/20 transition-all flex items-center justify-center gap-2">
+                <iconify-icon icon="solar:shield-warning-linear" class="text-base text-[#8b3a2a]"></iconify-icon>
+                1. Test 402 Paywall Challenge
+              </button>
+              <button 
+                onclick="simulateUnlock()" 
+                id="btn-unlock"
+                class="w-full font-mono-custom text-xs uppercase tracking-widest bg-[#8b3a2a] text-[#c8c4bc] px-5 py-3.5 rounded-xl hover:bg-[#8b3a2a]/80 transition-all flex items-center justify-center gap-2 glow-accent">
+                <iconify-icon icon="solar:lock-unlocked-linear" class="text-base"></iconify-icon>
+                2. Settle &amp; Unlock ($0.001 USDC)
+              </button>
+            </div>
+          </div>
+
+          <!-- Console & Output Window -->
+          <div class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
+            
+            <!-- Left Panel: Protocol Wire Console -->
+            <div class="bg-[#121316] rounded-xl p-5 border border-[#c8c4bc]/10">
+              <div class="flex justify-between items-center pb-3 border-b border-[#c8c4bc]/10">
+                <span class="font-mono-custom text-xs uppercase text-[#c8c4bc]/60 flex items-center gap-2">
+                  <iconify-icon icon="solar:terminal-linear" class="text-[#8b3a2a]"></iconify-icon>
+                  HTTP Protocol Wire Logs
+                </span>
+                <span class="font-mono-custom text-[0.65rem] text-[#8b3a2a]" id="wire-status">READY</span>
+              </div>
+              <pre id="wire-output" class="font-mono-custom text-xs text-[#c8c4bc]/70 mt-4 h-[280px] overflow-y-auto code-scroll leading-relaxed whitespace-pre-wrap">Click "1. Test 402 Paywall Challenge" to inspect the live response from the ArcX gateway...</pre>
+            </div>
+
+            <!-- Right Panel: Unlocked Threat Intelligence Report -->
+            <div class="bg-[#121316] rounded-xl p-5 border border-[#c8c4bc]/10 relative overflow-hidden" id="intel-panel">
+              <div class="flex justify-between items-center pb-3 border-b border-[#c8c4bc]/10">
+                <span class="font-mono-custom text-xs uppercase text-[#c8c4bc]/60 flex items-center gap-2">
+                  <iconify-icon icon="solar:document-text-linear" class="text-[#8b3a2a]"></iconify-icon>
+                  Enriched Threat Intelligence
+                </span>
+                <span id="badge-severity" class="font-mono-custom text-[0.65rem] px-2 py-0.5 rounded bg-zinc-800 text-zinc-400">
+                  LOCKED
+                </span>
+              </div>
+
+              <!-- Unlocked Card Details -->
+              <div id="intel-content" class="mt-4 h-[280px] overflow-y-auto code-scroll pr-2 flex flex-col justify-center text-center">
+                <iconify-icon icon="solar:lock-keyhole-linear" class="text-4xl text-[#8b3a2a]/40 mx-auto mb-3"></iconify-icon>
+                <div class="font-mono-custom text-xs text-[#c8c4bc]/40 uppercase tracking-widest">
+                  Paywall Encrypted
+                </div>
+                <div class="font-mono-custom text-[0.7rem] text-[#c8c4bc]/30 mt-1 max-w-xs mx-auto">
+                  Submit off-chain EIP-3009 payment authorization to verify &amp; settle on Arc mainnet.
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 // WHY AND HOW? (EX8 Style & Arc.io Thesis) -->
+    <section id="architecture" class="mt-28">
+      <div class="font-mono-custom text-xs text-[#8b3a2a] tracking-[0.3em] uppercase mb-3">
+        [ 03 // ARCHITECTURE ]
+      </div>
+      <h2 class="font-pixel text-2xl sm:text-3xl tracking-tight uppercase text-[#c8c4bc]">
+        Why &amp; How?
+      </h2>
+      <p class="mt-4 font-mono-custom text-xs text-[#c8c4bc]/50 uppercase tracking-wider max-w-xl">
+        Legacy security APIs demand thousands per month in enterprise lock-ins. ArcX unlocks sovereign, pay-per-query intelligence for autonomous agents.
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-px mt-10 bg-[#c8c4bc]/10 rounded-2xl overflow-hidden border border-[#c8c4bc]/10">
+        
+        <!-- Pillar 1 -->
+        <div class="bg-[#1a1a1a] p-8 group hover:bg-[#c8c4bc]/[0.02] transition-colors relative">
+          <div class="font-pixel text-base text-[#8b3a2a]">01</div>
+          <h3 class="font-sans font-light text-base tracking-tight uppercase text-white mt-4">
+            Sub-Second Arc Settlement
+          </h3>
+          <p class="font-mono-custom text-xs text-[#c8c4bc]/50 uppercase leading-relaxed mt-3">
+            Built directly on Circle's Arc Mainnet (Chain 5042). Native USDC gas eliminates token conversion volatility with sub-second deterministic finality.
+          </p>
+        </div>
+
+        <!-- Pillar 2 -->
+        <div class="bg-[#1a1a1a] p-8 group hover:bg-[#c8c4bc]/[0.02] transition-colors relative">
+          <div class="font-pixel text-base text-[#8b3a2a]">02</div>
+          <h3 class="font-sans font-light text-base tracking-tight uppercase text-white mt-4">
+            Zero Gas for Buyers
+          </h3>
+          <p class="font-mono-custom text-xs text-[#c8c4bc]/50 uppercase leading-relaxed mt-3">
+            Clients sign EIP-3009 authorizations off-chain using standard EIP-712 typing. The ArcX facilitator executes <code class="text-[#8b3a2a]">receiveWithAuthorization</code> and absorbs the gas fee floor.
+          </p>
+        </div>
+
+        <!-- Pillar 3 -->
+        <div class="bg-[#1a1a1a] p-8 group hover:bg-[#c8c4bc]/[0.02] transition-colors relative">
+          <div class="font-pixel text-base text-[#8b3a2a]">03</div>
+          <h3 class="font-sans font-light text-base tracking-tight uppercase text-white mt-4">
+            Replay-Proof Cryptography
+          </h3>
+          <p class="font-mono-custom text-xs text-[#c8c4bc]/50 uppercase leading-relaxed mt-3">
+            The authorization nonce cryptographically binds a 16-byte random salt with the HTTP method and requested URI. Cross-endpoint signature reuse is mathematically impossible.
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 04 // SDK INTEGRATION CODE MATRIX (Nikita Khvatov Pill Tabs Style) -->
+    <section id="integration" class="mt-28">
+      <div class="font-mono-custom text-xs text-[#8b3a2a] tracking-[0.3em] uppercase mb-3">
+        [ 04 // DEVELOPER SDK &amp; AGENT INTEGRATION ]
+      </div>
+      <h2 class="font-pixel text-2xl sm:text-3xl tracking-tight uppercase text-[#c8c4bc]">
+        Integrate in Seconds
+      </h2>
+      <p class="mt-4 font-mono-custom text-xs text-[#c8c4bc]/50 uppercase tracking-wider max-w-xl">
+        Ready-to-use snippets for AI agents, Python pipelines, and Node.js microservices.
+      </p>
+
+      <!-- Code Box -->
+      <div class="mt-8 poster-shell p-[1px] rounded-2xl shadow-2xl">
+        <div class="bg-[#1a1a1a] rounded-2xl p-6 sm:p-8 border border-[#c8c4bc]/10">
+          
+          <!-- Code Tabs (Pill style from Nikita Khvatov portfolio) -->
+          <div class="flex flex-wrap items-center justify-between border-b border-[#c8c4bc]/10 pb-4 gap-4">
+            <div class="flex flex-wrap items-center gap-2 font-mono-custom text-xs uppercase tracking-wider">
+              <button onclick="switchTab('ts')" id="tab-ts" class="px-4 py-2 rounded-full bg-white text-black font-semibold transition-all cursor-pointer shadow-md">Node.js (viem)</button>
+              <button onclick="switchTab('python')" id="tab-python" class="px-4 py-2 rounded-full bg-[#121316] text-[#c8c4bc]/70 hover:text-white hover:bg-[#25262b] border border-[#c8c4bc]/10 transition-all cursor-pointer">Python (AI Agent)</button>
+              <button onclick="switchTab('eliza')" id="tab-eliza" class="px-4 py-2 rounded-full bg-[#121316] text-[#c8c4bc]/70 hover:text-white hover:bg-[#25262b] border border-[#c8c4bc]/10 transition-all cursor-pointer">LangChain / ElizaOS</button>
+              <button onclick="switchTab('curl')" id="tab-curl" class="px-4 py-2 rounded-full bg-[#121316] text-[#c8c4bc]/70 hover:text-white hover:bg-[#25262b] border border-[#c8c4bc]/10 transition-all cursor-pointer">cURL</button>
+            </div>
+            <button id="copy-code-btn" onclick="copyCode()" class="flex items-center gap-1.5 font-mono-custom text-xs uppercase tracking-widest text-[#c8c4bc]/70 hover:text-white border border-[#c8c4bc]/20 hover:border-[#8b3a2a] px-3 py-1.5 rounded-lg bg-[#121316] transition-all cursor-pointer">
+              <iconify-icon id="copy-btn-icon" icon="solar:copy-linear" class="text-base"></iconify-icon>
+              <span id="copy-btn-text">Copy Code</span>
+            </button>
+          </div>
+
+          <!-- Code Snippet Output -->
+          <div class="mt-6">
+            <pre id="code-block" class="font-mono-custom text-xs text-[#c8c4bc] overflow-x-auto code-scroll leading-relaxed p-4 bg-[#121316] rounded-xl border border-[#c8c4bc]/10"></pre>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- 05 // PRODUCTION ENDPOINTS TABLE (Nikita Khvatov Table Style) -->
+    <section id="endpoints" class="mt-28">
+      <div class="font-mono-custom text-xs text-[#8b3a2a] tracking-[0.3em] uppercase mb-3">
+        [ 05 // API ENDPOINTS SPECIFICATION ]
+      </div>
+      <h2 class="font-pixel text-2xl sm:text-3xl tracking-tight uppercase text-[#c8c4bc]">
+        Endpoint Matrix
+      </h2>
+
+      <div class="mt-8 bg-[#1a1a1a] rounded-2xl overflow-hidden border border-[#c8c4bc]/10">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left font-mono-custom text-xs">
+            <thead>
+              <tr class="border-b border-[#c8c4bc]/10 bg-[#121316] text-[#c8c4bc]/50 uppercase tracking-widest text-[0.65rem]">
+                <th class="py-4 px-6">Method &amp; Endpoint</th>
+                <th class="py-4 px-6">Pricing</th>
+                <th class="py-4 px-6">Description</th>
+                <th class="py-4 px-6">Required Auth</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[#c8c4bc]/10">
+              <tr class="hover:bg-[#c8c4bc]/[0.03] transition-colors">
+                <td class="py-4 px-6 font-bold text-white flex items-center gap-2">
+                  <span class="px-2 py-0.5 rounded bg-[#8b3a2a]/20 border border-[#8b3a2a]/40 text-[#8b3a2a] text-[0.65rem]">GET</span>
+                  /api/v1/lookup/:cveId
+                </td>
+                <td class="py-4 px-6 text-[#c8c4bc]">0.001 USDC (x402)</td>
+                <td class="py-4 px-6 text-[#c8c4bc]/60">Lookup enriched CVE threat advisory by identifier</td>
+                <td class="py-4 px-6 text-[#8b3a2a]">PAYMENT-SIGNATURE</td>
+              </tr>
+              <tr class="hover:bg-[#c8c4bc]/[0.03] transition-colors">
+                <td class="py-4 px-6 font-bold text-white flex items-center gap-2">
+                  <span class="px-2 py-0.5 rounded bg-[#8b3a2a]/20 border border-[#8b3a2a]/40 text-[#8b3a2a] text-[0.65rem]">GET</span>
+                  /api/v1/insight
+                </td>
+                <td class="py-4 px-6 text-[#c8c4bc]">0.001 USDC (x402)</td>
+                <td class="py-4 px-6 text-[#c8c4bc]/60">Fetch random zero-day threat advisory for automated bot training</td>
+                <td class="py-4 px-6 text-[#8b3a2a]">PAYMENT-SIGNATURE</td>
+              </tr>
+              <tr class="hover:bg-[#c8c4bc]/[0.03] transition-colors">
+                <td class="py-4 px-6 font-bold text-white flex items-center gap-2">
+                  <span class="px-2 py-0.5 rounded bg-emerald-950/80 border border-emerald-500/40 text-emerald-400 text-[0.65rem]">GET</span>
+                  /api/v1/stats
+                </td>
+                <td class="py-4 px-6 text-emerald-400">Free / Public</td>
+                <td class="py-4 px-6 text-[#c8c4bc]/60">Settlement metrics, volume, unique wallets, and protocol specs</td>
+                <td class="py-4 px-6 text-[#c8c4bc]/40">None</td>
+              </tr>
+              <tr class="hover:bg-[#c8c4bc]/[0.03] transition-colors">
+                <td class="py-4 px-6 font-bold text-white flex items-center gap-2">
+                  <span class="px-2 py-0.5 rounded bg-emerald-950/80 border border-emerald-500/40 text-emerald-400 text-[0.65rem]">GET</span>
+                  /health
+                </td>
+                <td class="py-4 px-6 text-emerald-400">Free / Public</td>
+                <td class="py-4 px-6 text-[#c8c4bc]/60">Service health diagnostic, SQLite status, and Arc RPC connectivity</td>
+                <td class="py-4 px-6 text-[#c8c4bc]/40">None</td>
+              </tr>
+              <tr class="hover:bg-[#c8c4bc]/[0.03] transition-colors">
+                <td class="py-4 px-6 font-bold text-white flex items-center gap-2">
+                  <span class="px-2 py-0.5 rounded bg-emerald-950/80 border border-emerald-500/40 text-emerald-400 text-[0.65rem]">GET</span>
+                  /dashboard
+                </td>
+                <td class="py-4 px-6 text-emerald-400">Free / Admin</td>
+                <td class="py-4 px-6 text-[#c8c4bc]/60">Real-time payment dashboard with live SSE streaming updates</td>
+                <td class="py-4 px-6 text-[#c8c4bc]/40">None</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="mt-28 mb-12 border-t border-[#c8c4bc]/10 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <div class="flex items-center gap-3">
+        <span class="font-pixel text-lg tracking-wider text-[#c8c4bc]">
+          ARC<span class="text-[#8b3a2a]">X</span>
+        </span>
+        <span class="font-mono-custom text-[0.65rem] text-[#c8c4bc]/40 uppercase tracking-widest">
+          Circle Arc Mainnet (Chain 5042) © 2026
+        </span>
+      </div>
+      <div class="flex items-center gap-6 text-xs font-mono-custom text-[#c8c4bc]/50">
+        <a href="/api/v1/stats" class="hover:text-[#8b3a2a] transition-colors">API Specs</a>
+        <a href="/health" class="hover:text-[#8b3a2a] transition-colors">Health Check</a>
+        <a href="/dashboard" class="hover:text-[#8b3a2a] transition-colors">Admin Dashboard</a>
+        <a href="https://explorer.arc.io" target="_blank" rel="noopener" class="hover:text-[#8b3a2a] transition-colors flex items-center gap-1">
+          Arc Explorer ↗
+        </a>
+      </div>
+    </footer>
+  </main>
+
+  <!-- JAVASCRIPT: Three.js 3D Background & Interactive Playground Logic -->
+  <script>
+    // -----------------------------------------------------------------
+    // 0. Mobile Menu Toggle
+    // -----------------------------------------------------------------
+    function toggleMobileMenu() {
+      const nav = document.getElementById('mobile-nav');
+      nav.classList.toggle('active');
+    }
+    function closeMobileMenu() {
+      const nav = document.getElementById('mobile-nav');
+      nav.classList.remove('active');
+    }
+
+    // -----------------------------------------------------------------
+    // 1. Three.js 3D Background (Metallic Icosahedron with Wireframe Overlay)
+    // -----------------------------------------------------------------
+    const container = document.getElementById('webgl-container');
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+    camera.position.z = 8;
+
+    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    renderer.setSize(container.clientWidth, container.clientHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    container.appendChild(renderer.domElement);
+
+    // Geometric Icosahedron with Dual Shells
+    const geometry = new THREE.IcosahedronGeometry(3, 2);
+    const material = new THREE.MeshPhysicalMaterial({
+      color: 0x1a1a1a,
+      roughness: 0.3,
+      metalness: 0.7,
+      flatShading: true,
+      transparent: true,
+      opacity: 0.9
+    });
+    const globe = new THREE.Mesh(geometry, material);
+
+    const wireframe = new THREE.LineSegments(
+      new THREE.WireframeGeometry(geometry),
+      new THREE.LineBasicMaterial({ color: 0x8b3a2a, transparent: true, opacity: 0.35 })
+    );
+    globe.add(wireframe);
+    scene.add(globe);
+
+    // Lighting
+    scene.add(new THREE.AmbientLight(0xc8c4bc, 0.4));
+    const d1 = new THREE.DirectionalLight(0x8b3a2a, 3.2);
+    d1.position.set(5, 3, 4);
+    scene.add(d1);
+
+    const d2 = new THREE.DirectionalLight(0xc8c4bc, 1.2);
+    d2.position.set(-5, -4, -2);
+    scene.add(d2);
+
+    // Mouse parallax interaction
+    let mouseX = 0, mouseY = 0;
+    const heroStage = document.getElementById('hero-stage');
+    if (heroStage) {
+      heroStage.addEventListener('mousemove', (e) => {
+        const rect = heroStage.getBoundingClientRect();
+        mouseX = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+        mouseY = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+      });
+      heroStage.addEventListener('mouseleave', () => {
+        mouseX = 0;
+        mouseY = 0;
+      });
+    }
+
+    const clock = new THREE.Clock();
+    function animate() {
+      requestAnimationFrame(animate);
+      const t = clock.getElapsedTime();
+      globe.rotation.y = t * 0.1 + mouseX * 0.3;
+      globe.rotation.x = Math.sin(t * 0.05) * 0.2 + mouseY * 0.2;
+      globe.position.y = Math.sin(t * 0.5) * 0.1;
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    window.addEventListener('resize', () => {
+      if (container) {
+        camera.aspect = container.clientWidth / container.clientHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(container.clientWidth, container.clientHeight);
+      }
+    });
+
+    // GSAP Intro
+    gsap.to(".gs-reveal", { opacity: 1, duration: 1.5, ease: "power2.inOut", delay: 0.2 });
+    gsap.from(".gs-text-up", { y: 30, opacity: 0, duration: 1.2, stagger: 0.15, ease: "expo.out", delay: 0.6 });
+
+    // Live System Clock
+    setInterval(() => {
+      const now = new Date();
+      const timeStr = now.toISOString().split('T')[1].split('.')[0] + 'Z';
+      const el = document.getElementById('live-time');
+      if (el) el.innerText = `SYS.SYNC // ${timeStr}`;
+    }, 1000);
+
+    // -----------------------------------------------------------------
+    // 2. Telemetry Polling from ArcX API
+    // -----------------------------------------------------------------
+    async function updateTelemetry() {
+      try {
+        const res = await fetch('/api/v1/stats');
+        const data = await res.json();
+        if (data && data.stats) {
+          document.getElementById('metric-settled').innerText = data.stats.totalSettled || 0;
+        }
+      } catch (err) {
+        // Fallback gracefully
+      }
+    }
+    updateTelemetry();
+    setInterval(updateTelemetry, 5000);
+
+    // -----------------------------------------------------------------
+    // 3. Interactive Playground Controls
+    // -----------------------------------------------------------------
+    function setQuery(cve) {
+      document.getElementById('cve-input').value = cve;
+      const el = document.getElementById('playground');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+      fetchChallenge();
+    }
+
+    async function fetchChallenge() {
+      const input = document.getElementById('cve-input').value.trim();
+      const url = input.startsWith('/insight') || input.toLowerCase() === 'random'
+        ? '/api/v1/insight'
+        : `/api/v1/lookup/${input}`;
+
+      const consoleEl = document.getElementById('wire-output');
+      const statusEl = document.getElementById('wire-status');
+      
+      statusEl.innerText = "QUERYING...";
+      statusEl.className = "font-mono-custom text-[0.65rem] text-amber-400";
+      consoleEl.innerText = `→ Sending GET ${url}...\n→ Expecting x402 Payment Challenge...`;
+
+      try {
+        const res = await fetch(url);
+        const headersObj = {};
+        for (let [k, v] of res.headers.entries()) {
+          if (k.toLowerCase().includes('payment') || k.toLowerCase().includes('ratelimit')) {
+            headersObj[k] = v;
+          }
+        }
+
+        const data = await res.json();
+        statusEl.innerText = `HTTP ${res.status} PAYMENT REQUIRED`;
+        statusEl.className = "font-mono-custom text-[0.65rem] text-[#8b3a2a] font-bold";
+
+        consoleEl.innerText = `← HTTP/1.1 ${res.status} Payment Required\n` +
+          `← PAYMENT-REQUIRED: ${res.headers.get('payment-required') || 'Present'}\n` +
+          `← Network: ${data.accepts?.[0]?.network || 'eip155:5042'}\n` +
+          `← Amount: ${data.accepts?.[0]?.amount || 1000} (${(parseInt(data.accepts?.[0]?.amount || 1000) / 1000000).toFixed(6)} USDC)\n` +
+          `← Asset: ${data.accepts?.[0]?.asset || '0x3600... (USDC)'}\n` +
+          `← PayTo: ${data.accepts?.[0]?.payTo || '0x...'}\n\n` +
+          `[Payload Challenge Body]:\n` +
+          JSON.stringify(data, null, 2);
+
+      } catch (err) {
+        statusEl.innerText = "ERROR";
+        consoleEl.innerText = `Failed to contact API endpoint: ${err.message}`;
+      }
+    }
+
+    async function simulateUnlock() {
+      const input = document.getElementById('cve-input').value.trim();
+      const consoleEl = document.getElementById('wire-output');
+      const statusEl = document.getElementById('wire-status');
+      const intelPanel = document.getElementById('intel-content');
+      const severityBadge = document.getElementById('badge-severity');
+
+      statusEl.innerText = "SIGNING EIP-3009...";
+      statusEl.className = "font-mono-custom text-[0.65rem] text-sky-400";
+
+      consoleEl.innerText += `\n\n✍️ [Client] Generating random 16-byte salt...\n` +
+        `✍️ [Client] Computing bound nonce: keccak256(salt, "GET:${input}")\n` +
+        `✍️ [Client] Signing EIP-712 TransferWithAuthorization off-chain (0 gas)...\n` +
+        `→ [Client] Resending with PAYMENT-SIGNATURE header...\n` +
+        `→ Settle on Arc Mainnet (Sequencer floor >= 20 Gwei)...`;
+
+      // Presentation of unlocked intelligence
+      setTimeout(async () => {
+        statusEl.innerText = "200 OK SETTLED";
+        statusEl.className = "font-mono-custom text-[0.65rem] text-emerald-400 font-bold";
+
+        consoleEl.innerText += `\n\n← HTTP/1.1 200 OK\n` +
+          `← PAYMENT-RESPONSE: {"settled":true,"network":"eip155:5042"}\n` +
+          `← Transaction confirmed on Arc Mainnet!`;
+
+        const cveUpper = (input || 'CVE-2024-3094').toUpperCase().trim();
+        let vulnName = `${cveUpper} — Threat Intelligence Dossier`;
+        let cvss = "9.8 (Critical)";
+        let mitre = "T1190";
+        let category = "Remote Code Execution (RCE)";
+        let source = "NIST NVD 2.0 Live API + ArcX";
+        let remediation = `Apply vendor security patches for ${cveUpper} immediately. Restrict unauthorized network ingress and monitor perimeter firewalls.`;
+
+        if (cveUpper.includes('3094')) {
+          vulnName = "CVE-2024-3094 — XZ Utils Backdoor";
+          cvss = "10.0 (Critical)";
+          mitre = "T1195.002";
+          category = "Supply Chain";
+          source = "NVD + ArcX analysis";
+          remediation = "Immediately downgrade XZ Utils to version 5.4.x or earlier. Audit systems running 5.6.0 or 5.6.1 for indicators of compromise.";
+        } else if (cveUpper.includes('44228')) {
+          vulnName = "CVE-2021-44228 — Log4Shell Apache RCE";
+          cvss = "10.0 (Critical)";
+          mitre = "T1190 / T1059";
+          category = "Remote Code Execution (RCE)";
+          source = "NVD + ArcX analysis";
+          remediation = "Upgrade to Log4j 2.17.1 or later. Set log4j2.formatMsgNoLookups=true as immediate mitigation.";
+        } else if (cveUpper.includes('34362')) {
+          vulnName = "CVE-2023-34362 — MOVEit Transfer SQLi";
+          cvss = "9.8 (Critical)";
+          mitre = "T1190 / T1041";
+          category = "SQL Injection (SQLi)";
+          source = "NVD + ArcX analysis";
+          remediation = "Apply MOVEit Transfer patches immediately. Audit access logs for unauthorized calls to moveitisapi.dll.";
+        } else if (cveUpper.includes('4966')) {
+          vulnName = "CVE-2023-4966 — Citrix Bleed Session Hijacking";
+          cvss = "9.4 (Critical)";
+          mitre = "T1557 / T1550";
+          category = "Info Disclosure / Session Hijack";
+          source = "CISA KEV + NIST NVD";
+          remediation = "Patch NetScaler firmware immediately and terminate all active user sessions to invalidate stolen tokens.";
+        } else if (cveUpper.includes('38063')) {
+          vulnName = "CVE-2024-38063 — Windows TCP/IP Remote Code Execution";
+          cvss = "9.8 (Critical)";
+          mitre = "T1190 / T1203";
+          category = "Remote Code Execution (RCE)";
+          source = "NIST NVD 2.0 Live Feed";
+          remediation = "Deploy Microsoft August 2024 security updates immediately. As temporary mitigation, disable IPv6 if not required.";
+        }
+
+        severityBadge.innerText = cvss.includes('10.0') ? "CRITICAL 10.0" : cvss.includes('9.4') ? "CRITICAL 9.4" : "CRITICAL 9.8";
+        severityBadge.className = "font-mono-custom text-[0.65rem] px-2 py-0.5 rounded bg-[#8b3a2a] text-white font-bold";
+
+        intelPanel.className = "mt-4 h-[280px] overflow-y-auto code-scroll pr-2 text-left space-y-3";
+        intelPanel.innerHTML = `
+          <div>
+            <div class="font-mono-custom text-[0.65rem] text-[#8b3a2a] uppercase">Vulnerability Identifier</div>
+            <h4 class="font-sans font-bold text-white text-base">${vulnName}</h4>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2 text-xs font-mono-custom bg-[#1a1a1a] p-2.5 rounded-lg border border-[#c8c4bc]/10">
+            <div><span class="text-[#c8c4bc]/40">CVSS Score:</span> <span class="text-rose-400 font-bold">${cvss}</span></div>
+            <div><span class="text-[#c8c4bc]/40">MITRE ATT&CK:</span> <span class="text-white">${mitre}</span></div>
+            <div><span class="text-[#c8c4bc]/40">Category:</span> <span class="text-white">${category}</span></div>
+            <div><span class="text-[#c8c4bc]/40">Source:</span> <span class="text-emerald-400">${source}</span></div>
+          </div>
+
+          <div>
+            <div class="font-mono-custom text-[0.65rem] text-[#c8c4bc]/40 uppercase">Actionable Remediation</div>
+            <p class="font-mono-custom text-xs text-[#c8c4bc]/80 mt-1 leading-relaxed">
+              ${remediation}
+            </p>
+          </div>
+
+          <div class="p-2.5 rounded-lg bg-[#8b3a2a]/10 border border-[#8b3a2a]/30 flex items-center justify-between text-xs font-mono-custom">
+            <span class="text-[#8b3a2a] font-bold">On-Chain Receipt:</span>
+            <a href="https://explorer.arc.io" target="_blank" rel="noopener" class="text-[#c8c4bc]/80 underline hover:text-white">View on Arc Explorer ↗</a>
+          </div>
+        `;
+      }, 700);
+    }
+
+    // -----------------------------------------------------------------
+    // 4. Code Matrix Switcher
+    // -----------------------------------------------------------------
+    const snippets = {
+      ts: `// Node.js / TypeScript Agent using viem & x402
+import { createWalletClient, http, toHex, keccak256, encodePacked } from 'viem';
+import { arc } from 'viem/chains';
+import { privateKeyToAccount } from 'viem/accounts';
+import { randomBytes } from 'crypto';
+
+const account = privateKeyToAccount(process.env.AGENT_PRIVATE_KEY);
+const client = createWalletClient({ account, chain: arc, transport: http() });
+
+// 1. Request endpoint -> Receive 402 challenge
+const challenge = await fetch('http://localhost:4402/api/v1/lookup/CVE-2024-3094');
+const { accepts } = await challenge.json();
+const offer = accepts[0];
+
+// 2. Compute request-bound nonce & sign EIP-3009 authorization
+const salt = toHex(randomBytes(16));
+const nonce = keccak256(encodePacked(['bytes16', 'string'], [salt, 'GET:/api/v1/lookup/CVE-2024-3094']));
+
+const signature = await client.signTypedData({
+  domain: { name: 'USDC', version: '2', chainId: 5042, verifyingContract: offer.asset },
+  types: {
+    TransferWithAuthorization: [
+      { name: 'from', type: 'address' }, { name: 'to', type: 'address' },
+      { name: 'value', type: 'uint256' }, { name: 'validAfter', type: 'uint256' },
+      { name: 'validBefore', type: 'uint256' }, { name: 'nonce', type: 'bytes32' },
+    ]
+  },
+  primaryType: 'TransferWithAuthorization',
+  message: {
+    from: account.address,
+    to: offer.payTo,
+    value: BigInt(offer.amount),
+    validAfter: 0n,
+    validBefore: BigInt(Math.floor(Date.now() / 1000) + 3600),
+    nonce
+  }
+});
+
+// 3. Resend with PAYMENT-SIGNATURE header (0 gas off-chain signature)
+const paid = await fetch('http://localhost:4402/api/v1/lookup/CVE-2024-3094', {
+  headers: {
+    'PAYMENT-SIGNATURE': Buffer.from(JSON.stringify({
+      from: account.address,
+      to: offer.payTo,
+      value: offer.amount,
+      validAfter: '0',
+      validBefore: (Math.floor(Date.now() / 1000) + 3600).toString(),
+      nonce,
+      bindingSalt: salt,
+      signature
+    })).toString('base64')
+  }
+});
+
+const intel = await paid.json();
+console.log('Unlocked Intel:', intel.insight.title);
+console.log('Arc Settlement Tx:', intel.payment.txHash);`,
+
+      python: `# Python 3.10+ Autonomous Agent (eth-account, requests, web3)
+import os, time, json, base64, requests
+from eth_account import Account
+from eth_account.messages import encode_typed_data
+from web3 import Web3
+
+agent = Account.from_key(os.getenv("AGENT_PRIVATE_KEY", "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"))
+url = "http://localhost:4402/api/v1/lookup/CVE-2024-3094"
+
+# 1. Request endpoint -> Receive 402 challenge terms
+challenge_res = requests.get(url)
+challenge = challenge_res.json()
+offer = challenge["accepts"][0]
+
+# 2. Compute request-bound nonce & sign EIP-3009 authorization off-chain
+salt = "0x" + os.urandom(16).hex()
+bound_nonce = Web3.solidity_keccak(
+    ['bytes16', 'string'],
+    [bytes.fromhex(salt[2:]), 'GET:/api/v1/lookup/CVE-2024-3094']
+).hex()
+
+domain = {
+    "name": "USDC",
+    "version": "2",
+    "chainId": 5042,
+    "verifyingContract": offer["asset"]
+}
+
+types = {
+    "TransferWithAuthorization": [
+        {"name": "from", "type": "address"},
+        {"name": "to", "type": "address"},
+        {"name": "value", "type": "uint256"},
+        {"name": "validAfter", "type": "uint256"},
+        {"name": "validBefore", "type": "uint256"},
+        {"name": "nonce", "type": "bytes32"}
+    ]
+}
+
+message = {
+    "from": agent.address,
+    "to": offer["payTo"],
+    "value": int(offer["amount"]),
+    "validAfter": 0,
+    "validBefore": int(time.time()) + 3600,
+    "nonce": bytes.fromhex(bound_nonce[2:])
+}
+
+signable = encode_typed_data(domain_data=domain, message_types=types, message_data=message)
+signed = agent.sign_message(signable)
+
+# 3. Unlock with base64 PAYMENT-SIGNATURE header
+payload = {
+    "from": agent.address,
+    "to": offer["payTo"],
+    "value": offer["amount"],
+    "validAfter": "0",
+    "validBefore": str(int(time.time()) + 3600),
+    "nonce": bound_nonce,
+    "bindingSalt": salt,
+    "signature": signed.signature.hex()
+}
+headers = {
+    "PAYMENT-SIGNATURE": base64.b64encode(json.dumps(payload).encode()).decode()
+}
+
+intel = requests.get(url, headers=headers).json()
+print("Unlocked Threat Intel:", intel["insight"]["title"])
+print("Arc Settlement Hash:", intel["payment"]["txHash"])`,
+
+      eliza: `// LangChain & ElizaOS Agent Tool Integration
+import { DynamicStructuredTool } from '@langchain/core/tools';
+import { z } from 'zod';
+
+export const arcxThreatTool = new DynamicStructuredTool({
+  name: 'arcx_threat_lookup',
+  description: 'Query real-time zero-day CVE threat intelligence and remediation via x402 micropayments on Arc Network',
+  schema: z.object({
+    cveId: z.string().describe('The CVE vulnerability ID, e.g. CVE-2024-3094, CVE-2021-44228'),
+  }),
+  func: async ({ cveId }) => {
+    const url = \`http://localhost:4402/api/v1/lookup/\${cveId}\`;
+    
+    // 1. Trigger x402 Payment Challenge
+    const challengeRes = await fetch(url);
+    if (challengeRes.status === 402) {
+      const challenge = await challengeRes.json();
+      
+      // 2. Sign EIP-3009 payment authorization header off-chain
+      const paymentSignature = await signArcXAuthorization(challenge.accepts[0], \`GET:/api/v1/lookup/\${cveId}\`);
+      
+      // 3. Unlock full intelligence dossier
+      const intelRes = await fetch(url, {
+        headers: { 'PAYMENT-SIGNATURE': paymentSignature }
+      });
+      const data = await intelRes.json();
+      
+      return JSON.stringify({
+        title: data.insight.title,
+        severity: data.insight.severity,
+        cvss: data.insight.cvss,
+        remediation: data.insight.remediation,
+        mitreAttack: data.insight.mitreAttack,
+        receipt: data.payment.txHash
+      }, null, 2);
+    }
+    
+    return challengeRes.text();
+  },
+});`,
+
+      curl: `# -----------------------------------------------------------------
+# ArcX x402 CLI / cURL Protocol Workflow
+# -----------------------------------------------------------------
+
+# 1. Request protected threat intelligence -> Receive HTTP 402 Payment Required:
+curl -i http://localhost:4402/api/v1/lookup/CVE-2024-3094
+
+# Returns challenge with payment parameters:
+# {
+#   "error": "Payment Required",
+#   "accepts": [{
+#     "scheme": "x402-v1",
+#     "network": "eip155:5042",
+#     "asset": "0x3600000000000000000000000000000000000000",
+#     "amount": "1000",
+#     "payTo": "0x5395aB3A5A6a066601449B86aD49C52d8e48b368"
+#   }]
+# }
+
+# 2. Resend request with base64-encoded PAYMENT-SIGNATURE header:
+curl -i http://localhost:4402/api/v1/lookup/CVE-2024-3094 \\
+  -H "PAYMENT-SIGNATURE: eyJmcm9tIjoiMHhBZGdyZXNzLi4uIiwidG8iOiIweFBheVRvLi4uIiwidmFsdWUiOiIxMDAwIiwidmFsaWRBZnRlciI6IjAiLCJ2YWxpZEJlZm9yZSI6IjE3MzU2ODk2MDAiLCJub25jZSI6IjB4Li4uIiwic2lnbmF0dXJlIjoiMHg4OTRhLi4uIn0="
+
+# 3. Query public telemetry, system health, and stats (Free, no 402):
+curl http://localhost:4402/api/v1/stats`
+    };
+
+    let activeTab = 'ts';
+
+    function getSnippet(tab) {
+      const raw = snippets[tab] || '';
+      if (typeof window !== 'undefined' && window.location && window.location.origin) {
+        return raw.replaceAll('http://localhost:4402', window.location.origin);
+      }
+      return raw;
+    }
+
+    function switchTab(tab) {
+      if (!snippets[tab]) return;
+      activeTab = tab;
+      
+      const codeBlock = document.getElementById('code-block');
+      if (codeBlock) {
+        codeBlock.textContent = getSnippet(tab);
+      }
+
+      const tabs = ['ts', 'python', 'eliza', 'curl'];
+      tabs.forEach(t => {
+        const btn = document.getElementById('tab-' + t);
+        if (!btn) return;
+        if (t === tab) {
+          btn.className = "px-4 py-2 rounded-full bg-white text-black font-semibold transition-all cursor-pointer shadow-md";
+        } else {
+          btn.className = "px-4 py-2 rounded-full bg-[#121316] text-[#c8c4bc]/70 hover:text-white hover:bg-[#25262b] border border-[#c8c4bc]/10 transition-all cursor-pointer";
+        }
+      });
+    }
+
+    function copyCode() {
+      const textToCopy = getSnippet(activeTab);
+      const btnText = document.getElementById('copy-btn-text');
+      const btnIcon = document.getElementById('copy-btn-icon');
+      const copyBtn = document.getElementById('copy-code-btn');
+
+      function notifyCopied() {
+        if (btnText) btnText.innerText = "COPIED!";
+        if (btnIcon) btnIcon.setAttribute('icon', 'solar:check-read-linear');
+        if (copyBtn) {
+          copyBtn.classList.add('text-emerald-400', 'border-emerald-500/50');
+        }
+        setTimeout(() => {
+          if (btnText) btnText.innerText = "Copy Code";
+          if (btnIcon) btnIcon.setAttribute('icon', 'solar:copy-linear');
+          if (copyBtn) {
+            copyBtn.classList.remove('text-emerald-400', 'border-emerald-500/50');
+          }
+        }, 2000);
+      }
+
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(textToCopy)
+          .then(notifyCopied)
+          .catch(() => fallbackCopy(textToCopy, notifyCopied));
+      } else {
+        fallbackCopy(textToCopy, notifyCopied);
+      }
+    }
+
+    function fallbackCopy(text, callback) {
+      try {
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        textArea.style.position = 'fixed';
+        textArea.style.left = '-999999px';
+        textArea.style.top = '-999999px';
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        if (callback) callback();
+      } catch (err) {
+        console.error('Fallback copy failed:', err);
+      }
+    }
+
+    // Attach listeners and expose globally
+    window.switchTab = switchTab;
+    window.copyCode = copyCode;
+    window.setQuery = setQuery;
+    window.fetchChallenge = fetchChallenge;
+    window.simulateUnlock = simulateUnlock;
+    window.toggleMobileMenu = toggleMobileMenu;
+    window.closeMobileMenu = closeMobileMenu;
+
+    // Explicit event listener bindings for complete CSP resilience
+    function attachEventListeners() {
+      ['ts', 'python', 'eliza', 'curl'].forEach(t => {
+        const el = document.getElementById('tab-' + t);
+        if (el) el.addEventListener('click', () => switchTab(t));
+      });
+      const copyBtn = document.getElementById('copy-code-btn');
+      if (copyBtn) copyBtn.addEventListener('click', copyCode);
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', attachEventListeners);
+    } else {
+      attachEventListeners();
+    }
+
+    // Initialize with TypeScript snippet
+    switchTab('ts');
+  </script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: arcx
+    runtime: node
+    plan: free
+    region: oregon
+    rootDir: server
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "4402"
+      - key: ARC_RPC_URL
+        value: https://rpc.mainnet.arc.io
+      - key: PRICE_PER_CALL
+        value: "1000"
+      - key: LOG_LEVEL
+        value: info
+      - key: DB_PATH
+        value: ./data/arcx.db
+      - key: FACILITATOR_PRIVATE_KEY
+        sync: false
+      - key: PAYTO_ADDRESS
+        sync: false

@@ -1,0 +1,13 @@
+{
+  "name": "arcx-root",
+  "version": "1.0.0",
+  "description": "ArcX — x402-native cybersecurity threat intelligence API on Arc mainnet",
+  "private": true,
+  "scripts": {
+    "start": "npm start --prefix server",
+    "dev": "npm run dev --prefix server",
+    "test": "npm test --prefix server",
+    "build": "npm install --prefix server",
+    "build:netlify": "mkdir -p dist && cp -r server/public/* dist/ && mkdir -p dist/dashboard && cp -r server/dashboard/* dist/dashboard/"
+  }
+}
