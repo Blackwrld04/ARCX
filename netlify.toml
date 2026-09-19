@@ -8,16 +8,31 @@
   to = "/dashboard/index.html"
   status = 200
 
-# Proxy API calls to your Render backend
-# Once your Render web service is live, update the URL below to match your Render domain (e.g. https://arcx-xxxx.onrender.com)
+[[redirects]]
+  from = "/dashboard/*"
+  to = "/dashboard/:splat"
+  status = 200
+
+# Stats explorer GUI route rewrite
+[[redirects]]
+  from = "/stats"
+  to = "/stats/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/stats/*"
+  to = "/stats/:splat"
+  status = 200
+
+# Proxy API calls directly to the Render backend
 [[redirects]]
   from = "/api/*"
-  to = "https://arcx.onrender.com/api/:splat"
+  to = "https://arcx-v2fs.onrender.com/api/:splat"
   status = 200
-  force = false
+  force = true
 
 [[redirects]]
   from = "/health"
-  to = "https://arcx.onrender.com/health"
+  to = "https://arcx-v2fs.onrender.com/health"
   status = 200
-  force = false
+  force = true
