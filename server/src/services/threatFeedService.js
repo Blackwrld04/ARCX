@@ -477,11 +477,12 @@ export async function lookupCve(cveId) {
  */
 export async function getRandomInsight() {
   const db = getDb();
+  const cveThreats = curatedThreats.filter(t => t.cve);
   // 50% chance to return a curated entry, 50% chance to return an actively exploited CISA KEV entry
   const useCurated = Math.random() < 0.5 || cisaKevSet.size === 0;
 
-  if (useCurated && curatedThreats.length > 0) {
-    const entry = curatedThreats[Math.floor(Math.random() * curatedThreats.length)];
+  if (useCurated && cveThreats.length > 0) {
+    const entry = cveThreats[Math.floor(Math.random() * cveThreats.length)];
     const isKev = entry.cve ? cisaKevSet.has(entry.cve.toUpperCase()) : false;
     return {
       ...entry,
@@ -503,7 +504,7 @@ export async function getRandomInsight() {
   }
 
   // Fallback to curated baseline
-  const fallback = curatedThreats.find(t => t.cve) || curatedThreats[0];
+  const fallback = cveThreats[0] || curatedThreats[0];
   return {
     ...fallback,
     is_actively_exploited: fallback?.cve ? cisaKevSet.has(fallback.cve.toUpperCase()) : false

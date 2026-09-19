@@ -1,8 +1,11 @@
 import { Router } from 'express';
+import { dirname, join } from 'path';
+import { fileURLToPath } from 'url';
 import { getStats, getRecentPayments } from '../db/ledger.js';
 import { getFeedStats } from '../services/threatFeedService.js';
 import { config } from '../config.js';
 
+const __dirname = dirname(fileURLToPath(import.meta.url));
 const router = Router();
 const startTime = Date.now();
 
@@ -12,9 +15,18 @@ const startTime = Date.now();
  * Free endpoint — no payment required.
  * Returns public metrics about the API: total queries, revenue, unique wallets,
  * and live threat feed coverage (CISA KEV, NIST NVD, OSV, and cached CVEs).
- * Serves as social proof and lets judges/users verify the system is live.
+ * If requested from a browser (Accept: text/html), serves the sleek Explorer GUI.
+ * If requested via curl/SDK/agents (Accept: application/json or ?format=json), returns pure JSON.
  */
 router.get('/', (req, res) => {
+  const wantsJson = req.query.format === 'json' ||
+                    (req.headers.accept && req.headers.accept.includes('application/json') && !req.headers.accept.includes('text/html')) ||
+                    req.xhr;
+
+  if (!wantsJson && req.accepts('html')) {
+    return res.sendFile(join(__dirname, '../../public/stats/index.html'));
+  }
+
   const stats = getStats();
   const feedStats = getFeedStats();
   const uptimeSeconds = Math.floor((Date.now() - startTime) / 1000);

@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ArcX — Public Telemetry &amp; Protocol Specs</title>
+  <meta name="description" content="Public real-time metrics, settlement telemetry, and live threat feed coverage for ArcX on Circle's Arc Mainnet.">
+
+  <!-- Tailwind CSS & Icons -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+
+  <!-- Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-main: #0d0e12;
+      --bg-card: #13151b;
+      --bg-surface: #181b22;
+      --text-main: #c8c4bc;
+      --text-muted: rgba(200, 196, 188, 0.55);
+      --accent-red: #8b3a2a;
+      --accent-red-glow: rgba(139, 58, 42, 0.35);
+      --border-line: rgba(200, 196, 188, 0.1);
+      --border-accent: rgba(139, 58, 42, 0.35);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .font-pixel { font-family: 'Silkscreen', monospace; }
+    .font-mono-custom { font-family: 'JetBrains Mono', monospace; }
+
+    /* Custom scrollbars */
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: var(--bg-main); }
+    ::-webkit-scrollbar-thumb { background: var(--accent-red); }
+
+    /* JSON syntax highlighter */
+    .json-key { color: #93c5fd; }
+    .json-string { color: #86efac; }
+    .json-number { color: #fca5a5; }
+    .json-boolean { color: #fcd34d; }
+    .json-null { color: #cbd5e1; }
+
+    .glow-hover:hover {
+      box-shadow: 0 0 25px rgba(139, 58, 42, 0.2);
+      border-color: rgba(139, 58, 42, 0.6);
+    }
+  </style>
+</head>
+<body class="min-h-screen relative selection:bg-[#8b3a2a] selection:text-[#c8c4bc]">
+
+  <!-- Architectural Background Guide Lines -->
+  <div class="fixed top-0 bottom-0 left-4 sm:left-12 w-[1px] bg-[#c8c4bc]/5 z-0 pointer-events-none"></div>
+  <div class="fixed top-0 bottom-0 right-4 sm:right-12 w-[1px] bg-[#c8c4bc]/5 z-0 pointer-events-none"></div>
+
+  <!-- NAVIGATION -->
+  <nav class="sticky top-0 z-50 backdrop-blur-md bg-[#0d0e12]/90 border-b border-[#c8c4bc]/10">
+    <div class="max-w-[1240px] mx-auto px-6 sm:px-12 h-16 flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <div class="flex items-center gap-3">
+        <a href="/" class="font-pixel text-xl tracking-wider text-[#c8c4bc] hover:text-white transition-colors">
+          ARC<span class="text-[#8b3a2a]">X</span>
+        </a>
+        <span class="hidden sm:inline-block font-mono-custom text-[0.65rem] uppercase tracking-widest text-[#c8c4bc]/40 border-l border-[#c8c4bc]/10 pl-3">
+          Public Telemetry &amp; Specs
+        </span>
+      </div>
+
+      <!-- Navigation Links -->
+      <div class="flex items-center gap-4 sm:gap-6 font-mono-custom text-xs">
+        <a href="/" class="text-[#c8c4bc]/70 hover:text-white transition-colors flex items-center gap-1.5">
+          <iconify-icon icon="solar:arrow-left-linear"></iconify-icon>
+          <span class="hidden sm:inline">Portal</span>
+        </a>
+        <a href="/#playground" class="hidden md:inline-block text-[#c8c4bc]/70 hover:text-[#8b3a2a] transition-colors">
+          Playground
+        </a>
+        <a href="/health" target="_blank" class="hidden sm:inline-block text-[#c8c4bc]/70 hover:text-emerald-400 transition-colors">
+          Health Check
+        </a>
+
+        <!-- View Switcher (GUI vs JSON) -->
+        <div class="flex items-center bg-[#181b22] p-0.5 rounded border border-[#c8c4bc]/15">
+          <button id="btn-view-gui" onclick="setViewMode('gui')" class="px-2.5 py-1 text-[0.7rem] uppercase tracking-wider rounded font-medium bg-[#8b3a2a] text-white transition-all flex items-center gap-1">
+            <iconify-icon icon="solar:widget-linear"></iconify-icon>
+            GUI
+          </button>
+          <button id="btn-view-json" onclick="setViewMode('json')" class="px-2.5 py-1 text-[0.7rem] uppercase tracking-wider rounded font-medium text-[#c8c4bc]/60 hover:text-white transition-all flex items-center gap-1">
+            <iconify-icon icon="solar:code-file-linear"></iconify-icon>
+            JSON
+          </button>
+        </div>
+
+        <!-- Live Status Pill -->
+        <div class="flex items-center gap-2 bg-[#14151b] px-3 py-1 rounded border border-[#c8c4bc]/10">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span class="font-mono-custom text-[0.65rem] uppercase tracking-wider text-emerald-400 hidden sm:inline">Arc 5042</span>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTAINER -->
+  <main class="max-w-[1240px] mx-auto px-6 sm:px-12 py-10 relative z-10">
+
+    <!-- HERO HEADER -->
+    <header class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 border-b border-[#c8c4bc]/10">
+      <div>
+        <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-[#8b3a2a]/15 border border-[#8b3a2a]/30 text-[#8b3a2a] font-mono-custom text-xs uppercase tracking-widest mb-3">
+          <iconify-icon icon="solar:pulse-2-linear" class="text-sm"></iconify-icon>
+          Real-Time Public Telemetry
+        </div>
+        <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-white mb-2">
+          Protocol Explorer &amp; API Specs
+        </h1>
+        <p class="text-sm text-[#c8c4bc]/60 max-w-2xl">
+          Live verification status, settlement revenue on Circle's Arc Mainnet, synchronized vulnerability catalogs, and formal x402 payment specifications.
+        </p>
+      </div>
+
+      <!-- Live Controls -->
+      <div class="flex items-center gap-3">
+        <button onclick="fetchStats()" id="btn-refresh" class="px-4 py-2 rounded bg-[#181b22] hover:bg-[#20242e] border border-[#c8c4bc]/15 hover:border-[#8b3a2a]/50 text-xs font-mono-custom text-[#c8c4bc] transition-all flex items-center gap-2">
+          <iconify-icon icon="solar:refresh-linear" id="icon-refresh"></iconify-icon>
+          <span>Refresh</span>
+        </button>
+        <a href="/api/v1/stats?format=json" target="_blank" class="px-4 py-2 rounded bg-[#8b3a2a]/20 hover:bg-[#8b3a2a] border border-[#8b3a2a]/40 text-xs font-mono-custom text-white transition-all flex items-center gap-1.5">
+          <iconify-icon icon="solar:export-linear"></iconify-icon>
+          <span>Raw API URL</span>
+        </a>
+      </div>
+    </header>
+
+    <!-- ==================== VIEW 1: GUI DASHBOARD ==================== -->
+    <div id="view-gui" class="space-y-10">
+
+      <!-- KEY METRICS GRID -->
+      <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        
+        <!-- Metric 1: Total Settled -->
+        <div class="bg-[#13151b] border border-[#c8c4bc]/10 rounded-lg p-5 glow-hover transition-all relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-24 h-24 bg-[#8b3a2a]/5 rounded-bl-full pointer-events-none"></div>
+          <div class="flex items-center justify-between mb-3">
+            <span class="font-mono-custom text-xs uppercase tracking-wider text-[#c8c4bc]/50">Settled Payments</span>
+            <iconify-icon icon="solar:verified-check-linear" class="text-[#8b3a2a] text-lg"></iconify-icon>
+          </div>
+          <div id="val-settled" class="text-3xl font-bold font-mono-custom text-white">0</div>
+          <div class="mt-2 text-[0.7rem] font-mono-custom text-emerald-400 flex items-center gap-1">
+            <iconify-icon icon="solar:shield-check-linear"></iconify-icon>
+            <span>Verified on-chain via EIP-3009</span>
+          </div>
+        </div>
+
+        <!-- Metric 2: Total Revenue -->
+        <div class="bg-[#13151b] border border-[#c8c4bc]/10 rounded-lg p-5 glow-hover transition-all relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-24 h-24 bg-emerald-500/5 rounded-bl-full pointer-events-none"></div>
+          <div class="flex items-center justify-between mb-3">
+            <span class="font-mono-custom text-xs uppercase tracking-wider text-[#c8c4bc]/50">Protocol Revenue</span>
+            <iconify-icon icon="solar:dollar-minimalistic-linear" class="text-emerald-400 text-lg"></iconify-icon>
+          </div>
+          <div id="val-revenue" class="text-3xl font-bold font-mono-custom text-white">0.000000 USDC</div>
+          <div class="mt-2 text-[0.7rem] font-mono-custom text-[#c8c4bc]/40 flex items-center gap-1">
+            <span>Unified USDC balance</span>
+          </div>
+        </div>
+
+        <!-- Metric 3: Active Zero-Days (CISA KEV) -->
+        <div class="bg-[#13151b] border border-[#c8c4bc]/10 rounded-lg p-5 glow-hover transition-all relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-24 h-24 bg-rose-500/5 rounded-bl-full pointer-events-none"></div>
+          <div class="flex items-center justify-between mb-3">
+            <span class="font-mono-custom text-xs uppercase tracking-wider text-[#c8c4bc]/50">CISA KEV Catalog</span>
+            <iconify-icon icon="solar:danger-triangle-linear" class="text-rose-400 text-lg"></iconify-icon>
+          </div>
+          <div id="val-kev-count" class="text-3xl font-bold font-mono-custom text-white">1,716</div>
+          <div class="mt-2 text-[0.7rem] font-mono-custom text-rose-400 flex items-center gap-1">
+            <iconify-icon icon="solar:radar-2-linear"></iconify-icon>
+            <span>Actively exploited zero-days</span>
+          </div>
+        </div>
+
+        <!-- Metric 4: Query Price -->
+        <div class="bg-[#13151b] border border-[#c8c4bc]/10 rounded-lg p-5 glow-hover transition-all relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-24 h-24 bg-cyan-500/5 rounded-bl-full pointer-events-none"></div>
+          <div class="flex items-center justify-between mb-3">
+            <span class="font-mono-custom text-xs uppercase tracking-wider text-[#c8c4bc]/50">Micropayment Cost</span>
+            <iconify-icon icon="solar:tag-price-linear" class="text-cyan-400 text-lg"></iconify-icon>
+          </div>
+          <div id="val-price" class="text-3xl font-bold font-mono-custom text-white">$0.001000</div>
+          <div class="mt-2 text-[0.7rem] font-mono-custom text-cyan-400 flex items-center gap-1">
+            <iconify-icon icon="solar:flash-linear"></iconify-icon>
+            <span>Zero-gas off-chain authorization</span>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- SECTION: PROTOCOL ARCHITECTURE & CONTRACT SPECS -->
+      <section class="bg-[#13151b] border border-[#c8c4bc]/10 rounded-lg p-6 sm:p-8">
+        <div class="flex items-center gap-3 mb-6 pb-4 border-b border-[#c8c4bc]/10">
+          <iconify-icon icon="solar:server-square-linear" class="text-xl text-[#8b3a2a]"></iconify-icon>
+          <div>
+            <h2 class="text-lg font-bold text-white">Smart Contract &amp; Payment Settlement Specs</h2>
+            <p class="text-xs text-[#c8c4bc]/50 font-mono-custom">EIP-3009 transferWithAuthorization parameters on Arc Network</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          
+          <!-- Spec item: Network -->
+          <div class="bg-[#181b22] p-4 rounded border border-[#c8c4bc]/10 flex flex-col justify-between">
+            <div class="text-xs font-mono-custom text-[#c8c4bc]/50 uppercase mb-1">Blockchain Network</div>
+            <div class="flex items-center justify-between">
+              <span class="text-white font-medium">Arc Mainnet</span>
+              <span id="spec-network" class="px-2.5 py-0.5 rounded bg-emerald-950/80 border border-emerald-500/30 text-emerald-400 text-xs font-mono-custom">
+                Chain ID 5042
+              </span>
+            </div>
+          </div>
+
+          <!-- Spec item: EIP-155 Identifier -->
+          <div class="bg-[#181b22] p-4 rounded border border-[#c8c4bc]/10 flex flex-col justify-between">
+            <div class="text-xs font-mono-custom text-[#c8c4bc]/50 uppercase mb-1">EIP-155 Network Descriptor</div>
+            <div class="flex items-center justify-between">
+              <span class="text-white font-mono-custom text-sm">eip155:5042</span>
+              <button onclick="copyToClipboard('eip155:5042', this)" class="text-[#c8c4bc]/40 hover:text-white transition-colors text-xs font-mono-custom flex items-center gap-1">
+                <iconify-icon icon="solar:copy-linear"></iconify-icon> Copy
+              </button>
+            </div>
+          </div>
+
+          <!-- Spec item: USDC Contract -->
+          <div class="bg-[#181b22] p-4 rounded border border-[#c8c4bc]/10">
+            <div class="text-xs font-mono-custom text-[#c8c4bc]/50 uppercase mb-1">Unified USDC Asset Contract</div>
+            <div class="flex items-center justify-between gap-2">
+              <span id="spec-asset" class="font-mono-custom text-xs text-white truncate">0x3600000000000000000000000000000000000000</span>
+              <div class="flex items-center gap-2 shrink-0">
+                <button onclick="copyToClipboard(document.getElementById('spec-asset').innerText, this)" class="text-[#c8c4bc]/40 hover:text-white transition-colors text-xs font-mono-custom flex items-center gap-1">
+                  <iconify-icon icon="solar:copy-linear"></iconify-icon>
+                </button>
+                <a href="https://explorer.arc.io/address/0x3600000000000000000000000000000000000000" target="_blank" rel="noopener" class="text-[#8b3a2a] hover:text-white transition-colors text-xs font-mono-custom flex items-center gap-1">
+                  <iconify-icon icon="solar:square-top-down-linear"></iconify-icon>
+                </a>
+              </div>
+            </div>
+            <div class="mt-2 text-[0.7rem] text-[#c8c4bc]/40">
+              Arc's native dual-interface USDC token (ERC-20 + Native Gas).
+            </div>
+          </div>
+
+          <!-- Spec item: Facilitator PayTo Address -->
+          <div class="bg-[#181b22] p-4 rounded border border-[#c8c4bc]/10">
+            <div class="text-xs font-mono-custom text-[#c8c4bc]/50 uppercase mb-1">Facilitator / Pay-To Address</div>
+            <div class="flex items-center justify-between gap-2">
+              <span id="spec-payto" class="font-mono-custom text-xs text-white truncate">0x8b415aE3956992b0cbC6C78c485A4d099F6331cE</span>
+              <div class="flex items-center gap-2 shrink-0">
+                <button onclick="copyToClipboard(document.getElementById('spec-payto').innerText, this)" class="text-[#c8c4bc]/40 hover:text-white transition-colors text-xs font-mono-custom flex items-center gap-1">
+                  <iconify-icon icon="solar:copy-linear"></iconify-icon>
+                </button>
+                <a id="link-payto-explorer" href="https://explorer.arc.io/address/0x8b415aE3956992b0cbC6C78c485A4d099F6331cE" target="_blank" rel="noopener" class="text-[#8b3a2a] hover:text-white transition-colors text-xs font-mono-custom flex items-center gap-1">
+                  <iconify-icon icon="solar:square-top-down-linear"></iconify-icon>
+                </a>
+              </div>
+            </div>
+            <div class="mt-2 text-[0.7rem] text-[#c8c4bc]/40">
+              Verified recipient address for cryptographic EIP-3009 transfer authorizations.
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- SECTION: THREAT INTELLIGENCE ENGINE & PIPELINE -->
+      <section class="bg-[#13151b] border border-[#c8c4bc]/10 rounded-lg p-6 sm:p-8">
+        <div class="flex items-center justify-between mb-6 pb-4 border-b border-[#c8c4bc]/10">
+          <div class="flex items-center gap-3">
+            <iconify-icon icon="solar:radar-2-linear" class="text-xl text-rose-400"></iconify-icon>
+            <div>
+              <h2 class="text-lg font-bold text-white">Active Threat Intelligence Feeds</h2>
+              <p class="text-xs text-[#c8c4bc]/50 font-mono-custom">Multi-tiered vulnerability synthesis and validation sources</p>
+            </div>
+          </div>
+          <div class="text-right">
+            <span class="text-[0.7rem] font-mono-custom text-[#c8c4bc]/40">Last Feed Sync:</span>
+            <div id="val-last-sync" class="text-xs font-mono-custom text-[#c8c4bc]">Syncing...</div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" id="feeds-grid">
+          
+          <!-- Source 1: CISA KEV -->
+          <div class="bg-[#181b22] p-4 rounded border border-[#c8c4bc]/10 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-mono-custom text-emerald-400 font-semibold uppercase">US CISA KEV</span>
+                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+              </div>
+              <div class="text-sm font-bold text-white mb-1">Known Exploited Vulnerabilities</div>
+              <p class="text-xs text-[#c8c4bc]/50">Government catalog of zero-days actively weaponized in the wild.</p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-[#c8c4bc]/10 flex items-center justify-between text-xs font-mono-custom">
+              <span class="text-[#c8c4bc]/50">Exploited CVEs</span>
+              <span id="badge-cisa-count" class="text-white font-bold">1,716+</span>
+            </div>
+          </div>
+
+          <!-- Source 2: NIST NVD 2.0 -->
+          <div class="bg-[#181b22] p-4 rounded border border-[#c8c4bc]/10 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-mono-custom text-cyan-400 font-semibold uppercase">NIST NVD 2.0</span>
+                <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
+              </div>
+              <div class="text-sm font-bold text-white mb-1">Live Global Registry</div>
+              <p class="text-xs text-[#c8c4bc]/50">Live REST API resolving over 250,000 official CVE entries on demand.</p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-[#c8c4bc]/10 flex items-center justify-between text-xs font-mono-custom">
+              <span class="text-[#c8c4bc]/50">Coverage</span>
+              <span class="text-white font-bold">250,000+ CVEs</span>
+            </div>
+          </div>
+
+          <!-- Source 3: OSV.dev -->
+          <div class="bg-[#181b22] p-4 rounded border border-[#c8c4bc]/10 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-mono-custom text-purple-400 font-semibold uppercase">OSV.dev Engine</span>
+                <span class="w-2 h-2 rounded-full bg-purple-400"></span>
+              </div>
+              <div class="text-sm font-bold text-white mb-1">Open Source Intel</div>
+              <p class="text-xs text-[#c8c4bc]/50">High-speed secondary fallback for open-source package vulnerabilities.</p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-[#c8c4bc]/10 flex items-center justify-between text-xs font-mono-custom">
+              <span class="text-[#c8c4bc]/50">Latency</span>
+              <span class="text-white font-bold">&lt; 150ms</span>
+            </div>
+          </div>
+
+          <!-- Source 4: ArcX Curated -->
+          <div class="bg-[#181b22] p-4 rounded border border-[#c8c4bc]/10 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-mono-custom text-[#8b3a2a] font-semibold uppercase">ArcX Curated</span>
+                <span class="w-2 h-2 rounded-full bg-[#8b3a2a]"></span>
+              </div>
+              <div class="text-sm font-bold text-white mb-1">Baseline Security Dossiers</div>
+              <p class="text-xs text-[#c8c4bc]/50">Hand-curated zero-days with verified MITRE ATT&amp;CK mappings &amp; IoCs.</p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-[#c8c4bc]/10 flex items-center justify-between text-xs font-mono-custom">
+              <span class="text-[#c8c4bc]/50">Baseline</span>
+              <span id="badge-curated-count" class="text-white font-bold">50 Critical</span>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- SECTION: ENDPOINT MATRIX & ROUTING SPECS -->
+      <section class="bg-[#13151b] border border-[#c8c4bc]/10 rounded-lg p-6 sm:p-8">
+        <div class="flex items-center gap-3 mb-6 pb-4 border-b border-[#c8c4bc]/10">
+          <iconify-icon icon="solar:code-file-linear" class="text-xl text-emerald-400"></iconify-icon>
+          <div>
+            <h2 class="text-lg font-bold text-white">Public API Endpoints Specification</h2>
+            <p class="text-xs text-[#c8c4bc]/50 font-mono-custom">Available methods, pricing tier, and authentication schemes</p>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left font-mono-custom text-xs">
+            <thead>
+              <tr class="border-b border-[#c8c4bc]/10 text-[#c8c4bc]/50 uppercase">
+                <th class="py-3 px-4">Endpoint</th>
+                <th class="py-3 px-4">Cost</th>
+                <th class="py-3 px-4">Auth / Protocol</th>
+                <th class="py-3 px-4">Description</th>
+                <th class="py-3 px-4 text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[#c8c4bc]/10">
+              
+              <!-- Endpoint 1: Stats -->
+              <tr class="hover:bg-[#c8c4bc]/[0.02] transition-colors">
+                <td class="py-4 px-4 font-bold text-white flex items-center gap-2">
+                  <span class="px-2 py-0.5 rounded bg-emerald-950/80 border border-emerald-500/40 text-emerald-400 text-[0.65rem]">GET</span>
+                  <span class="text-emerald-400">/api/v1/stats</span>
+                  <span class="px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 text-[0.6rem]">CURRENT</span>
+                </td>
+                <td class="py-4 px-4 text-emerald-400">Free / Public</td>
+                <td class="py-4 px-4 text-[#c8c4bc]/40">None</td>
+                <td class="py-4 px-4 text-[#c8c4bc]/70">This endpoint — real-time settlement telemetry and feed stats</td>
+                <td class="py-4 px-4 text-right">
+                  <button onclick="copyToClipboard('http://' + window.location.host + '/api/v1/stats', this)" class="px-2.5 py-1 rounded bg-[#181b22] hover:bg-[#20242e] border border-[#c8c4bc]/15 text-[#c8c4bc] hover:text-white transition-all">
+                    Copy URL
+                  </button>
+                </td>
+              </tr>
+
+              <!-- Endpoint 2: Health -->
+              <tr class="hover:bg-[#c8c4bc]/[0.02] transition-colors">
+                <td class="py-4 px-4 font-bold text-white flex items-center gap-2">
+                  <span class="px-2 py-0.5 rounded bg-emerald-950/80 border border-emerald-500/40 text-emerald-400 text-[0.65rem]">GET</span>
+                  <a href="/health" target="_blank" class="hover:text-emerald-400 underline decoration-dotted underline-offset-4 transition-colors">/health</a>
+                </td>
+                <td class="py-4 px-4 text-emerald-400">Free / Public</td>
+                <td class="py-4 px-4 text-[#c8c4bc]/40">None</td>
+                <td class="py-4 px-4 text-[#c8c4bc]/70">System diagnostic, SQLite database integrity, and Arc RPC health</td>
+                <td class="py-4 px-4 text-right">
+                  <a href="/health" target="_blank" class="px-2.5 py-1 rounded bg-[#181b22] hover:bg-[#20242e] border border-[#c8c4bc]/15 text-[#c8c4bc] hover:text-white transition-all inline-block">
+                    Open ↗
+                  </a>
+                </td>
+              </tr>
+
+              <!-- Endpoint 3: Insight -->
+              <tr class="hover:bg-[#c8c4bc]/[0.02] transition-colors">
+                <td class="py-4 px-4 font-bold text-white flex items-center gap-2">
+                  <span class="px-2 py-0.5 rounded bg-[#8b3a2a]/20 border border-[#8b3a2a]/40 text-[#8b3a2a] text-[0.65rem]">GET</span>
+                  <span>/api/v1/insight</span>
+                </td>
+                <td class="py-4 px-4 text-[#c8c4bc]">0.001 USDC</td>
+                <td class="py-4 px-4 text-[#8b3a2a]">x402 (EIP-3009)</td>
+                <td class="py-4 px-4 text-[#c8c4bc]/70">Dynamic enriched threat intelligence advisory for security agents</td>
+                <td class="py-4 px-4 text-right">
+                  <a href="/#playground" class="px-2.5 py-1 rounded bg-[#8b3a2a]/20 hover:bg-[#8b3a2a] border border-[#8b3a2a]/40 text-white transition-all inline-block">
+                    Test in Portal
+                  </a>
+                </td>
+              </tr>
+
+              <!-- Endpoint 4: Lookup -->
+              <tr class="hover:bg-[#c8c4bc]/[0.02] transition-colors">
+                <td class="py-4 px-4 font-bold text-white flex items-center gap-2">
+                  <span class="px-2 py-0.5 rounded bg-[#8b3a2a]/20 border border-[#8b3a2a]/40 text-[#8b3a2a] text-[0.65rem]">GET</span>
+                  <span>/api/v1/lookup/:cveId</span>
+                </td>
+                <td class="py-4 px-4 text-[#c8c4bc]">0.001 USDC</td>
+                <td class="py-4 px-4 text-[#8b3a2a]">x402 (EIP-3009)</td>
+                <td class="py-4 px-4 text-[#c8c4bc]/70">Query specific CVE identifier against NVD, KEV, and local cache</td>
+                <td class="py-4 px-4 text-right">
+                  <a href="/#playground" class="px-2.5 py-1 rounded bg-[#8b3a2a]/20 hover:bg-[#8b3a2a] border border-[#8b3a2a]/40 text-white transition-all inline-block">
+                    Test in Portal
+                  </a>
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ==================== VIEW 2: RAW JSON CODE VIEWER ==================== -->
+    <div id="view-json" class="hidden space-y-6">
+      
+      <div class="bg-[#13151b] border border-[#c8c4bc]/10 rounded-lg p-6">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4 pb-4 border-b border-[#c8c4bc]/10">
+          <div>
+            <h2 class="text-lg font-bold text-white">Live API Payload Response</h2>
+            <p class="text-xs text-[#c8c4bc]/50 font-mono-custom">Exact output received by AI agents and automated SDKs</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="copyRawJson(this)" class="px-3 py-1.5 rounded bg-[#181b22] hover:bg-[#20242e] border border-[#c8c4bc]/15 text-xs font-mono-custom text-white transition-all flex items-center gap-1.5">
+              <iconify-icon icon="solar:copy-linear"></iconify-icon>
+              <span>Copy JSON</span>
+            </button>
+            <button onclick="copyCurlCommand(this)" class="px-3 py-1.5 rounded bg-[#8b3a2a]/20 hover:bg-[#8b3a2a] border border-[#8b3a2a]/40 text-xs font-mono-custom text-white transition-all flex items-center gap-1.5">
+              <iconify-icon icon="solar:command-linear"></iconify-icon>
+              <span>Copy cURL</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Preformatted Code Display -->
+        <div class="relative">
+          <pre id="json-display" class="bg-[#0a0b0e] border border-[#c8c4bc]/10 rounded-lg p-5 text-xs font-mono-custom overflow-x-auto text-[#c8c4bc] leading-relaxed max-h-[600px]">Loading live JSON payload...</pre>
+        </div>
+
+        <div class="mt-4 p-4 rounded bg-[#181b22]/70 border border-[#c8c4bc]/10 text-xs text-[#c8c4bc]/60 font-mono-custom">
+          💡 <strong class="text-white">Agent Integration Tip:</strong> AI agents requesting <code class="text-amber-300">Accept: application/json</code> or appending <code class="text-amber-300">?format=json</code> will automatically receive pure machine-readable JSON without any HTML markup.
+        </div>
+      </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="mt-16 pt-8 border-t border-[#c8c4bc]/10 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs font-mono-custom text-[#c8c4bc]/40">
+      <div class="flex items-center gap-3">
+        <span class="font-pixel text-[#c8c4bc]">ARC<span class="text-[#8b3a2a]">X</span></span>
+        <span>//</span>
+        <span id="footer-uptime">Uptime: checking...</span>
+      </div>
+      <div class="flex items-center gap-6">
+        <a href="/" class="hover:text-white transition-colors">Portal Home</a>
+        <a href="/health" target="_blank" class="hover:text-emerald-400 transition-colors">Health Status</a>
+        <a href="https://explorer.arc.io" target="_blank" rel="noopener" class="hover:text-[#8b3a2a] transition-colors flex items-center gap-1">
+          Arc Explorer ↗
+        </a>
+      </div>
+    </footer>
+
+  </main>
+
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    let rawStatsData = null;
+
+    // View switcher: GUI or JSON
+    function setViewMode(mode) {
+      const guiView = document.getElementById('view-gui');
+      const jsonView = document.getElementById('view-json');
+      const btnGui = document.getElementById('btn-view-gui');
+      const btnJson = document.getElementById('btn-view-json');
+
+      if (mode === 'json') {
+        guiView.classList.add('hidden');
+        jsonView.classList.remove('hidden');
+        btnJson.classList.add('bg-[#8b3a2a]', 'text-white');
+        btnJson.classList.remove('text-[#c8c4bc]/60');
+        btnGui.classList.remove('bg-[#8b3a2a]', 'text-white');
+        btnGui.classList.add('text-[#c8c4bc]/60');
+      } else {
+        jsonView.classList.add('hidden');
+        guiView.classList.remove('hidden');
+        btnGui.classList.add('bg-[#8b3a2a]', 'text-white');
+        btnGui.classList.remove('text-[#c8c4bc]/60');
+        btnJson.classList.remove('bg-[#8b3a2a]', 'text-white');
+        btnJson.classList.add('text-[#c8c4bc]/60');
+      }
+    }
+
+    // Syntax highlight JSON string
+    function syntaxHighlight(json) {
+      if (typeof json !== 'string') {
+        json = JSON.stringify(json, undefined, 2);
+      }
+      json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+        let cls = 'json-number';
+        if (/^"/.test(match)) {
+          if (/:$/.test(match)) {
+            cls = 'json-key font-semibold';
+          } else {
+            cls = 'json-string';
+          }
+        } else if (/true|false/.test(match)) {
+          cls = 'json-boolean font-semibold';
+        } else if (/null/.test(match)) {
+          cls = 'json-null italic';
+        }
+        return '<span class="' + cls + '">' + match + '</span>';
+      });
+    }
+
+    // Fetch live stats from API
+    async function fetchStats() {
+      const icon = document.getElementById('icon-refresh');
+      if (icon) icon.classList.add('animate-spin');
+
+      try {
+        const res = await fetch('/api/v1/stats?format=json');
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+        rawStatsData = data;
+
+        // Populate metrics
+        document.getElementById('val-settled').innerText = (data.stats.totalSettled || 0).toLocaleString();
+        document.getElementById('val-revenue').innerText = data.stats.totalRevenue || '0.000000 USDC';
+        
+        if (data.threatFeeds) {
+          const cisaCount = data.threatFeeds.cisaKevCount || 0;
+          document.getElementById('val-kev-count').innerText = cisaCount.toLocaleString();
+          document.getElementById('badge-cisa-count').innerText = cisaCount.toLocaleString() + ' Active';
+          
+          if (data.threatFeeds.curatedThreatsCount) {
+            document.getElementById('badge-curated-count').innerText = data.threatFeeds.curatedThreatsCount + ' Critical';
+          }
+
+          if (data.threatFeeds.lastCisaSync) {
+            const date = new Date(data.threatFeeds.lastCisaSync);
+            document.getElementById('val-last-sync').innerText = date.toLocaleTimeString() + ' (' + date.toLocaleDateString() + ')';
+          } else {
+            document.getElementById('val-last-sync').innerText = 'Active (In-Memory)';
+          }
+        }
+
+        if (data.pricing) {
+          document.getElementById('val-price').innerText = '$' + data.pricing.perQuery.replace(' USDC', '');
+          document.getElementById('spec-network').innerText = 'Chain ID ' + data.pricing.chainId;
+          document.getElementById('spec-asset').innerText = data.pricing.asset;
+          document.getElementById('spec-payto').innerText = data.pricing.payTo;
+          
+          const explorerLink = document.getElementById('link-payto-explorer');
+          if (explorerLink) {
+            explorerLink.href = 'https://explorer.arc.io/address/' + data.pricing.payTo;
+          }
+        }
+
+        if (data.uptime) {
+          document.getElementById('footer-uptime').innerText = 'Uptime: ' + data.uptime;
+        }
+
+        // Render formatted JSON view
+        document.getElementById('json-display').innerHTML = syntaxHighlight(data);
+
+      } catch (err) {
+        console.error('Failed to load stats:', err);
+      } finally {
+        if (icon) {
+          setTimeout(() => icon.classList.remove('animate-spin'), 400);
+        }
+      }
+    }
+
+    // Copy helper
+    function copyToClipboard(text, btn) {
+      navigator.clipboard.writeText(text).then(() => {
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<iconify-icon icon="solar:check-circle-linear" class="text-emerald-400"></iconify-icon> Copied!';
+        setTimeout(() => {
+          btn.innerHTML = originalText;
+        }, 1800);
+      });
+    }
+
+    // Copy raw JSON
+    function copyRawJson(btn) {
+      if (!rawStatsData) return;
+      copyToClipboard(JSON.stringify(rawStatsData, null, 2), btn);
+    }
+
+    // Copy cURL command
+    function copyCurlCommand(btn) {
+      const curl = 'curl -s http://' + window.location.host + '/api/v1/stats';
+      copyToClipboard(curl, btn);
+    }
+
+    // Initial fetch and auto-refresh every 6 seconds
+    fetchStats();
+    setInterval(fetchStats, 6000);
+  </script>
+</body>
+</html>

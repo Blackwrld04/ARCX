@@ -77,6 +77,7 @@ app.use('/api', rateLimiter);
 // ---------------------
 app.use('/health', healthRouter);
 app.use('/api/v1/stats', statsRouter);
+app.use('/stats', statsRouter);
 
 // ---------------------
 // Paywalled endpoints
