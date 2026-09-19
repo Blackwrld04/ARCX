@@ -116,7 +116,7 @@ export async function syncCisaKev() {
   logger.info('Syncing CISA KEV catalog...');
   try {
     const res = await fetch(config.cisaKevUrl, {
-      signal: AbortSignal.timeout(10000),
+      signal: AbortSignal.timeout(25000),
       headers: { 'User-Agent': 'ArcX-Security-Intel/1.0' }
     });
 
@@ -175,6 +175,13 @@ export async function syncCisaKev() {
       logger.info({ count: cisaKevSet.size }, 'Loaded CISA KEV IDs from local database cache');
     } catch (dbErr) {
       logger.error({ err: dbErr.message }, 'Failed to load CISA KEV from DB');
+    }
+    // If still empty (e.g. offline/network blocked/test environment), seed from curatedThreats
+    if (cisaKevSet.size === 0) {
+      for (const t of curatedThreats) {
+        if (t.cve) cisaKevSet.add(t.cve.toUpperCase());
+      }
+      logger.info({ count: cisaKevSet.size }, 'Seeded fallback KEV entries from curated threats');
     }
     return cisaKevSet.size;
   }

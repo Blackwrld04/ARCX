@@ -4,8 +4,8 @@ import { lookupCve, syncCisaKev, getRandomInsight, getFeedStats } from '../src/s
 
 console.log('🧪 Starting ArcX External Feeds & Synthesis test suite...\n');
 
-// Initialize DB
-initDatabase();
+// Initialize in-memory database for testing
+initDatabase(':memory:');
 
 async function runTests() {
   // Test 1: Curated CVE lookup

@@ -11,8 +11,8 @@ import { recordPending, recordSettlement, findByNonce } from '../src/db/ledger.j
 
 console.log('🧪 Starting ArcX verification & test suite...\n');
 
-// Initialize in-memory / test database
-initDatabase();
+// Initialize in-memory test database so real ledger is not polluted
+initDatabase(':memory:');
 const db = getDb();
 
 // Test wallet setup
