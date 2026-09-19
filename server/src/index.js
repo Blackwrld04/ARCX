@@ -41,6 +41,17 @@ app.use(helmet({
 app.use(cors());
 app.use(express.json({ limit: '16kb' }));
 
+// URL normalization (strip accidental spaces or double slashes from copy-pasting)
+app.use((req, res, next) => {
+  if (req.url.includes('%20') || req.url.includes(' ') || req.url.includes('//')) {
+    const cleaned = req.url.replace(/(%20|\s)+/g, '').replace(/\/+/g, '/');
+    if (cleaned !== req.url) {
+      req.url = cleaned;
+    }
+  }
+  next();
+});
+
 // Request logging
 app.use((req, res, next) => {
   const start = Date.now();
