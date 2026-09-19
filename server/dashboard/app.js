@@ -40,12 +40,6 @@ async function fetchData() {
       cachedEl.textContent = stats.threatFeeds.cachedExternalCvesCount ?? 0;
     }
 
-    const badge = document.getElementById('status-badge');
-    if (badge) {
-      badge.innerHTML = '<span class="pulse-dot"></span>LIVE';
-      badge.className = 'font-mono-custom text-xs uppercase tracking-wider bg-emerald-950/80 border border-emerald-500/40 text-emerald-400 px-3 py-1.5 rounded-lg flex items-center gap-2';
-    }
-
     const base = window.location.origin;
     const statsUrlEl = document.getElementById('api-url-stats');
     if (statsUrlEl) statsUrlEl.textContent = `${base}/api/v1/stats`;
@@ -59,11 +53,6 @@ async function fetchData() {
     renderFeed(feedData.payments);
   } catch (err) {
     console.error('Failed to fetch telemetry data:', err);
-    const badge = document.getElementById('status-badge');
-    if (badge) {
-      badge.innerHTML = '<span class="w-2 h-2 rounded-full bg-rose-500 inline-block"></span>OFFLINE';
-      badge.className = 'font-mono-custom text-xs uppercase tracking-wider bg-rose-950/80 border border-rose-500/40 text-rose-400 px-3 py-1.5 rounded-lg flex items-center gap-2';
-    }
   } finally {
     if (refreshBtn) {
       const icon = refreshBtn.querySelector('iconify-icon');
