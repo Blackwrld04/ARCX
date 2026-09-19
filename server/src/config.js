@@ -39,4 +39,5 @@ export const config = {
   cisaKevRefreshHours: parseInt(optional('CISA_KEV_REFRESH_HOURS', '12'), 10),
 
   logLevel: optional('LOG_LEVEL', 'info'),
+  adminKey: optional('ADMIN_KEY', 'arcx-admin-2026'),
 };

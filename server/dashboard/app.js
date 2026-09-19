@@ -1,8 +1,96 @@
 
 const POLL_INTERVAL = 4000;
 let previousPaymentCount = 0;
+let pollTimer = null;
+
+function getAdminToken() {
+  return sessionStorage.getItem('arcx_admin_token');
+}
+
+function checkAuthState() {
+  const token = getAdminToken();
+  const overlay = document.getElementById('auth-overlay');
+  if (!token) {
+    if (overlay) overlay.classList.remove('hidden');
+    return false;
+  } else {
+    if (overlay) overlay.classList.add('hidden');
+    return true;
+  }
+}
+
+async function handleAuthSubmit(event) {
+  event.preventDefault();
+  const keyInput = document.getElementById('admin-key-input');
+  const errorEl = document.getElementById('auth-error');
+  const submitBtn = document.getElementById('btn-auth-submit');
+  const key = keyInput ? keyInput.value.trim() : '';
+
+  if (!key) return;
+
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<iconify-icon icon="solar:restart-linear" class="animate-spin text-base"></iconify-icon> Verifying...';
+  }
+  if (errorEl) errorEl.classList.add('hidden');
+
+  try {
+    const res = await fetch('/api/v1/stats/admin/auth', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ key })
+    });
+
+    if (!res.ok) {
+      throw new Error('Authentication failed');
+    }
+
+    const data = await res.json();
+    if (data.authenticated && data.token) {
+      sessionStorage.setItem('arcx_admin_token', data.token);
+      checkAuthState();
+      fetchData();
+      if (!pollTimer) {
+        pollTimer = setInterval(fetchData, POLL_INTERVAL);
+      }
+    } else {
+      throw new Error('Invalid authentication response');
+    }
+  } catch (err) {
+    if (errorEl) errorEl.classList.remove('hidden');
+    if (keyInput) {
+      keyInput.value = '';
+      keyInput.focus();
+    }
+  } finally {
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = '<iconify-icon icon="solar:lock-unlocked-linear" class="text-base"></iconify-icon> Unlock Console';
+    }
+  }
+}
+
+function adminLogout() {
+  sessionStorage.removeItem('arcx_admin_token');
+  if (pollTimer) {
+    clearInterval(pollTimer);
+    pollTimer = null;
+  }
+  const overlay = document.getElementById('auth-overlay');
+  if (overlay) {
+    overlay.classList.remove('hidden');
+    const input = document.getElementById('admin-key-input');
+    if (input) {
+      input.value = '';
+      input.focus();
+    }
+  }
+}
 
 async function fetchData() {
+  if (!checkAuthState()) return;
+  const token = getAdminToken();
+
   const refreshBtn = document.getElementById('refresh-btn');
   if (refreshBtn) {
     const icon = refreshBtn.querySelector('iconify-icon');
@@ -10,8 +98,7 @@ async function fetchData() {
   }
 
   try {
-
-    const statsRes = await fetch('/api/v1/stats');
+    const statsRes = await fetch('/api/v1/stats?format=json');
     const stats = await statsRes.json();
 
     const revEl = document.getElementById('total-revenue');
@@ -47,7 +134,13 @@ async function fetchData() {
     const insightUrlEl = document.getElementById('api-url-insight');
     if (insightUrlEl) insightUrlEl.textContent = `${base}/api/v1/insight`;
 
-    const feedRes = await fetch('/api/v1/stats/feed?limit=20');
+    const feedRes = await fetch('/api/v1/stats/feed?limit=20', {
+      headers: { 'x-admin-key': token }
+    });
+    if (feedRes.status === 401) {
+      adminLogout();
+      return;
+    }
     const feedData = await feedRes.json();
 
     renderFeed(feedData.payments);
@@ -164,5 +257,10 @@ function formatTime(isoString) {
   }
 }
 
-fetchData();
-setInterval(fetchData, POLL_INTERVAL);
+if (checkAuthState()) {
+  fetchData();
+  pollTimer = setInterval(fetchData, POLL_INTERVAL);
+} else {
+  const overlay = document.getElementById('auth-overlay');
+  if (overlay) overlay.classList.remove('hidden');
+}

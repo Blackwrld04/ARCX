@@ -80,7 +80,46 @@ router.get('/', (req, res) => {
   });
 });
 
+router.post('/admin/auth', (req, res) => {
+  const { key } = req.body || {};
+  if (!key || key !== config.adminKey) {
+    return res.status(401).json({
+      error: 'UNAUTHORIZED',
+      message: 'Invalid administrative passkey',
+    });
+  }
+  res.json({
+    authenticated: true,
+    token: Buffer.from(`${key}:${Date.now()}`).toString('base64'),
+  });
+});
+
 router.get('/feed', (req, res) => {
+  const authHeader = req.headers['x-admin-key'] || req.headers['authorization'] || req.query.adminKey;
+  let isAuthorized = false;
+  if (authHeader) {
+    const raw = authHeader.replace(/^Bearer\s+/i, '').trim();
+    if (raw === config.adminKey) {
+      isAuthorized = true;
+    } else {
+      try {
+        const decoded = Buffer.from(raw, 'base64').toString('utf8');
+        if (decoded.startsWith(`${config.adminKey}:`)) {
+          isAuthorized = true;
+        }
+      } catch {
+        isAuthorized = false;
+      }
+    }
+  }
+
+  if (!isAuthorized) {
+    return res.status(401).json({
+      error: 'UNAUTHORIZED',
+      message: 'Admin authorization required to access ledger feed',
+    });
+  }
+
   const limit = Math.min(parseInt(req.query.limit) || 20, 100);
   const payments = getRecentPayments(limit);
 
