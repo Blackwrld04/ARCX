@@ -127,6 +127,10 @@
         <a href="#architecture" class="hover:text-[#8b3a2a] transition-colors whitespace-nowrap">Why Arc?</a>
         <a href="#integration" class="hover:text-[#8b3a2a] transition-colors whitespace-nowrap">SDK</a>
         <a href="#endpoints" class="hover:text-[#8b3a2a] transition-colors whitespace-nowrap">API Specs</a>
+        <a href="/stats" class="text-[#8b3a2a] hover:text-white transition-colors flex items-center gap-1.5 whitespace-nowrap">
+          <iconify-icon icon="solar:pulse-2-linear"></iconify-icon>
+          Live Stats
+        </a>
       </div>
 
       <!-- Network Status Tag & Mobile Menu Toggle -->
@@ -152,6 +156,10 @@
       <a href="#architecture" onclick="closeMobileMenu()">Why Arc?</a>
       <a href="#integration" onclick="closeMobileMenu()">SDK</a>
       <a href="#endpoints" onclick="closeMobileMenu()">API Specs</a>
+      <a href="/stats" onclick="closeMobileMenu()" class="text-[#8b3a2a] flex items-center gap-2">
+        <iconify-icon icon="solar:pulse-2-linear"></iconify-icon>
+        Live Stats Explorer
+      </a>
     </div>
   </nav>
 
@@ -205,10 +213,14 @@
               Autonomous cybersecurity feed for AI agents, CI/CD pipelines, and SOCs. Query enriched CVE insights settled at $0.001 USDC on Circle's Arc mainnet. Zero API keys. Zero credit cards.
             </p>
 
-            <div class="mt-10 flex flex-col sm:flex-row gap-4 gs-text-up">
+            <div class="mt-10 flex flex-wrap items-center justify-center gap-4 gs-text-up">
               <a href="#playground" class="font-mono-custom text-xs uppercase tracking-widest bg-[#8b3a2a] text-[#c8c4bc] px-8 py-4 rounded-xl hover:bg-[#8b3a2a]/80 transition-all glow-accent flex items-center justify-center gap-2">
                 <iconify-icon icon="solar:play-linear" class="text-base"></iconify-icon>
                 Try Live Playground
+              </a>
+              <a href="/stats" class="font-mono-custom text-xs uppercase tracking-widest border border-[#8b3a2a] text-[#c8c4bc] px-8 py-4 rounded-xl hover:bg-[#8b3a2a] hover:text-white transition-all flex items-center justify-center gap-2">
+                <iconify-icon icon="solar:pulse-2-linear" class="text-base text-[#8b3a2a]"></iconify-icon>
+                Live Stats Explorer
               </a>
               <a href="#integration" class="font-mono-custom text-xs uppercase tracking-widest border border-[#c8c4bc]/20 text-[#c8c4bc]/70 px-8 py-4 rounded-xl hover:border-[#8b3a2a] transition-colors flex items-center justify-center gap-2">
                 <iconify-icon icon="solar:code-linear" class="text-base"></iconify-icon>
@@ -218,33 +230,33 @@
           </div>
         </section>
 
-        <!-- Brutalist Stats Bar (Inspired by EX8 & Nikita Khvatov) -->
-        <section class="grid grid-cols-2 md:grid-cols-4 border-t border-[#c8c4bc]/10 relative z-30 bg-[#121316]">
+        <!-- Brutalist Stats Bar (Clickable Link to /stats) -->
+        <a href="/stats" title="Click to view live public telemetry & protocol explorer" class="grid grid-cols-2 md:grid-cols-4 border-t border-[#c8c4bc]/10 relative z-30 bg-[#121316] group hover:bg-[#181a20] transition-colors">
           <div class="p-6 border-r border-b md:border-b-0 border-[#c8c4bc]/10 text-center">
-            <div class="font-pixel text-2xl sm:text-3xl tracking-tight text-[#c8c4bc]">$0.001</div>
-            <div class="font-mono-custom text-[0.65rem] uppercase tracking-widest text-[#c8c4bc]/40 mt-2">
+            <div class="font-pixel text-2xl sm:text-3xl tracking-tight text-[#c8c4bc] group-hover:text-white transition-colors">$0.001</div>
+            <div class="font-mono-custom text-[0.65rem] uppercase tracking-widest text-[#c8c4bc]/40 group-hover:text-[#8b3a2a] transition-colors mt-2">
               USDC Per Query
             </div>
           </div>
           <div class="p-6 border-r border-b md:border-b-0 border-[#c8c4bc]/10 text-center">
-            <div class="font-pixel text-2xl sm:text-3xl tracking-tight text-[#c8c4bc]" id="metric-settled">0</div>
-            <div class="font-mono-custom text-[0.65rem] uppercase tracking-widest text-[#c8c4bc]/40 mt-2">
-              On-Chain Settled
+            <div class="font-pixel text-2xl sm:text-3xl tracking-tight text-[#c8c4bc] group-hover:text-white transition-colors" id="metric-settled">0</div>
+            <div class="font-mono-custom text-[0.65rem] uppercase tracking-widest text-[#c8c4bc]/40 group-hover:text-[#8b3a2a] transition-colors mt-2">
+              On-Chain Settled ↗
             </div>
           </div>
           <div class="p-6 border-r border-[#c8c4bc]/10 text-center">
-            <div class="font-pixel text-2xl sm:text-3xl tracking-tight text-[#c8c4bc]">5042</div>
-            <div class="font-mono-custom text-[0.65rem] uppercase tracking-widest text-[#c8c4bc]/40 mt-2">
+            <div class="font-pixel text-2xl sm:text-3xl tracking-tight text-[#c8c4bc] group-hover:text-white transition-colors">5042</div>
+            <div class="font-mono-custom text-[0.65rem] uppercase tracking-widest text-[#c8c4bc]/40 group-hover:text-[#8b3a2a] transition-colors mt-2">
               Arc Chain ID
             </div>
           </div>
           <div class="p-6 text-center">
-            <div class="font-pixel text-2xl sm:text-3xl tracking-tight text-[#c8c4bc]">&lt; 1 SEC</div>
-            <div class="font-mono-custom text-[0.65rem] uppercase tracking-widest text-[#c8c4bc]/40 mt-2">
+            <div class="font-pixel text-2xl sm:text-3xl tracking-tight text-[#c8c4bc] group-hover:text-emerald-400 transition-colors">&lt; 1 SEC</div>
+            <div class="font-mono-custom text-[0.65rem] uppercase tracking-widest text-[#c8c4bc]/40 group-hover:text-[#8b3a2a] transition-colors mt-2">
               Settlement Finality
             </div>
           </div>
-        </section>
+        </a>
       </div>
     </div>
 
@@ -618,6 +630,10 @@
         </span>
       </div>
       <div class="flex items-center gap-6 text-xs font-mono-custom text-[#c8c4bc]/50">
+        <a href="/stats" class="text-[#8b3a2a] hover:text-white transition-colors flex items-center gap-1">
+          <iconify-icon icon="solar:pulse-2-linear"></iconify-icon>
+          Live Stats
+        </a>
         <a href="/api/v1/stats" class="hover:text-[#8b3a2a] transition-colors">API Specs</a>
         <a href="/health" class="hover:text-[#8b3a2a] transition-colors">Health Check</a>
         <a href="https://explorer.arc.io" target="_blank" rel="noopener" class="hover:text-[#8b3a2a] transition-colors flex items-center gap-1">
