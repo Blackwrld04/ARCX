@@ -539,18 +539,7 @@ npm start --prefix client
 | [`render.yaml`](render.yaml) | 1-click infrastructure deployment blueprint for Render |
 | [`netlify.toml`](netlify.toml) | Frontend deployment configuration for Netlify |
 
----
 
-## Arc Microgrants alignment matrix
-
-| Evaluation Criterion | How ArcX Satisfies It |
-| :--- | :--- |
-| **Relevance to Arc** | ArcX cannot function efficiently on standard EVM chains. It leverages Arc’s **native USDC gas**, **unified 1-balance 2-interface model**, and **deterministic sub-second finality** to enable real-time sub-cent x402 API billing. |
-| **Technical Credibility** | ArcX is not a slide deck or mockup. It is a functional codebase featuring 12 passing automated test suites, in-memory cryptographic verification, SQLite trigger-enforced immutability, and live synchronization with CISA KEV and NIST NVD APIs. |
-| **Quality of Build** | Includes a cyber-brutalist landing page, a public x402 telemetry explorer, an encrypted passkey-gated admin console, and production SDKs for Node.js, Python, and LangChain. |
-| **Path to Circle Grant Program** | The microgrant funds our initial mainnet deployment. From here, ArcX is expanding into a decentralized, multi-tenant cybersecurity oracle network where autonomous AI agents buy and sell real-time threat intelligence. |
-
----
 
 ## Disclosures & license
 
