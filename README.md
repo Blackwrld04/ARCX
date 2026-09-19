@@ -15,7 +15,7 @@ ArcX is an autonomous, machine-to-machine cybersecurity intelligence API. Softwa
 
 **Challenge first. Authorize off-chain. Settle directly from native USDC gas.**
 
-[Live App](https://arcx-v2fs.onrender.com) · [Protocol Telemetry GUI](https://arcx-v2fs.onrender.com/stats) · [Verify it yourself](#verify-it-yourself) · [Arc Explorer](https://explorer.arc.io/address/0x8b415aE3956992b0cbC6C78c485A4d099F6331cE)
+[Live App (Netlify)](https://arccx.netlify.app) · [Protocol Telemetry GUI](https://arccx.netlify.app/stats) · [Verify it yourself](#verify-it-yourself) · [Arc Explorer](https://explorer.arc.io/address/0x8b415aE3956992b0cbC6C78c485A4d099F6331cE)
 
 **Autonomous AI Agent Infrastructure — Sub-cent intelligence without API keys.**
 
@@ -31,9 +31,10 @@ Arc Mainnet (Chain 5042) · Node.js & Viem · SQLite WAL · x402 v2 + EIP-3009
 
 | Resource | Destination | What it establishes |
 | :--- | :--- | :--- |
-| **Live Mainnet App** | [`https://arcx-v2fs.onrender.com`](https://arcx-v2fs.onrender.com) | Production web deployment on Render |
-| **Public Telemetry GUI** | [`https://arcx-v2fs.onrender.com/stats`](https://arcx-v2fs.onrender.com/stats) | Real-time query counts, settled volume, and live latency |
-| **Admin Threat Center** | [`https://arcx-v2fs.onrender.com/dashboard`](https://arcx-v2fs.onrender.com/dashboard) | Audit ledger feed gated with Master Passkey |
+| **Live Web App (Netlify)** | [`https://arccx.netlify.app`](https://arccx.netlify.app) | Production web application on Netlify Edge CDN |
+| **Backend API (Render)** | [`https://arcx-v2fs.onrender.com`](https://arcx-v2fs.onrender.com) | Live x402 facilitator & on-chain settlement service |
+| **Public Telemetry GUI** | [`https://arccx.netlify.app/stats`](https://arccx.netlify.app/stats) | Real-time query counts, settled volume, and live latency |
+| **Admin Threat Center** | [`https://arccx.netlify.app/dashboard`](https://arccx.netlify.app/dashboard) | Audit ledger feed gated with Master Passkey |
 | **Arc Mainnet Settlement Address** | [`0x8b415aE3956992b0cbC6C78c485A4d099F6331cE`](https://explorer.arc.io/address/0x8b415aE3956992b0cbC6C78c485A4d099F6331cE) | Verifiable on-chain recipient on Arc Explorer |
 | **Public Builder Profile** | `[BUILDER PROFILE LINK - GitHub / X / Farcaster]` | Builder identity & submission handle |
 | **Submission Category** | **Experimental Infrastructure / Autonomous AI Agent Tooling** | Built natively for Circle's Arc Mainnet |
@@ -447,8 +448,9 @@ Transparency is paramount for infrastructure software.
 
 | Component | Target Network | Hosted Location | Status |
 | :--- | :--- | :--- | :--- |
-| **API & Web Service** | Arc Mainnet (5042) | [`https://arcx-v2fs.onrender.com`](https://arcx-v2fs.onrender.com) | Live Web Service on Render |
-| **Static Explorer UI** | Browser | [`https://arcx-v2fs.onrender.com/stats`](https://arcx-v2fs.onrender.com/stats) | Live Telemetry Dashboard |
+| **Web App & CDN Frontend** | Browser | [`https://arccx.netlify.app`](https://arccx.netlify.app) | Live on Netlify Edge CDN |
+| **API & Settlement Engine** | Arc Mainnet (5042) | [`https://arcx-v2fs.onrender.com`](https://arcx-v2fs.onrender.com) | Live Web Service on Render |
+| **Protocol Explorer GUI** | Browser | [`https://arccx.netlify.app/stats`](https://arccx.netlify.app/stats) | Live Telemetry Dashboard |
 | **USDC Contract** | Arc Mainnet (5042) | [`0x3600000000000000000000000000000000000000`](https://explorer.arc.io/address/0x3600000000000000000000000000000000000000) | Canonical Circle USDC |
 | **Settlement Recipient** | Arc Mainnet (5042) | [`0x8b415aE3956992b0cbC6C78c485A4d099F6331cE`](https://explorer.arc.io/address/0x8b415aE3956992b0cbC6C78c485A4d099F6331cE) | Active on Arc Mainnet |
 
