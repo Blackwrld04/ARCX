@@ -4,44 +4,62 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ArcX — Public Telemetry &amp; Protocol Specs</title>
-  <meta name="description" content="Public real-time metrics, settlement telemetry, and live threat feed coverage for ArcX on Circle's Arc Mainnet.">
+  <meta name="description" content="Public real-time metrics, settlement telemetry, and live threat feed coverage for ArcX on Circle's Arc Mainnet (Chain 5042).">
 
   <!-- Tailwind CSS & Icons -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
 
-  <!-- Typography -->
+  <!-- Typography: Silkscreen (Pixel/Brutalist), Inter, JetBrains Mono (Identical to Main Page) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Inter:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@100;300;400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
-    :root {
-      --bg-main: #0d0e12;
-      --bg-card: #13151b;
-      --bg-surface: #181b22;
-      --text-main: #c8c4bc;
-      --text-muted: rgba(200, 196, 188, 0.55);
-      --accent-red: #8b3a2a;
-      --accent-red-glow: rgba(139, 58, 42, 0.35);
-      --border-line: rgba(200, 196, 188, 0.1);
-      --border-accent: rgba(139, 58, 42, 0.35);
-    }
-
     body {
       font-family: 'Inter', sans-serif;
-      background-color: var(--bg-main);
-      color: var(--text-main);
-      -webkit-font-smoothing: antialiased;
+      background-color: #121316;
+      color: #c8c4bc;
     }
-
-    .font-pixel { font-family: 'Silkscreen', monospace; }
-    .font-mono-custom { font-family: 'JetBrains Mono', monospace; }
-
-    /* Custom scrollbars */
-    ::-webkit-scrollbar { width: 5px; height: 5px; }
-    ::-webkit-scrollbar-track { background: var(--bg-main); }
-    ::-webkit-scrollbar-thumb { background: var(--accent-red); }
+    .font-pixel {
+      font-family: 'Silkscreen', monospace;
+    }
+    .font-mono-custom {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #121316;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #8b3a2a;
+    }
+    .flicker-text {
+      animation: flicker 4s infinite;
+    }
+    @keyframes flicker {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+      52% { opacity: 0.9; }
+      54% { opacity: 0.3; }
+      56% { opacity: 1; }
+    }
+    .poster-shell {
+      background: linear-gradient(135deg, rgba(200, 196, 188, 0.15) 0%, rgba(18, 19, 22, 0.9) 40%, rgba(139, 58, 42, 0.25) 100%);
+    }
+    .glow-accent {
+      box-shadow: 0 0 35px -5px rgba(139, 58, 42, 0.35);
+    }
+    .border-glow:hover {
+      border-color: #8b3a2a;
+      box-shadow: 0 0 20px -3px rgba(139, 58, 42, 0.3);
+    }
+    html {
+      scroll-behavior: smooth;
+    }
 
     /* JSON syntax highlighter */
     .json-key { color: #93c5fd; }
@@ -49,26 +67,21 @@
     .json-number { color: #fca5a5; }
     .json-boolean { color: #fcd34d; }
     .json-null { color: #cbd5e1; }
-
-    .glow-hover:hover {
-      box-shadow: 0 0 25px rgba(139, 58, 42, 0.2);
-      border-color: rgba(139, 58, 42, 0.6);
-    }
   </style>
 </head>
-<body class="min-h-screen relative selection:bg-[#8b3a2a] selection:text-[#c8c4bc]">
+<body class="antialiased min-h-screen relative overflow-x-hidden selection:bg-[#8b3a2a] selection:text-[#c8c4bc]">
 
-  <!-- Architectural Background Guide Lines -->
-  <div class="fixed top-0 bottom-0 left-4 sm:left-12 w-[1px] bg-[#c8c4bc]/5 z-0 pointer-events-none"></div>
-  <div class="fixed top-0 bottom-0 right-4 sm:right-12 w-[1px] bg-[#c8c4bc]/5 z-0 pointer-events-none"></div>
+  <!-- Outer Architectural Guide Lines (Identical to Main Page) -->
+  <div class="fixed top-0 bottom-0 left-4 sm:left-12 w-[1px] bg-[#c8c4bc]/10 z-0 pointer-events-none"></div>
+  <div class="fixed top-0 bottom-0 right-4 sm:right-12 w-[1px] bg-[#c8c4bc]/10 z-0 pointer-events-none"></div>
 
-  <!-- NAVIGATION -->
-  <nav class="sticky top-0 z-50 backdrop-blur-md bg-[#0d0e12]/90 border-b border-[#c8c4bc]/10">
-    <div class="max-w-[1240px] mx-auto px-6 sm:px-12 h-16 flex items-center justify-between">
+  <!-- NAV (Identical to Main Page) -->
+  <nav class="sticky top-0 z-50 backdrop-blur-md bg-[#121316]/85 border-b border-[#c8c4bc]/10">
+    <div class="max-w-[1440px] mx-auto px-4 sm:px-10 lg:px-16 h-16 flex items-center justify-between">
       
       <!-- Brand Logo -->
       <div class="flex items-center gap-3">
-        <a href="/" class="font-pixel text-xl tracking-wider text-[#c8c4bc] hover:text-white transition-colors">
+        <a href="/" class="font-pixel text-2xl tracking-wider text-[#c8c4bc] hover:text-white transition-colors">
           ARC<span class="text-[#8b3a2a]">X</span>
         </a>
         <span class="hidden sm:inline-block font-mono-custom text-[0.65rem] uppercase tracking-widest text-[#c8c4bc]/40 border-l border-[#c8c4bc]/10 pl-3">
@@ -76,377 +89,396 @@
         </span>
       </div>
 
-      <!-- Navigation Links -->
-      <div class="flex items-center gap-4 sm:gap-6 font-mono-custom text-xs">
-        <a href="/" class="text-[#c8c4bc]/70 hover:text-white transition-colors flex items-center gap-1.5">
+      <!-- Links -->
+      <div class="hidden md:flex items-center gap-5 lg:gap-7 font-mono-custom text-xs uppercase tracking-widest text-[#c8c4bc]/60">
+        <a href="/" class="hover:text-[#8b3a2a] transition-colors flex items-center gap-1.5">
           <iconify-icon icon="solar:arrow-left-linear"></iconify-icon>
-          <span class="hidden sm:inline">Portal</span>
+          Portal
         </a>
-        <a href="/#playground" class="hidden md:inline-block text-[#c8c4bc]/70 hover:text-[#8b3a2a] transition-colors">
-          Playground
-        </a>
-        <a href="/health" target="_blank" class="hidden sm:inline-block text-[#c8c4bc]/70 hover:text-emerald-400 transition-colors">
-          Health Check
-        </a>
+        <a href="/#playground" class="hover:text-[#8b3a2a] transition-colors">Playground</a>
+        <a href="#architecture" class="hover:text-[#8b3a2a] transition-colors">Architecture</a>
+        <a href="#feeds" class="hover:text-[#8b3a2a] transition-colors">Feeds</a>
+        <a href="#endpoints" class="hover:text-[#8b3a2a] transition-colors">API Specs</a>
+        <a href="#json-section" class="hover:text-[#8b3a2a] transition-colors">Raw JSON</a>
+      </div>
 
-        <!-- View Switcher (GUI vs JSON) -->
-        <div class="flex items-center bg-[#181b22] p-0.5 rounded border border-[#c8c4bc]/15">
-          <button id="btn-view-gui" onclick="setViewMode('gui')" class="px-2.5 py-1 text-[0.7rem] uppercase tracking-wider rounded font-medium bg-[#8b3a2a] text-white transition-all flex items-center gap-1">
-            <iconify-icon icon="solar:widget-linear"></iconify-icon>
-            GUI
-          </button>
-          <button id="btn-view-json" onclick="setViewMode('json')" class="px-2.5 py-1 text-[0.7rem] uppercase tracking-wider rounded font-medium text-[#c8c4bc]/60 hover:text-white transition-all flex items-center gap-1">
-            <iconify-icon icon="solar:code-file-linear"></iconify-icon>
-            JSON
-          </button>
-        </div>
-
-        <!-- Live Status Pill -->
-        <div class="flex items-center gap-2 bg-[#14151b] px-3 py-1 rounded border border-[#c8c4bc]/10">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span class="font-mono-custom text-[0.65rem] uppercase tracking-wider text-emerald-400 hidden sm:inline">Arc 5042</span>
-        </div>
+      <!-- Network Status Tag & View Switcher -->
+      <div class="flex items-center gap-3">
+        <span class="hidden sm:flex items-center gap-2 font-mono-custom text-[0.7rem] uppercase text-[#c8c4bc]/50 bg-[#1a1a1a] px-3 py-1.5 rounded-md border border-[#c8c4bc]/10">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          Arc Mainnet 5042
+        </span>
+        <a href="/api/v1/stats?format=json" target="_blank" class="font-mono-custom text-xs uppercase tracking-widest text-[#c8c4bc] border border-[#8b3a2a] px-3.5 py-1.5 rounded-lg hover:bg-[#8b3a2a] transition-colors flex items-center gap-1.5">
+          <iconify-icon icon="solar:code-file-linear"></iconify-icon>
+          <span>Raw API</span>
+        </a>
       </div>
     </div>
   </nav>
 
   <!-- MAIN CONTAINER -->
-  <main class="max-w-[1240px] mx-auto px-6 sm:px-12 py-10 relative z-10">
+  <main class="max-w-[1440px] mx-auto px-4 sm:px-10 lg:px-16 pt-10 pb-20 relative z-20">
 
-    <!-- HERO HEADER -->
-    <header class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 border-b border-[#c8c4bc]/10">
-      <div>
-        <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-[#8b3a2a]/15 border border-[#8b3a2a]/30 text-[#8b3a2a] font-mono-custom text-xs uppercase tracking-widest mb-3">
-          <iconify-icon icon="solar:pulse-2-linear" class="text-sm"></iconify-icon>
-          Real-Time Public Telemetry
-        </div>
-        <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-white mb-2">
-          Protocol Explorer &amp; API Specs
-        </h1>
-        <p class="text-sm text-[#c8c4bc]/60 max-w-2xl">
-          Live verification status, settlement revenue on Circle's Arc Mainnet, synchronized vulnerability catalogs, and formal x402 payment specifications.
-        </p>
-      </div>
-
-      <!-- Live Controls -->
-      <div class="flex items-center gap-3">
-        <button onclick="fetchStats()" id="btn-refresh" class="px-4 py-2 rounded bg-[#181b22] hover:bg-[#20242e] border border-[#c8c4bc]/15 hover:border-[#8b3a2a]/50 text-xs font-mono-custom text-[#c8c4bc] transition-all flex items-center gap-2">
-          <iconify-icon icon="solar:refresh-linear" id="icon-refresh"></iconify-icon>
-          <span>Refresh</span>
-        </button>
-        <a href="/api/v1/stats?format=json" target="_blank" class="px-4 py-2 rounded bg-[#8b3a2a]/20 hover:bg-[#8b3a2a] border border-[#8b3a2a]/40 text-xs font-mono-custom text-white transition-all flex items-center gap-1.5">
-          <iconify-icon icon="solar:export-linear"></iconify-icon>
-          <span>Raw API URL</span>
-        </a>
-      </div>
-    </header>
-
-    <!-- ==================== VIEW 1: GUI DASHBOARD ==================== -->
-    <div id="view-gui" class="space-y-10">
-
-      <!-- KEY METRICS GRID -->
-      <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <!-- HERO POSTER SHELL (Identical Brutalist Container as Main Page) -->
+    <div class="poster-shell p-[1px] rounded-2xl shadow-2xl shadow-black/80">
+      <div class="bg-[#121316]/95 backdrop-blur-sm rounded-2xl relative overflow-hidden">
         
-        <!-- Metric 1: Total Settled -->
-        <div class="bg-[#13151b] border border-[#c8c4bc]/10 rounded-lg p-5 glow-hover transition-all relative overflow-hidden">
-          <div class="absolute top-0 right-0 w-24 h-24 bg-[#8b3a2a]/5 rounded-bl-full pointer-events-none"></div>
-          <div class="flex items-center justify-between mb-3">
-            <span class="font-mono-custom text-xs uppercase tracking-wider text-[#c8c4bc]/50">Settled Payments</span>
-            <iconify-icon icon="solar:verified-check-linear" class="text-[#8b3a2a] text-lg"></iconify-icon>
-          </div>
-          <div id="val-settled" class="text-3xl font-bold font-mono-custom text-white">0</div>
-          <div class="mt-2 text-[0.7rem] font-mono-custom text-emerald-400 flex items-center gap-1">
-            <iconify-icon icon="solar:shield-check-linear"></iconify-icon>
-            <span>Verified on-chain via EIP-3009</span>
-          </div>
-        </div>
+        <!-- Subtle Matrix Grid Texture -->
+        <div class="absolute inset-0 pointer-events-none opacity-[0.03]" style="background-image: linear-gradient(to right, #c8c4bc 1px, transparent 1px); background-size: 48px 100%;"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[650px] bg-[#8b3a2a]/10 rounded-full blur-[120px] pointer-events-none"></div>
 
-        <!-- Metric 2: Total Revenue -->
-        <div class="bg-[#13151b] border border-[#c8c4bc]/10 rounded-lg p-5 glow-hover transition-all relative overflow-hidden">
-          <div class="absolute top-0 right-0 w-24 h-24 bg-emerald-500/5 rounded-bl-full pointer-events-none"></div>
-          <div class="flex items-center justify-between mb-3">
-            <span class="font-mono-custom text-xs uppercase tracking-wider text-[#c8c4bc]/50">Protocol Revenue</span>
-            <iconify-icon icon="solar:dollar-minimalistic-linear" class="text-emerald-400 text-lg"></iconify-icon>
+        <!-- Technical Header Bar -->
+        <header class="flex justify-between items-center p-6 border-b border-[#c8c4bc]/10 relative z-30">
+          <div class="flex items-center gap-4">
+            <iconify-icon icon="solar:pulse-2-linear" class="text-xl text-[#8b3a2a]"></iconify-icon>
+            <span class="font-mono-custom text-xs uppercase tracking-widest text-[#c8c4bc]/70">
+              [ ARCX // REAL-TIME PROTOCOL TELEMETRY ]
+            </span>
           </div>
-          <div id="val-revenue" class="text-3xl font-bold font-mono-custom text-white">0.000000 USDC</div>
-          <div class="mt-2 text-[0.7rem] font-mono-custom text-[#c8c4bc]/40 flex items-center gap-1">
-            <span>Unified USDC balance</span>
+          <div class="flex items-center gap-3 font-mono-custom text-xs uppercase tracking-widest text-[#c8c4bc]/50">
+            <span class="w-1.5 h-1.5 rounded-full bg-[#8b3a2a] flicker-text"></span>
+            <span id="live-time">SYS.SYNC // 00:00:00Z</span>
           </div>
-        </div>
+        </header>
 
-        <!-- Metric 3: Active Zero-Days (CISA KEV) -->
-        <div class="bg-[#13151b] border border-[#c8c4bc]/10 rounded-lg p-5 glow-hover transition-all relative overflow-hidden">
-          <div class="absolute top-0 right-0 w-24 h-24 bg-rose-500/5 rounded-bl-full pointer-events-none"></div>
-          <div class="flex items-center justify-between mb-3">
-            <span class="font-mono-custom text-xs uppercase tracking-wider text-[#c8c4bc]/50">CISA KEV Catalog</span>
-            <iconify-icon icon="solar:danger-triangle-linear" class="text-rose-400 text-lg"></iconify-icon>
-          </div>
-          <div id="val-kev-count" class="text-3xl font-bold font-mono-custom text-white">1,716</div>
-          <div class="mt-2 text-[0.7rem] font-mono-custom text-rose-400 flex items-center gap-1">
-            <iconify-icon icon="solar:radar-2-linear"></iconify-icon>
-            <span>Actively exploited zero-days</span>
-          </div>
-        </div>
-
-        <!-- Metric 4: Query Price -->
-        <div class="bg-[#13151b] border border-[#c8c4bc]/10 rounded-lg p-5 glow-hover transition-all relative overflow-hidden">
-          <div class="absolute top-0 right-0 w-24 h-24 bg-cyan-500/5 rounded-bl-full pointer-events-none"></div>
-          <div class="flex items-center justify-between mb-3">
-            <span class="font-mono-custom text-xs uppercase tracking-wider text-[#c8c4bc]/50">Micropayment Cost</span>
-            <iconify-icon icon="solar:tag-price-linear" class="text-cyan-400 text-lg"></iconify-icon>
-          </div>
-          <div id="val-price" class="text-3xl font-bold font-mono-custom text-white">$0.001000</div>
-          <div class="mt-2 text-[0.7rem] font-mono-custom text-cyan-400 flex items-center gap-1">
-            <iconify-icon icon="solar:flash-linear"></iconify-icon>
-            <span>Zero-gas off-chain authorization</span>
-          </div>
-        </div>
-
-      </section>
-
-      <!-- SECTION: PROTOCOL ARCHITECTURE & CONTRACT SPECS -->
-      <section class="bg-[#13151b] border border-[#c8c4bc]/10 rounded-lg p-6 sm:p-8">
-        <div class="flex items-center gap-3 mb-6 pb-4 border-b border-[#c8c4bc]/10">
-          <iconify-icon icon="solar:server-square-linear" class="text-xl text-[#8b3a2a]"></iconify-icon>
-          <div>
-            <h2 class="text-lg font-bold text-white">Smart Contract &amp; Payment Settlement Specs</h2>
-            <p class="text-xs text-[#c8c4bc]/50 font-mono-custom">EIP-3009 transferWithAuthorization parameters on Arc Network</p>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Centered Banner with Corner Reticles -->
+        <div class="relative py-16 px-6 sm:px-12 text-center flex flex-col items-center">
           
-          <!-- Spec item: Network -->
-          <div class="bg-[#181b22] p-4 rounded border border-[#c8c4bc]/10 flex flex-col justify-between">
-            <div class="text-xs font-mono-custom text-[#c8c4bc]/50 uppercase mb-1">Blockchain Network</div>
-            <div class="flex items-center justify-between">
-              <span class="text-white font-medium">Arc Mainnet</span>
-              <span id="spec-network" class="px-2.5 py-0.5 rounded bg-emerald-950/80 border border-emerald-500/30 text-emerald-400 text-xs font-mono-custom">
-                Chain ID 5042
-              </span>
-            </div>
+          <!-- Corner Reticles (Iconic ArcX Style) -->
+          <div class="absolute top-6 left-6 w-4 h-4 border-t border-l border-[#8b3a2a] z-20"></div>
+          <div class="absolute top-6 right-6 w-4 h-4 border-t border-r border-[#8b3a2a] z-20"></div>
+          <div class="absolute bottom-6 left-6 w-4 h-4 border-b border-l border-[#8b3a2a] z-20"></div>
+          <div class="absolute bottom-6 right-6 w-4 h-4 border-b border-r border-[#8b3a2a] z-20"></div>
+
+          <div class="font-mono-custom text-xs text-[#8b3a2a] tracking-[0.3em] uppercase mb-4 flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-[#8b3a2a] inline-block animate-ping"></span>
+            x402-Native Public Explorer &amp; Specs
           </div>
 
-          <!-- Spec item: EIP-155 Identifier -->
-          <div class="bg-[#181b22] p-4 rounded border border-[#c8c4bc]/10 flex flex-col justify-between">
-            <div class="text-xs font-mono-custom text-[#c8c4bc]/50 uppercase mb-1">EIP-155 Network Descriptor</div>
-            <div class="flex items-center justify-between">
-              <span class="text-white font-mono-custom text-sm">eip155:5042</span>
-              <button onclick="copyToClipboard('eip155:5042', this)" class="text-[#c8c4bc]/40 hover:text-white transition-colors text-xs font-mono-custom flex items-center gap-1">
-                <iconify-icon icon="solar:copy-linear"></iconify-icon> Copy
-              </button>
-            </div>
-          </div>
+          <h1 class="font-pixel text-2xl sm:text-4xl lg:text-5xl tracking-tight uppercase text-[#c8c4bc] leading-[1.15]">
+            LIVE PROTOCOL
+            <br>
+            <span class="text-white">METRICS &amp; SPECS</span>
+          </h1>
 
-          <!-- Spec item: USDC Contract -->
-          <div class="bg-[#181b22] p-4 rounded border border-[#c8c4bc]/10">
-            <div class="text-xs font-mono-custom text-[#c8c4bc]/50 uppercase mb-1">Unified USDC Asset Contract</div>
-            <div class="flex items-center justify-between gap-2">
-              <span id="spec-asset" class="font-mono-custom text-xs text-white truncate">0x3600000000000000000000000000000000000000</span>
-              <div class="flex items-center gap-2 shrink-0">
-                <button onclick="copyToClipboard(document.getElementById('spec-asset').innerText, this)" class="text-[#c8c4bc]/40 hover:text-white transition-colors text-xs font-mono-custom flex items-center gap-1">
-                  <iconify-icon icon="solar:copy-linear"></iconify-icon>
-                </button>
-                <a href="https://explorer.arc.io/address/0x3600000000000000000000000000000000000000" target="_blank" rel="noopener" class="text-[#8b3a2a] hover:text-white transition-colors text-xs font-mono-custom flex items-center gap-1">
-                  <iconify-icon icon="solar:square-top-down-linear"></iconify-icon>
-                </a>
-              </div>
-            </div>
-            <div class="mt-2 text-[0.7rem] text-[#c8c4bc]/40">
-              Arc's native dual-interface USDC token (ERC-20 + Native Gas).
-            </div>
-          </div>
+          <p class="mt-5 font-mono-custom text-xs text-[#c8c4bc]/60 tracking-wider uppercase max-w-xl mx-auto leading-relaxed">
+            Real-time on-chain settlement ledger on Circle's Arc Mainnet, live multi-tiered threat feed synchronizations, and public x402 payment specifications.
+          </p>
 
-          <!-- Spec item: Facilitator PayTo Address -->
-          <div class="bg-[#181b22] p-4 rounded border border-[#c8c4bc]/10">
-            <div class="text-xs font-mono-custom text-[#c8c4bc]/50 uppercase mb-1">Facilitator / Pay-To Address</div>
-            <div class="flex items-center justify-between gap-2">
-              <span id="spec-payto" class="font-mono-custom text-xs text-white truncate">0x8b415aE3956992b0cbC6C78c485A4d099F6331cE</span>
-              <div class="flex items-center gap-2 shrink-0">
-                <button onclick="copyToClipboard(document.getElementById('spec-payto').innerText, this)" class="text-[#c8c4bc]/40 hover:text-white transition-colors text-xs font-mono-custom flex items-center gap-1">
-                  <iconify-icon icon="solar:copy-linear"></iconify-icon>
-                </button>
-                <a id="link-payto-explorer" href="https://explorer.arc.io/address/0x8b415aE3956992b0cbC6C78c485A4d099F6331cE" target="_blank" rel="noopener" class="text-[#8b3a2a] hover:text-white transition-colors text-xs font-mono-custom flex items-center gap-1">
-                  <iconify-icon icon="solar:square-top-down-linear"></iconify-icon>
-                </a>
-              </div>
-            </div>
-            <div class="mt-2 text-[0.7rem] text-[#c8c4bc]/40">
-              Verified recipient address for cryptographic EIP-3009 transfer authorizations.
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-      <!-- SECTION: THREAT INTELLIGENCE ENGINE & PIPELINE -->
-      <section class="bg-[#13151b] border border-[#c8c4bc]/10 rounded-lg p-6 sm:p-8">
-        <div class="flex items-center justify-between mb-6 pb-4 border-b border-[#c8c4bc]/10">
-          <div class="flex items-center gap-3">
-            <iconify-icon icon="solar:radar-2-linear" class="text-xl text-rose-400"></iconify-icon>
-            <div>
-              <h2 class="text-lg font-bold text-white">Active Threat Intelligence Feeds</h2>
-              <p class="text-xs text-[#c8c4bc]/50 font-mono-custom">Multi-tiered vulnerability synthesis and validation sources</p>
-            </div>
-          </div>
-          <div class="text-right">
-            <span class="text-[0.7rem] font-mono-custom text-[#c8c4bc]/40">Last Feed Sync:</span>
-            <div id="val-last-sync" class="text-xs font-mono-custom text-[#c8c4bc]">Syncing...</div>
+          <!-- Action Buttons -->
+          <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
+            <button onclick="fetchStats()" id="btn-refresh" class="font-mono-custom text-xs uppercase tracking-widest bg-[#8b3a2a] text-[#c8c4bc] px-6 py-3 rounded-xl hover:bg-[#8b3a2a]/80 transition-all glow-accent flex items-center justify-center gap-2">
+              <iconify-icon icon="solar:refresh-linear" id="icon-refresh" class="text-base"></iconify-icon>
+              <span>Refresh Telemetry</span>
+            </button>
+            <a href="#json-section" class="font-mono-custom text-xs uppercase tracking-widest border border-[#c8c4bc]/20 text-[#c8c4bc]/70 px-6 py-3 rounded-xl hover:border-[#8b3a2a] transition-colors flex items-center justify-center gap-2">
+              <iconify-icon icon="solar:code-linear" class="text-base"></iconify-icon>
+              <span>Inspect JSON Output</span>
+            </a>
+            <a href="/" class="font-mono-custom text-xs uppercase tracking-widest border border-[#c8c4bc]/20 text-[#c8c4bc]/70 px-6 py-3 rounded-xl hover:border-[#8b3a2a] transition-colors flex items-center justify-center gap-2">
+              <iconify-icon icon="solar:home-2-linear" class="text-base"></iconify-icon>
+              <span>Return to Portal</span>
+            </a>
           </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" id="feeds-grid">
-          
-          <!-- Source 1: CISA KEV -->
-          <div class="bg-[#181b22] p-4 rounded border border-[#c8c4bc]/10 flex flex-col justify-between">
-            <div>
-              <div class="flex items-center justify-between mb-2">
-                <span class="text-xs font-mono-custom text-emerald-400 font-semibold uppercase">US CISA KEV</span>
-                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-              </div>
-              <div class="text-sm font-bold text-white mb-1">Known Exploited Vulnerabilities</div>
-              <p class="text-xs text-[#c8c4bc]/50">Government catalog of zero-days actively weaponized in the wild.</p>
-            </div>
-            <div class="mt-4 pt-3 border-t border-[#c8c4bc]/10 flex items-center justify-between text-xs font-mono-custom">
-              <span class="text-[#c8c4bc]/50">Exploited CVEs</span>
-              <span id="badge-cisa-count" class="text-white font-bold">1,716+</span>
+        <!-- Brutalist Stats Bar (Identical 4-Col Grid from Main Page) -->
+        <section class="grid grid-cols-2 md:grid-cols-4 border-t border-[#c8c4bc]/10 relative z-30 bg-[#121316]">
+          <div class="p-6 border-r border-b md:border-b-0 border-[#c8c4bc]/10 text-center">
+            <div id="stat-price" class="font-pixel text-2xl sm:text-3xl tracking-tight text-[#c8c4bc]">$0.001</div>
+            <div class="font-mono-custom text-[0.65rem] uppercase tracking-widest text-[#c8c4bc]/40 mt-2">
+              USDC Per Query
             </div>
           </div>
-
-          <!-- Source 2: NIST NVD 2.0 -->
-          <div class="bg-[#181b22] p-4 rounded border border-[#c8c4bc]/10 flex flex-col justify-between">
-            <div>
-              <div class="flex items-center justify-between mb-2">
-                <span class="text-xs font-mono-custom text-cyan-400 font-semibold uppercase">NIST NVD 2.0</span>
-                <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
-              </div>
-              <div class="text-sm font-bold text-white mb-1">Live Global Registry</div>
-              <p class="text-xs text-[#c8c4bc]/50">Live REST API resolving over 250,000 official CVE entries on demand.</p>
-            </div>
-            <div class="mt-4 pt-3 border-t border-[#c8c4bc]/10 flex items-center justify-between text-xs font-mono-custom">
-              <span class="text-[#c8c4bc]/50">Coverage</span>
-              <span class="text-white font-bold">250,000+ CVEs</span>
+          <div class="p-6 border-r border-b md:border-b-0 border-[#c8c4bc]/10 text-center">
+            <div id="stat-settled" class="font-pixel text-2xl sm:text-3xl tracking-tight text-white">0</div>
+            <div class="font-mono-custom text-[0.65rem] uppercase tracking-widest text-[#c8c4bc]/40 mt-2">
+              On-Chain Settled
             </div>
           </div>
-
-          <!-- Source 3: OSV.dev -->
-          <div class="bg-[#181b22] p-4 rounded border border-[#c8c4bc]/10 flex flex-col justify-between">
-            <div>
-              <div class="flex items-center justify-between mb-2">
-                <span class="text-xs font-mono-custom text-purple-400 font-semibold uppercase">OSV.dev Engine</span>
-                <span class="w-2 h-2 rounded-full bg-purple-400"></span>
-              </div>
-              <div class="text-sm font-bold text-white mb-1">Open Source Intel</div>
-              <p class="text-xs text-[#c8c4bc]/50">High-speed secondary fallback for open-source package vulnerabilities.</p>
-            </div>
-            <div class="mt-4 pt-3 border-t border-[#c8c4bc]/10 flex items-center justify-between text-xs font-mono-custom">
-              <span class="text-[#c8c4bc]/50">Latency</span>
-              <span class="text-white font-bold">&lt; 150ms</span>
+          <div class="p-6 border-r border-[#c8c4bc]/10 text-center">
+            <div id="stat-revenue" class="font-pixel text-xl sm:text-2xl tracking-tight text-emerald-400">0.000000 USDC</div>
+            <div class="font-mono-custom text-[0.65rem] uppercase tracking-widest text-[#c8c4bc]/40 mt-2">
+              Protocol Revenue
             </div>
           </div>
-
-          <!-- Source 4: ArcX Curated -->
-          <div class="bg-[#181b22] p-4 rounded border border-[#c8c4bc]/10 flex flex-col justify-between">
-            <div>
-              <div class="flex items-center justify-between mb-2">
-                <span class="text-xs font-mono-custom text-[#8b3a2a] font-semibold uppercase">ArcX Curated</span>
-                <span class="w-2 h-2 rounded-full bg-[#8b3a2a]"></span>
-              </div>
-              <div class="text-sm font-bold text-white mb-1">Baseline Security Dossiers</div>
-              <p class="text-xs text-[#c8c4bc]/50">Hand-curated zero-days with verified MITRE ATT&amp;CK mappings &amp; IoCs.</p>
-            </div>
-            <div class="mt-4 pt-3 border-t border-[#c8c4bc]/10 flex items-center justify-between text-xs font-mono-custom">
-              <span class="text-[#c8c4bc]/50">Baseline</span>
-              <span id="badge-curated-count" class="text-white font-bold">50 Critical</span>
+          <div class="p-6 text-center">
+            <div id="stat-cisa" class="font-pixel text-2xl sm:text-3xl tracking-tight text-[#c8c4bc]">1,716+</div>
+            <div class="font-mono-custom text-[0.65rem] uppercase tracking-widest text-[#c8c4bc]/40 mt-2">
+              CISA KEV Zero-Days
             </div>
           </div>
+        </section>
 
+      </div>
+    </div>
+
+    <!-- 01 // SMART CONTRACT & SETTLEMENT SPECS -->
+    <section id="architecture" class="mt-24">
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+        <div>
+          <div class="font-mono-custom text-xs text-[#8b3a2a] tracking-[0.3em] uppercase mb-3">
+            [ 01 // PAYMENT RAILS &amp; CONTRACT SPECS ]
+          </div>
+          <h2 class="font-pixel text-2xl sm:text-3xl tracking-tight uppercase text-[#c8c4bc]">
+            Smart Contract Architecture
+          </h2>
         </div>
-      </section>
+        <div class="font-mono-custom text-xs text-[#c8c4bc]/50 uppercase tracking-widest">
+          EIP-3009 // DETERMINISTIC OFF-CHAIN AUTHORIZATION
+        </div>
+      </div>
 
-      <!-- SECTION: ENDPOINT MATRIX & ROUTING SPECS -->
-      <section class="bg-[#13151b] border border-[#c8c4bc]/10 rounded-lg p-6 sm:p-8">
-        <div class="flex items-center gap-3 mb-6 pb-4 border-b border-[#c8c4bc]/10">
-          <iconify-icon icon="solar:code-file-linear" class="text-xl text-emerald-400"></iconify-icon>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        <!-- Card 1: Network Descriptor -->
+        <div class="bg-[#1a1a1a] border border-[#c8c4bc]/10 rounded-xl p-6 border-glow transition-all">
+          <div class="flex items-center justify-between mb-4">
+            <span class="font-mono-custom text-xs text-[#8b3a2a] uppercase tracking-widest">[ NETWORK SPEC ]</span>
+            <span class="px-2 py-0.5 rounded bg-emerald-950/80 border border-emerald-500/40 text-emerald-400 font-mono-custom text-[0.65rem]">MAINNET LIVE</span>
+          </div>
+          <h3 class="text-lg font-bold text-white mb-1">Arc Blockchain (Circle)</h3>
+          <p class="text-xs font-mono-custom text-[#c8c4bc]/60 mb-4">Deterministic sub-second finality with native USDC gas.</p>
+          <div class="bg-[#121316] p-3 rounded-lg border border-[#c8c4bc]/10 flex items-center justify-between font-mono-custom text-xs">
+            <span class="text-[#c8c4bc]/50">EIP-155 Identifier:</span>
+            <span class="text-white font-semibold">eip155:5042</span>
+          </div>
+        </div>
+
+        <!-- Card 2: USDC Asset Contract -->
+        <div class="bg-[#1a1a1a] border border-[#c8c4bc]/10 rounded-xl p-6 border-glow transition-all">
+          <div class="flex items-center justify-between mb-4">
+            <span class="font-mono-custom text-xs text-[#8b3a2a] uppercase tracking-widest">[ SETTLEMENT ASSET ]</span>
+            <span class="px-2 py-0.5 rounded bg-[#8b3a2a]/20 border border-[#8b3a2a]/40 text-[#8b3a2a] font-mono-custom text-[0.65rem]">ERC-20 + GAS</span>
+          </div>
+          <h3 class="text-lg font-bold text-white mb-1">Unified USDC Contract</h3>
+          <p class="text-xs font-mono-custom text-[#c8c4bc]/60 mb-4">One balance, two interfaces. 6 decimals for token authorizations.</p>
+          <div class="bg-[#121316] p-3 rounded-lg border border-[#c8c4bc]/10 flex items-center justify-between font-mono-custom text-xs gap-2">
+            <span id="txt-asset-addr" class="text-white truncate">0x3600000000000000000000000000000000000000</span>
+            <button onclick="copyToClipboard('0x3600000000000000000000000000000000000000', this)" class="text-[#8b3a2a] hover:text-white transition-colors shrink-0 flex items-center gap-1">
+              <iconify-icon icon="solar:copy-linear"></iconify-icon>
+              <span>Copy</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Card 3: Pay-To Facilitator Address -->
+        <div class="bg-[#1a1a1a] border border-[#c8c4bc]/10 rounded-xl p-6 border-glow transition-all">
+          <div class="flex items-center justify-between mb-4">
+            <span class="font-mono-custom text-xs text-[#8b3a2a] uppercase tracking-widest">[ VERIFIED RECIPIENT ]</span>
+            <span class="px-2 py-0.5 rounded bg-cyan-950/80 border border-cyan-500/40 text-cyan-400 font-mono-custom text-[0.65rem]">FACILITATOR</span>
+          </div>
+          <h3 class="text-lg font-bold text-white mb-1">Payment Gate Facilitator</h3>
+          <p class="text-xs font-mono-custom text-[#c8c4bc]/60 mb-4">Cryptographically bound recipient for all signed payment authorizations.</p>
+          <div class="bg-[#121316] p-3 rounded-lg border border-[#c8c4bc]/10 flex items-center justify-between font-mono-custom text-xs gap-2">
+            <span id="txt-payto-addr" class="text-white truncate">0x8b415aE3956992b0cbC6C78c485A4d099F6331cE</span>
+            <button onclick="copyToClipboard('0x8b415aE3956992b0cbC6C78c485A4d099F6331cE', this)" class="text-[#8b3a2a] hover:text-white transition-colors shrink-0 flex items-center gap-1">
+              <iconify-icon icon="solar:copy-linear"></iconify-icon>
+              <span>Copy</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Card 4: Ledger Immutability & Trigger -->
+        <div class="bg-[#1a1a1a] border border-[#c8c4bc]/10 rounded-xl p-6 border-glow transition-all">
+          <div class="flex items-center justify-between mb-4">
+            <span class="font-mono-custom text-xs text-[#8b3a2a] uppercase tracking-widest">[ LEDGER SECURITY ]</span>
+            <span class="px-2 py-0.5 rounded bg-emerald-950/80 border border-emerald-500/40 text-emerald-400 font-mono-custom text-[0.65rem]">IMMUTABLE</span>
+          </div>
+          <h3 class="text-lg font-bold text-white mb-1">Trigger-Enforced Persistence</h3>
+          <p class="text-xs font-mono-custom text-[#c8c4bc]/60 mb-4">WAL-mode SQLite database protected by abort triggers against tampering or deletion.</p>
+          <div class="bg-[#121316] p-3 rounded-lg border border-[#c8c4bc]/10 flex items-center justify-between font-mono-custom text-xs">
+            <span class="text-[#c8c4bc]/50">State Verification:</span>
+            <span class="text-emerald-400 font-semibold">TRIGGERS ACTIVE &amp; HEALTHY</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 02 // LIVE THREAT INTELLIGENCE FEEDS -->
+    <section id="feeds" class="mt-24">
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+        <div>
+          <div class="font-mono-custom text-xs text-[#8b3a2a] tracking-[0.3em] uppercase mb-3">
+            [ 02 // MULTI-TIERED FEED SYNTHESIS ]
+          </div>
+          <h2 class="font-pixel text-2xl sm:text-3xl tracking-tight uppercase text-[#c8c4bc]">
+            Active Intelligence Pipeline
+          </h2>
+        </div>
+        <div class="font-mono-custom text-xs text-[#c8c4bc]/50 uppercase tracking-widest">
+          LAST SYNC // <span id="txt-last-sync" class="text-white">SYNCHRONIZED</span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        
+        <!-- Source 1: CISA KEV -->
+        <div class="bg-[#1a1a1a] border border-[#c8c4bc]/10 rounded-xl p-6 border-glow transition-all flex flex-col justify-between">
           <div>
-            <h2 class="text-lg font-bold text-white">Public API Endpoints Specification</h2>
-            <p class="text-xs text-[#c8c4bc]/50 font-mono-custom">Available methods, pricing tier, and authentication schemes</p>
+            <div class="flex items-center justify-between mb-3">
+              <span class="font-mono-custom text-xs text-rose-400 font-bold uppercase">US CISA KEV</span>
+              <span class="w-2 h-2 rounded-full bg-rose-400 animate-pulse"></span>
+            </div>
+            <h3 class="text-base font-bold text-white mb-1">Exploited Zero-Days</h3>
+            <p class="text-xs font-mono-custom text-[#c8c4bc]/60 leading-relaxed">
+              Official catalog of active vulnerabilities weaponized against enterprise networks.
+            </p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-[#c8c4bc]/10 flex items-center justify-between font-mono-custom text-xs">
+            <span class="text-[#c8c4bc]/40">Active Entries</span>
+            <span id="badge-kev-val" class="font-pixel text-[#c8c4bc]">1,716+</span>
           </div>
         </div>
 
+        <!-- Source 2: NIST NVD 2.0 -->
+        <div class="bg-[#1a1a1a] border border-[#c8c4bc]/10 rounded-xl p-6 border-glow transition-all flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="font-mono-custom text-xs text-cyan-400 font-bold uppercase">NIST NVD 2.0</span>
+              <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
+            </div>
+            <h3 class="text-base font-bold text-white mb-1">Global Vulnerability API</h3>
+            <p class="text-xs font-mono-custom text-[#c8c4bc]/60 leading-relaxed">
+              Live automated queries against over 250,000 official CVE records.
+            </p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-[#c8c4bc]/10 flex items-center justify-between font-mono-custom text-xs">
+            <span class="text-[#c8c4bc]/40">Coverage</span>
+            <span class="font-pixel text-[#c8c4bc]">250K+</span>
+          </div>
+        </div>
+
+        <!-- Source 3: OSV.dev -->
+        <div class="bg-[#1a1a1a] border border-[#c8c4bc]/10 rounded-xl p-6 border-glow transition-all flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="font-mono-custom text-xs text-purple-400 font-bold uppercase">OSV.DEV</span>
+              <span class="w-2 h-2 rounded-full bg-purple-400"></span>
+            </div>
+            <h3 class="text-base font-bold text-white mb-1">Open Source Intel</h3>
+            <p class="text-xs font-mono-custom text-[#c8c4bc]/60 leading-relaxed">
+              High-speed fallback engine resolving vulnerabilities in npm, PyPI, Go, and crates.
+            </p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-[#c8c4bc]/10 flex items-center justify-between font-mono-custom text-xs">
+            <span class="text-[#c8c4bc]/40">Resolution</span>
+            <span class="font-pixel text-[#c8c4bc]">&lt; 150MS</span>
+          </div>
+        </div>
+
+        <!-- Source 4: ArcX Curated -->
+        <div class="bg-[#1a1a1a] border border-[#c8c4bc]/10 rounded-xl p-6 border-glow transition-all flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="font-mono-custom text-xs text-[#8b3a2a] font-bold uppercase">ARCX BASELINE</span>
+              <span class="w-2 h-2 rounded-full bg-[#8b3a2a]"></span>
+            </div>
+            <h3 class="text-base font-bold text-white mb-1">Hand-Curated Dossiers</h3>
+            <p class="text-xs font-mono-custom text-[#c8c4bc]/60 leading-relaxed">
+              Curated zero-days featuring mapped MITRE ATT&amp;CK techniques and mitigation scripts.
+            </p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-[#c8c4bc]/10 flex items-center justify-between font-mono-custom text-xs">
+            <span class="text-[#c8c4bc]/40">Zero-Days</span>
+            <span class="font-pixel text-[#c8c4bc]">50 DOSSIERS</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 03 // PUBLIC ENDPOINTS MATRIX (Identical Table Styling to Main Page) -->
+    <section id="endpoints" class="mt-24">
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+        <div>
+          <div class="font-mono-custom text-xs text-[#8b3a2a] tracking-[0.3em] uppercase mb-3">
+            [ 03 // PUBLIC REST SPECIFICATIONS ]
+          </div>
+          <h2 class="font-pixel text-2xl sm:text-3xl tracking-tight uppercase text-[#c8c4bc]">
+            API Endpoint Matrix
+          </h2>
+        </div>
+        <div class="font-mono-custom text-xs text-[#c8c4bc]/50 uppercase tracking-widest">
+          HTTP 402 // x402 PAYMENT PROTOCOL
+        </div>
+      </div>
+
+      <div class="bg-[#1a1a1a] border border-[#c8c4bc]/10 rounded-xl overflow-hidden shadow-xl">
         <div class="overflow-x-auto">
           <table class="w-full text-left font-mono-custom text-xs">
             <thead>
-              <tr class="border-b border-[#c8c4bc]/10 text-[#c8c4bc]/50 uppercase">
-                <th class="py-3 px-4">Endpoint</th>
-                <th class="py-3 px-4">Cost</th>
-                <th class="py-3 px-4">Auth / Protocol</th>
-                <th class="py-3 px-4">Description</th>
-                <th class="py-3 px-4 text-right">Action</th>
+              <tr class="border-b border-[#c8c4bc]/10 text-[#c8c4bc]/40 uppercase tracking-wider">
+                <th class="py-4 px-6">Endpoint</th>
+                <th class="py-4 px-6">Cost / Access</th>
+                <th class="py-4 px-6">Description</th>
+                <th class="py-4 px-6">Auth Header</th>
+                <th class="py-4 px-6 text-right">Action</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-[#c8c4bc]/10">
               
-              <!-- Endpoint 1: Stats -->
-              <tr class="hover:bg-[#c8c4bc]/[0.02] transition-colors">
-                <td class="py-4 px-4 font-bold text-white flex items-center gap-2">
+              <!-- /api/v1/stats -->
+              <tr class="hover:bg-[#c8c4bc]/[0.03] transition-colors">
+                <td class="py-4 px-6 font-bold text-white flex items-center gap-2">
                   <span class="px-2 py-0.5 rounded bg-emerald-950/80 border border-emerald-500/40 text-emerald-400 text-[0.65rem]">GET</span>
-                  <span class="text-emerald-400">/api/v1/stats</span>
-                  <span class="px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 text-[0.6rem]">CURRENT</span>
+                  <a href="/api/v1/stats" target="_blank" class="text-emerald-400 underline decoration-emerald-500/30 hover:decoration-emerald-400 underline-offset-4 transition-colors">/api/v1/stats</a>
+                  <span class="px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 text-[0.6rem]">ACTIVE</span>
                 </td>
-                <td class="py-4 px-4 text-emerald-400">Free / Public</td>
-                <td class="py-4 px-4 text-[#c8c4bc]/40">None</td>
-                <td class="py-4 px-4 text-[#c8c4bc]/70">This endpoint — real-time settlement telemetry and feed stats</td>
-                <td class="py-4 px-4 text-right">
-                  <button onclick="copyToClipboard('http://' + window.location.host + '/api/v1/stats', this)" class="px-2.5 py-1 rounded bg-[#181b22] hover:bg-[#20242e] border border-[#c8c4bc]/15 text-[#c8c4bc] hover:text-white transition-all">
+                <td class="py-4 px-6 text-emerald-400">Free / Public</td>
+                <td class="py-4 px-6 text-[#c8c4bc]/70">Settlement metrics, revenue volume, unique wallets, and protocol specs</td>
+                <td class="py-4 px-6 text-[#c8c4bc]/40">None</td>
+                <td class="py-4 px-6 text-right">
+                  <button onclick="copyToClipboard('http://' + window.location.host + '/api/v1/stats', this)" class="px-3 py-1 rounded bg-[#121316] hover:bg-[#20242e] border border-[#c8c4bc]/15 text-[#c8c4bc] hover:text-white transition-all">
                     Copy URL
                   </button>
                 </td>
               </tr>
 
-              <!-- Endpoint 2: Health -->
-              <tr class="hover:bg-[#c8c4bc]/[0.02] transition-colors">
-                <td class="py-4 px-4 font-bold text-white flex items-center gap-2">
+              <!-- /health -->
+              <tr class="hover:bg-[#c8c4bc]/[0.03] transition-colors">
+                <td class="py-4 px-6 font-bold text-white flex items-center gap-2">
                   <span class="px-2 py-0.5 rounded bg-emerald-950/80 border border-emerald-500/40 text-emerald-400 text-[0.65rem]">GET</span>
-                  <a href="/health" target="_blank" class="hover:text-emerald-400 underline decoration-dotted underline-offset-4 transition-colors">/health</a>
+                  <a href="/health" target="_blank" class="text-white hover:text-emerald-400 underline decoration-[#c8c4bc]/30 hover:decoration-emerald-400 underline-offset-4 transition-colors">/health</a>
                 </td>
-                <td class="py-4 px-4 text-emerald-400">Free / Public</td>
-                <td class="py-4 px-4 text-[#c8c4bc]/40">None</td>
-                <td class="py-4 px-4 text-[#c8c4bc]/70">System diagnostic, SQLite database integrity, and Arc RPC health</td>
-                <td class="py-4 px-4 text-right">
-                  <a href="/health" target="_blank" class="px-2.5 py-1 rounded bg-[#181b22] hover:bg-[#20242e] border border-[#c8c4bc]/15 text-[#c8c4bc] hover:text-white transition-all inline-block">
+                <td class="py-4 px-6 text-emerald-400">Free / Public</td>
+                <td class="py-4 px-6 text-[#c8c4bc]/70">Service health diagnostic, SQLite integrity, and Arc RPC connectivity</td>
+                <td class="py-4 px-6 text-[#c8c4bc]/40">None</td>
+                <td class="py-4 px-6 text-right">
+                  <a href="/health" target="_blank" class="px-3 py-1 rounded bg-[#121316] hover:bg-[#20242e] border border-[#c8c4bc]/15 text-[#c8c4bc] hover:text-white transition-all inline-block">
                     Open ↗
                   </a>
                 </td>
               </tr>
 
-              <!-- Endpoint 3: Insight -->
-              <tr class="hover:bg-[#c8c4bc]/[0.02] transition-colors">
-                <td class="py-4 px-4 font-bold text-white flex items-center gap-2">
+              <!-- /api/v1/insight -->
+              <tr class="hover:bg-[#c8c4bc]/[0.03] transition-colors">
+                <td class="py-4 px-6 font-bold text-white flex items-center gap-2">
                   <span class="px-2 py-0.5 rounded bg-[#8b3a2a]/20 border border-[#8b3a2a]/40 text-[#8b3a2a] text-[0.65rem]">GET</span>
-                  <span>/api/v1/insight</span>
+                  <span class="text-white">/api/v1/insight</span>
                 </td>
-                <td class="py-4 px-4 text-[#c8c4bc]">0.001 USDC</td>
-                <td class="py-4 px-4 text-[#8b3a2a]">x402 (EIP-3009)</td>
-                <td class="py-4 px-4 text-[#c8c4bc]/70">Dynamic enriched threat intelligence advisory for security agents</td>
-                <td class="py-4 px-4 text-right">
-                  <a href="/#playground" class="px-2.5 py-1 rounded bg-[#8b3a2a]/20 hover:bg-[#8b3a2a] border border-[#8b3a2a]/40 text-white transition-all inline-block">
+                <td class="py-4 px-6 text-[#c8c4bc]">0.001 USDC (x402)</td>
+                <td class="py-4 px-6 text-[#c8c4bc]/70">Fetch random zero-day threat advisory for automated bot training &amp; triage</td>
+                <td class="py-4 px-6 text-[#8b3a2a]">PAYMENT-SIGNATURE</td>
+                <td class="py-4 px-6 text-right">
+                  <a href="/#playground" class="px-3 py-1 rounded bg-[#8b3a2a]/20 hover:bg-[#8b3a2a] border border-[#8b3a2a]/40 text-white transition-all inline-block">
                     Test in Portal
                   </a>
                 </td>
               </tr>
 
-              <!-- Endpoint 4: Lookup -->
-              <tr class="hover:bg-[#c8c4bc]/[0.02] transition-colors">
-                <td class="py-4 px-4 font-bold text-white flex items-center gap-2">
+              <!-- /api/v1/lookup/:cveId -->
+              <tr class="hover:bg-[#c8c4bc]/[0.03] transition-colors">
+                <td class="py-4 px-6 font-bold text-white flex items-center gap-2">
                   <span class="px-2 py-0.5 rounded bg-[#8b3a2a]/20 border border-[#8b3a2a]/40 text-[#8b3a2a] text-[0.65rem]">GET</span>
-                  <span>/api/v1/lookup/:cveId</span>
+                  <span class="text-white">/api/v1/lookup/:cveId</span>
                 </td>
-                <td class="py-4 px-4 text-[#c8c4bc]">0.001 USDC</td>
-                <td class="py-4 px-4 text-[#8b3a2a]">x402 (EIP-3009)</td>
-                <td class="py-4 px-4 text-[#c8c4bc]/70">Query specific CVE identifier against NVD, KEV, and local cache</td>
-                <td class="py-4 px-4 text-right">
-                  <a href="/#playground" class="px-2.5 py-1 rounded bg-[#8b3a2a]/20 hover:bg-[#8b3a2a] border border-[#8b3a2a]/40 text-white transition-all inline-block">
+                <td class="py-4 px-6 text-[#c8c4bc]">0.001 USDC (x402)</td>
+                <td class="py-4 px-6 text-[#c8c4bc]/70">Lookup enriched CVE threat advisory by identifier across NVD &amp; CISA KEV</td>
+                <td class="py-4 px-6 text-[#8b3a2a]">PAYMENT-SIGNATURE</td>
+                <td class="py-4 px-6 text-right">
+                  <a href="/#playground" class="px-3 py-1 rounded bg-[#8b3a2a]/20 hover:bg-[#8b3a2a] border border-[#8b3a2a]/40 text-white transition-all inline-block">
                     Test in Portal
                   </a>
                 </td>
@@ -455,90 +487,87 @@
             </tbody>
           </table>
         </div>
-      </section>
+      </div>
+    </section>
 
-    </div>
+    <!-- 04 // MACHINE-READABLE API PAYLOAD (Raw JSON Inspector) -->
+    <section id="json-section" class="mt-24">
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+        <div>
+          <div class="font-mono-custom text-xs text-[#8b3a2a] tracking-[0.3em] uppercase mb-3">
+            [ 04 // MACHINE-READABLE RESPONSE ]
+          </div>
+          <h2 class="font-pixel text-2xl sm:text-3xl tracking-tight uppercase text-[#c8c4bc]">
+            Live API JSON Payload
+          </h2>
+        </div>
+        <div class="flex items-center gap-3">
+          <button onclick="copyRawJson(this)" class="font-mono-custom text-xs uppercase tracking-widest border border-[#c8c4bc]/20 text-[#c8c4bc]/80 px-4 py-2 rounded-lg hover:border-[#8b3a2a] hover:text-white transition-colors flex items-center gap-1.5">
+            <iconify-icon icon="solar:copy-linear"></iconify-icon>
+            <span>Copy JSON</span>
+          </button>
+          <button onclick="copyCurlCommand(this)" class="font-mono-custom text-xs uppercase tracking-widest bg-[#8b3a2a] text-[#c8c4bc] px-4 py-2 rounded-lg hover:bg-[#8b3a2a]/80 transition-colors flex items-center gap-1.5">
+            <iconify-icon icon="solar:command-linear"></iconify-icon>
+            <span>Copy cURL</span>
+          </button>
+        </div>
+      </div>
 
-    <!-- ==================== VIEW 2: RAW JSON CODE VIEWER ==================== -->
-    <div id="view-json" class="hidden space-y-6">
-      
-      <div class="bg-[#13151b] border border-[#c8c4bc]/10 rounded-lg p-6">
-        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4 pb-4 border-b border-[#c8c4bc]/10">
+      <div class="bg-[#1a1a1a] border border-[#c8c4bc]/10 rounded-xl p-6 shadow-xl relative">
+        <pre id="json-display" class="bg-[#121316] border border-[#c8c4bc]/10 rounded-lg p-6 font-mono-custom text-xs text-[#c8c4bc] overflow-x-auto leading-relaxed max-h-[550px]">Loading live JSON response from /api/v1/stats...</pre>
+        
+        <div class="mt-4 pt-4 border-t border-[#c8c4bc]/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 font-mono-custom text-xs text-[#c8c4bc]/50">
           <div>
-            <h2 class="text-lg font-bold text-white">Live API Payload Response</h2>
-            <p class="text-xs text-[#c8c4bc]/50 font-mono-custom">Exact output received by AI agents and automated SDKs</p>
+            💡 <strong class="text-white">AI Agent Integration:</strong> Clients passing <code class="text-amber-300">Accept: application/json</code> or <code class="text-amber-300">?format=json</code> receive pure machine-readable JSON directly.
           </div>
-          <div class="flex items-center gap-2">
-            <button onclick="copyRawJson(this)" class="px-3 py-1.5 rounded bg-[#181b22] hover:bg-[#20242e] border border-[#c8c4bc]/15 text-xs font-mono-custom text-white transition-all flex items-center gap-1.5">
-              <iconify-icon icon="solar:copy-linear"></iconify-icon>
-              <span>Copy JSON</span>
-            </button>
-            <button onclick="copyCurlCommand(this)" class="px-3 py-1.5 rounded bg-[#8b3a2a]/20 hover:bg-[#8b3a2a] border border-[#8b3a2a]/40 text-xs font-mono-custom text-white transition-all flex items-center gap-1.5">
-              <iconify-icon icon="solar:command-linear"></iconify-icon>
-              <span>Copy cURL</span>
-            </button>
+          <div id="val-json-status" class="text-emerald-400 shrink-0">
+            HTTP 200 OK
           </div>
-        </div>
-
-        <!-- Preformatted Code Display -->
-        <div class="relative">
-          <pre id="json-display" class="bg-[#0a0b0e] border border-[#c8c4bc]/10 rounded-lg p-5 text-xs font-mono-custom overflow-x-auto text-[#c8c4bc] leading-relaxed max-h-[600px]">Loading live JSON payload...</pre>
-        </div>
-
-        <div class="mt-4 p-4 rounded bg-[#181b22]/70 border border-[#c8c4bc]/10 text-xs text-[#c8c4bc]/60 font-mono-custom">
-          💡 <strong class="text-white">Agent Integration Tip:</strong> AI agents requesting <code class="text-amber-300">Accept: application/json</code> or appending <code class="text-amber-300">?format=json</code> will automatically receive pure machine-readable JSON without any HTML markup.
         </div>
       </div>
+    </section>
 
-    </div>
-
-    <!-- FOOTER -->
-    <footer class="mt-16 pt-8 border-t border-[#c8c4bc]/10 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs font-mono-custom text-[#c8c4bc]/40">
+    <!-- FOOTER (Identical to Main Page) -->
+    <footer class="mt-28 mb-12 border-t border-[#c8c4bc]/10 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
       <div class="flex items-center gap-3">
-        <span class="font-pixel text-[#c8c4bc]">ARC<span class="text-[#8b3a2a]">X</span></span>
-        <span>//</span>
-        <span id="footer-uptime">Uptime: checking...</span>
+        <span class="font-pixel text-lg tracking-wider text-[#c8c4bc]">
+          ARC<span class="text-[#8b3a2a]">X</span>
+        </span>
+        <span class="font-mono-custom text-xs text-[#c8c4bc]/30">|</span>
+        <span class="font-mono-custom text-xs text-[#c8c4bc]/50">Autonomous Threat Intelligence</span>
       </div>
-      <div class="flex items-center gap-6">
-        <a href="/" class="hover:text-white transition-colors">Portal Home</a>
-        <a href="/health" target="_blank" class="hover:text-emerald-400 transition-colors">Health Status</a>
+
+      <div class="flex items-center gap-6 text-xs font-mono-custom text-[#c8c4bc]/50">
+        <a href="/" class="hover:text-[#8b3a2a] transition-colors">Portal Home</a>
+        <a href="/#playground" class="hover:text-[#8b3a2a] transition-colors">Playground</a>
+        <a href="/health" class="hover:text-[#8b3a2a] transition-colors">Health Check</a>
         <a href="https://explorer.arc.io" target="_blank" rel="noopener" class="hover:text-[#8b3a2a] transition-colors flex items-center gap-1">
           Arc Explorer ↗
         </a>
+      </div>
+
+      <div class="font-mono-custom text-xs text-[#c8c4bc]/30" id="footer-uptime">
+        UPTIME // 00S
       </div>
     </footer>
 
   </main>
 
-  <!-- JAVASCRIPT LOGIC -->
+  <!-- LIVE SCRIPT LOGIC -->
   <script>
     let rawStatsData = null;
 
-    // View switcher: GUI or JSON
-    function setViewMode(mode) {
-      const guiView = document.getElementById('view-gui');
-      const jsonView = document.getElementById('view-json');
-      const btnGui = document.getElementById('btn-view-gui');
-      const btnJson = document.getElementById('btn-view-json');
-
-      if (mode === 'json') {
-        guiView.classList.add('hidden');
-        jsonView.classList.remove('hidden');
-        btnJson.classList.add('bg-[#8b3a2a]', 'text-white');
-        btnJson.classList.remove('text-[#c8c4bc]/60');
-        btnGui.classList.remove('bg-[#8b3a2a]', 'text-white');
-        btnGui.classList.add('text-[#c8c4bc]/60');
-      } else {
-        jsonView.classList.add('hidden');
-        guiView.classList.remove('hidden');
-        btnGui.classList.add('bg-[#8b3a2a]', 'text-white');
-        btnGui.classList.remove('text-[#c8c4bc]/60');
-        btnJson.classList.remove('bg-[#8b3a2a]', 'text-white');
-        btnJson.classList.add('text-[#c8c4bc]/60');
-      }
+    // Live clock in technical header
+    function updateClock() {
+      const now = new Date();
+      const timeStr = now.toISOString().substring(11, 19) + 'Z';
+      const el = document.getElementById('live-time');
+      if (el) el.innerText = 'SYS.SYNC // ' + timeStr;
     }
+    setInterval(updateClock, 1000);
+    updateClock();
 
-    // Syntax highlight JSON string
+    // Syntax highlight JSON output
     function syntaxHighlight(json) {
       if (typeof json !== 'string') {
         json = JSON.stringify(json, undefined, 2);
@@ -561,7 +590,7 @@
       });
     }
 
-    // Fetch live stats from API
+    // Fetch stats from API
     async function fetchStats() {
       const icon = document.getElementById('icon-refresh');
       if (icon) icon.classList.add('animate-spin');
@@ -572,44 +601,34 @@
         const data = await res.json();
         rawStatsData = data;
 
-        // Populate metrics
-        document.getElementById('val-settled').innerText = (data.stats.totalSettled || 0).toLocaleString();
-        document.getElementById('val-revenue').innerText = data.stats.totalRevenue || '0.000000 USDC';
+        // Update Brutalist Stats Bar
+        document.getElementById('stat-settled').innerText = (data.stats.totalSettled || 0).toLocaleString();
+        document.getElementById('stat-revenue').innerText = data.stats.totalRevenue || '0.000000 USDC';
         
-        if (data.threatFeeds) {
-          const cisaCount = data.threatFeeds.cisaKevCount || 0;
-          document.getElementById('val-kev-count').innerText = cisaCount.toLocaleString();
-          document.getElementById('badge-cisa-count').innerText = cisaCount.toLocaleString() + ' Active';
-          
-          if (data.threatFeeds.curatedThreatsCount) {
-            document.getElementById('badge-curated-count').innerText = data.threatFeeds.curatedThreatsCount + ' Critical';
-          }
-
-          if (data.threatFeeds.lastCisaSync) {
-            const date = new Date(data.threatFeeds.lastCisaSync);
-            document.getElementById('val-last-sync').innerText = date.toLocaleTimeString() + ' (' + date.toLocaleDateString() + ')';
-          } else {
-            document.getElementById('val-last-sync').innerText = 'Active (In-Memory)';
-          }
+        if (data.pricing) {
+          document.getElementById('stat-price').innerText = '$' + data.pricing.perQuery.replace(' USDC', '');
+          document.getElementById('txt-asset-addr').innerText = data.pricing.asset;
+          document.getElementById('txt-payto-addr').innerText = data.pricing.payTo;
         }
 
-        if (data.pricing) {
-          document.getElementById('val-price').innerText = '$' + data.pricing.perQuery.replace(' USDC', '');
-          document.getElementById('spec-network').innerText = 'Chain ID ' + data.pricing.chainId;
-          document.getElementById('spec-asset').innerText = data.pricing.asset;
-          document.getElementById('spec-payto').innerText = data.pricing.payTo;
+        if (data.threatFeeds) {
+          const cisaCount = data.threatFeeds.cisaKevCount || 0;
+          document.getElementById('stat-cisa').innerText = cisaCount.toLocaleString() + '+';
+          document.getElementById('badge-kev-val').innerText = cisaCount.toLocaleString() + ' ACTIVE';
           
-          const explorerLink = document.getElementById('link-payto-explorer');
-          if (explorerLink) {
-            explorerLink.href = 'https://explorer.arc.io/address/' + data.pricing.payTo;
+          if (data.threatFeeds.lastCisaSync) {
+            const date = new Date(data.threatFeeds.lastCisaSync);
+            document.getElementById('txt-last-sync').innerText = date.toLocaleTimeString() + ' (' + date.toLocaleDateString() + ')';
+          } else {
+            document.getElementById('txt-last-sync').innerText = 'ACTIVE (IN-MEMORY)';
           }
         }
 
         if (data.uptime) {
-          document.getElementById('footer-uptime').innerText = 'Uptime: ' + data.uptime;
+          document.getElementById('footer-uptime').innerText = 'UPTIME // ' + data.uptime.toUpperCase();
         }
 
-        // Render formatted JSON view
+        // Render formatted JSON
         document.getElementById('json-display').innerHTML = syntaxHighlight(data);
 
       } catch (err) {
@@ -625,7 +644,7 @@
     function copyToClipboard(text, btn) {
       navigator.clipboard.writeText(text).then(() => {
         const originalText = btn.innerHTML;
-        btn.innerHTML = '<iconify-icon icon="solar:check-circle-linear" class="text-emerald-400"></iconify-icon> Copied!';
+        btn.innerHTML = '<iconify-icon icon="solar:check-circle-linear" class="text-emerald-400"></iconify-icon> <span>Copied!</span>';
         setTimeout(() => {
           btn.innerHTML = originalText;
         }, 1800);
