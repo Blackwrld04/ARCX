@@ -26,8 +26,7 @@ function copyDir(src, dest) {
 copyDir(publicDir, distDir);
 copyDir(dashboardDir, path.join(distDir, 'dashboard'));
 
-// Determine backend URL for Netlify proxy rewrite
-const backendUrl = (process.env.BACKEND_URL || process.env.API_URL || 'https://arcx.onrender.com').replace(/\/$/, '');
+const backendUrl = (process.env.BACKEND_URL || process.env.API_URL || 'https://arcx-v2fs.onrender.com').replace(/\/$/, '');
 
 // Generate Netlify _redirects file
 const redirectsContent = `# Route rewrites for Netlify Edge CDN

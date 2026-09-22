@@ -24,16 +24,15 @@
   to = "/stats/:splat"
   status = 200
 
-# Fallback proxy for API calls to Render backend
-# (Can also be dynamically configured via BACKEND_URL in Netlify Environment Variables)
+# Proxy API calls directly to live Render backend service
 [[redirects]]
   from = "/api/*"
-  to = "https://arcx.onrender.com/api/:splat"
+  to = "https://arcx-v2fs.onrender.com/api/:splat"
   status = 200
   force = true
 
 [[redirects]]
   from = "/health"
-  to = "https://arcx.onrender.com/health"
+  to = "https://arcx-v2fs.onrender.com/health"
   status = 200
   force = true
