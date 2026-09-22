@@ -2,7 +2,6 @@
   command = "npm run build"
   publish = "dist"
 
-# Dashboard route rewrite
 [[redirects]]
   from = "/dashboard"
   to = "/dashboard/index.html"
@@ -13,7 +12,6 @@
   to = "/dashboard/:splat"
   status = 200
 
-# Stats explorer GUI route rewrite
 [[redirects]]
   from = "/stats"
   to = "/stats/index.html"
@@ -24,7 +22,6 @@
   to = "/stats/:splat"
   status = 200
 
-# Proxy API calls directly to live Render backend service
 [[redirects]]
   from = "/api/*"
   to = "https://arcx-v2fs.onrender.com/api/:splat"

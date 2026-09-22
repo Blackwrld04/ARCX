@@ -862,8 +862,7 @@
     }
 
     const snippets = {
-      ts: `// Node.js / TypeScript Agent using viem & x402
-import { createWalletClient, http, toHex, keccak256, encodePacked } from 'viem';
+      ts: `import { createWalletClient, http, toHex, keccak256, encodePacked } from 'viem';
 import { arc } from 'viem/chains';
 import { privateKeyToAccount } from 'viem/accounts';
 import { randomBytes } from 'crypto';
@@ -871,12 +870,10 @@ import { randomBytes } from 'crypto';
 const account = privateKeyToAccount(process.env.AGENT_PRIVATE_KEY);
 const client = createWalletClient({ account, chain: arc, transport: http() });
 
-// 1. Request endpoint -> Receive 402 challenge
 const challenge = await fetch('http://localhost:4402/api/v1/lookup/CVE-2024-3094');
 const { accepts } = await challenge.json();
 const offer = accepts[0];
 
-// 2. Compute request-bound nonce & sign EIP-3009 authorization
 const salt = toHex(randomBytes(16));
 const nonce = keccak256(encodePacked(['bytes16', 'string'], [salt, 'GET:/api/v1/lookup/CVE-2024-3094']));
 
@@ -900,7 +897,6 @@ const signature = await client.signTypedData({
   }
 });
 
-// 3. Resend with PAYMENT-SIGNATURE header (0 gas off-chain signature)
 const paid = await fetch('http://localhost:4402/api/v1/lookup/CVE-2024-3094', {
   headers: {
     'PAYMENT-SIGNATURE': Buffer.from(JSON.stringify({
@@ -929,12 +925,10 @@ from web3 import Web3
 agent = Account.from_key(os.getenv("AGENT_PRIVATE_KEY", "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"))
 url = "http://localhost:4402/api/v1/lookup/CVE-2024-3094"
 
-# 1. Request endpoint -> Receive 402 challenge terms
 challenge_res = requests.get(url)
 challenge = challenge_res.json()
 offer = challenge["accepts"][0]
 
-# 2. Compute request-bound nonce & sign EIP-3009 authorization off-chain
 salt = "0x" + os.urandom(16).hex()
 bound_nonce = Web3.solidity_keccak(
     ['bytes16', 'string'],
@@ -971,7 +965,6 @@ message = {
 signable = encode_typed_data(domain_data=domain, message_types=types, message_data=message)
 signed = agent.sign_message(signable)
 
-# 3. Unlock with base64 PAYMENT-SIGNATURE header
 payload = {
     "from": agent.address,
     "to": offer["payTo"],
@@ -990,8 +983,7 @@ intel = requests.get(url, headers=headers).json()
 print("Unlocked Threat Intel:", intel["insight"]["title"])
 print("Arc Settlement Hash:", intel["payment"]["txHash"])`,
 
-      eliza: `// LangChain & ElizaOS Agent Tool Integration
-import { DynamicStructuredTool } from '@langchain/core/tools';
+      eliza: `import { DynamicStructuredTool } from '@langchain/core/tools';
 import { z } from 'zod';
 
 export const arcxThreatTool = new DynamicStructuredTool({
@@ -1003,15 +995,12 @@ export const arcxThreatTool = new DynamicStructuredTool({
   func: async ({ cveId }) => {
     const url = \`http://localhost:4402/api/v1/lookup/\${cveId}\`;
 
-    // 1. Trigger x402 Payment Challenge
     const challengeRes = await fetch(url);
     if (challengeRes.status === 402) {
       const challenge = await challengeRes.json();
 
-      // 2. Sign EIP-3009 payment authorization header off-chain
       const paymentSignature = await signArcXAuthorization(challenge.accepts[0], \`GET:/api/v1/lookup/\${cveId}\`);
 
-      // 3. Unlock full intelligence dossier
       const intelRes = await fetch(url, {
         headers: { 'PAYMENT-SIGNATURE': paymentSignature }
       });
@@ -1031,30 +1020,11 @@ export const arcxThreatTool = new DynamicStructuredTool({
   },
 });`,
 
-      curl: `# -----------------------------------------------------------------
-# ArcX x402 CLI / cURL Protocol Workflow
-# -----------------------------------------------------------------
+      curl: `curl -i http://localhost:4402/api/v1/lookup/CVE-2024-3094
 
-# 1. Request protected threat intelligence -> Receive HTTP 402 Payment Required:
-curl -i http://localhost:4402/api/v1/lookup/CVE-2024-3094
-
-# Returns challenge with payment parameters:
-# {
-#   "error": "Payment Required",
-#   "accepts": [{
-#     "scheme": "x402-v1",
-#     "network": "eip155:5042",
-#     "asset": "0x3600000000000000000000000000000000000000",
-#     "amount": "1000",
-#     "payTo": "0x5395aB3A5A6a066601449B86aD49C52d8e48b368"
-#   }]
-# }
-
-# 2. Resend request with base64-encoded PAYMENT-SIGNATURE header:
 curl -i http://localhost:4402/api/v1/lookup/CVE-2024-3094 \\
   -H "PAYMENT-SIGNATURE: eyJmcm9tIjoiMHhBZGdyZXNzLi4uIiwidG8iOiIweFBheVRvLi4uIiwidmFsdWUiOiIxMDAwIiwidmFsaWRBZnRlciI6IjAiLCJ2YWxpZEJlZm9yZSI6IjE3MzU2ODk2MDAiLCJub25jZSI6IjB4Li4uIiwic2lnbmF0dXJlIjoiMHg4OTRhLi4uIn0="
 
-# 3. Query public telemetry, system health, and stats (Free, no 402):
 curl http://localhost:4402/api/v1/stats`
     };
 

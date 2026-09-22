@@ -4,11 +4,9 @@ import { lookupCve, syncCisaKev, getRandomInsight, getFeedStats } from '../src/s
 
 console.log('🧪 Starting ArcX External Feeds & Synthesis test suite...\n');
 
-// Initialize in-memory database for testing
 initDatabase(':memory:');
 
 async function runTests() {
-  // Test 1: Curated CVE lookup
   console.log('Test 1: Curated CVE lookup (CVE-2024-3094)');
   const curated = await lookupCve('CVE-2024-3094');
   assert(curated, 'Curated threat must be found');
@@ -17,13 +15,11 @@ async function runTests() {
   assert(curated.remediation.length > 10, 'Remediation must be populated');
   console.log('  ✓ Curated threat retrieved with complete intelligence\n');
 
-  // Test 2: CISA KEV catalog sync
   console.log('Test 2: CISA KEV catalog sync & exploit verification');
   const count = await syncCisaKev();
   assert(count > 0, 'CISA KEV count must be greater than 0');
   console.log(`  ✓ Synced ${count} actively exploited zero-days from CISA KEV catalog\n`);
 
-  // Test 3: Live external fetch for non-curated CVE
   console.log('Test 3: Live external fetch for non-curated CVE (CVE-2024-38063)');
   const t0 = Date.now();
   const external = await lookupCve('CVE-2024-38063');
@@ -34,7 +30,6 @@ async function runTests() {
   assert(external.source.includes('NVD') || external.source.includes('OSV'), 'Source must indicate external feed');
   console.log(`  ✓ Live external lookup succeeded in ${duration1}ms (Severity: ${external.severity}, CVSS: ${external.cvss})\n`);
 
-  // Test 4: Sub-millisecond SQLite cache verification
   console.log('Test 4: SQLite cache hit for previously fetched CVE');
   const t2 = Date.now();
   const cached = await lookupCve('CVE-2024-38063');
@@ -43,14 +38,12 @@ async function runTests() {
   assert(duration2 < 50, `Cached response must be fast (got ${duration2}ms)`);
   console.log(`  ✓ Cached response served in ${duration2}ms from SQLite cve_cache\n`);
 
-  // Test 5: Dynamic random threat insight
   console.log('Test 5: Dynamic random insight generation');
   const insight = await getRandomInsight();
   assert(insight && insight.cve, 'Insight must contain a valid CVE');
   assert(insight.remediation, 'Insight must contain remediation guidance');
   console.log(`  ✓ Generated dynamic threat dossier for ${insight.cve} (${insight.title})\n`);
 
-  // Test 6: Feed telemetry stats
   console.log('Test 6: Feed telemetry stats');
   const stats = getFeedStats();
   assert(stats.cisaKevCount > 0, 'CISA KEV count must be > 0');

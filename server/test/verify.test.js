@@ -11,11 +11,9 @@ import { recordPending, recordSettlement, findByNonce } from '../src/db/ledger.j
 
 console.log('🧪 Starting ArcX verification & test suite...\n');
 
-// Initialize in-memory test database so real ledger is not polluted
 initDatabase(':memory:');
 const db = getDb();
 
-// Test wallet setup
 const testPrivateKey = generatePrivateKey();
 const testAccount = privateKeyToAccount(testPrivateKey);
 const testWallet = createWalletClient({
@@ -28,7 +26,6 @@ async function runTests() {
   const domain = getUsdcDomain();
   console.log('✅ Dynamic EIP-712 domain:', domain);
 
-  // --- Test 1: Valid EIP-3009 signature with request binding ---
   console.log('\nTest 1: Valid EIP-3009 signature with request binding');
   const salt = toHex(randomBytes(16));
   const endpoint = '/api/v1/insight';
@@ -67,14 +64,12 @@ async function runTests() {
   assert.strictEqual(validRes.valid, true, `Expected valid payment, got: ${validRes.reason}`);
   console.log('  ✓ Valid payment with bound nonce verified successfully');
 
-  // --- Test 2: Nonce binding mismatch (using signature on different endpoint) ---
   console.log('\nTest 2: Nonce binding mismatch (replay across endpoints)');
   const mismatchRes = await verifyPayment(validPayment, { endpoint: '/api/v1/lookup/CVE-2024-3094', method: 'GET' });
   assert.strictEqual(mismatchRes.valid, false);
   assert.match(mismatchRes.reason, /Payment nonce is not bound/);
   console.log('  ✓ Endpoint replay rejected by cryptographic binding');
 
-  // --- Test 3: Insufficient payment value ---
   console.log('\nTest 3: Insufficient payment value');
   const lowPayment = { ...validPayment, value: '500' };
   const lowRes = await verifyPayment(lowPayment, { endpoint, method });
@@ -82,7 +77,6 @@ async function runTests() {
   assert.match(lowRes.reason, /Insufficient payment/);
   console.log('  ✓ Insufficient amount rejected');
 
-  // --- Test 4: Expired payment ---
   console.log('\nTest 4: Expired payment window');
   const expiredPayment = { ...validPayment, validBefore: (now - 10n).toString() };
   const expiredRes = await verifyPayment(expiredPayment, { endpoint, method });
@@ -90,7 +84,6 @@ async function runTests() {
   assert.match(expiredRes.reason, /Payment expired/);
   console.log('  ✓ Expired authorization rejected');
 
-  // --- Test 5: Recipient mismatch ---
   console.log('\nTest 5: Recipient mismatch');
   const wrongRecipientPayment = { ...validPayment, to: testAccount.address };
   const wrongRecipRes = await verifyPayment(wrongRecipientPayment, { endpoint, method });
@@ -98,7 +91,6 @@ async function runTests() {
   assert.match(wrongRecipRes.reason, /Payment recipient mismatch/);
   console.log('  ✓ Wrong recipient rejected');
 
-  // --- Test 6: Ledger immutability triggers ---
   console.log('\nTest 6: SQLite trigger immutability enforcement');
   const testNonce = toHex(randomBytes(32));
   const paymentId = recordPending({
@@ -112,14 +104,12 @@ async function runTests() {
   });
   assert(paymentId > 0);
 
-  // Updating settlement status should SUCCEED
   recordSettlement(paymentId, '0xabcdef123456', 12345, '21000', { test: true });
   const settled = findByNonce(testNonce);
   assert.strictEqual(settled.status, 'SETTLED');
   assert.strictEqual(settled.tx_hash, '0xabcdef123456');
   console.log('  ✓ Settlement update allowed by trigger');
 
-  // Attempting to tamper with financial fields should FAIL
   assert.throws(() => {
     db.prepare('UPDATE payments SET amount = 999999 WHERE id = ?').run(paymentId);
   }, /Financial payment fields are immutable/);
