@@ -474,7 +474,7 @@ ArcX is ready for one-click deployment to **Render** (backend API) and **Netlify
    - **Build Command**: `npm run build:netlify`
    - **Publish Directory**: `dist`
 3. In **Site Configuration > Environment Variables**, add:
-   - `BACKEND_URL`: `https://your-service.onrender.com` (Your Render URL from step 1)
+   - `BACKEND_URL` (or `API_URL`): `https://your-service.onrender.com` *(Your Render URL from step 1)*
 4. Click **Deploy Site**. The frontend edge CDN will build and proxy all `/api/*` requests directly to your Render backend.
 
 ---

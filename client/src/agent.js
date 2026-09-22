@@ -5,7 +5,7 @@ import { privateKeyToAccount } from 'viem/accounts';
 import { randomBytes } from 'crypto';
 
 const AGENT_KEY = process.env.AGENT_PRIVATE_KEY;
-const API_URL = process.env.API_URL || 'http://localhost:4402';
+const API_URL = process.env.API_URL || process.env.BACKEND_URL || 'http://localhost:4402';
 const NUM_QUERIES = parseInt(process.env.NUM_QUERIES || '1', 10);
 
 if (!AGENT_KEY) {
