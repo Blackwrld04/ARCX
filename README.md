@@ -16,7 +16,7 @@ ArcX is an autonomous, machine-to-machine cybersecurity intelligence API built n
 
 **Challenge first with x402. Authorize off-chain with EIP-3009. Settle directly with Arc native USDC gas.**
 
-[Live App (Netlify)](https://arccx.netlify.app) · [x402 Telemetry GUI](https://arccx.netlify.app/stats) · [Backend Facilitator (Render)](https://arcx-v2fs.onrender.com) · [Verify it yourself](#verify-it-yourself) · [Arc Explorer](https://explorer.arc.io/address/0x461cd48D95993242bB04774cc68042795586BbAd)
+[x402 Telemetry GUI](/stats) · [Deployment Guide](#deployment-guide-render--netlify) · [Verify it yourself](#verify-it-yourself) · [Arc Explorer](https://explorer.arc.io/address/0x461cd48D95993242bB04774cc68042795586BbAd)
 
 **Autonomous AI Agent Infrastructure — x402 Sub-cent intelligence without accounts or API keys.**
 
@@ -266,7 +266,7 @@ You can verify the entire cryptographic verification engine, request binding inv
 ### Run Verification Suite
 
 ```bash
-git clone https://github.com/Blackwrld04/ARCX.git
+git clone https://github.com/StephenOwo/ARCX.git
 cd ARCX
 npm test --prefix server
 ```
@@ -345,7 +345,7 @@ const account = privateKeyToAccount(process.env.AGENT_PRIVATE_KEY);
 const client = createWalletClient({ account, chain: arc, transport: http() });
 
 async function queryArcX(endpoint = '/api/v1/insight') {
-  const url = `https://arccx.netlify.app${endpoint}`;
+  const url = `${process.env.API_URL || 'http://localhost:4402'}${endpoint}`;
   
   // 1. Initial GET -> Receive HTTP 402 Payment Required
   const challenge = await fetch(url);
@@ -415,7 +415,8 @@ from web3 import Web3
 @tool
 def get_cve_threat_intel(cve_id: str) -> str:
     """Query verified zero-day threat intelligence from ArcX via x402 micropayments."""
-    url = f"https://arccx.netlify.app/api/v1/lookup/{cve_id}"
+    api_base = os.getenv("ARCX_API_URL", "http://localhost:4402")
+    url = f"{api_base}/api/v1/lookup/{cve_id}"
     res = requests.get(url)
     if res.status_code == 200:
         return res.text
@@ -445,17 +446,48 @@ Transparency is paramount for infrastructure software.
 
 ---
 
-## Live deployments
+## Deployment guide (Render & Netlify)
 
-| Component | Target Network | Hosted Location | Status |
+ArcX is ready for one-click deployment to **Render** (backend API) and **Netlify** (frontend edge CDN):
+
+### 1. Deploy backend API to Render
+
+1. On [Render](https://render.com), create a new **Web Service** from your `StephenOwo/ARCX` repository.
+2. Render will automatically detect [`render.yaml`](render.yaml), or configure:
+   - **Root Directory**: `server`
+   - **Build Command**: `npm install`
+   - **Start Command**: `npm start`
+   - **Health Check Path**: `/health`
+3. Add Environment Variables:
+   - `NODE_ENV`: `production`
+   - `PORT`: `4402`
+   - `ARC_RPC_URL`: `https://rpc.mainnet.arc.io`
+   - `FACILITATOR_PRIVATE_KEY`: `0x...` (Your Facilitator wallet private key)
+   - `PAYTO_ADDRESS`: `0x461cd48D95993242bB04774cc68042795586BbAd` (Your settlement recipient address)
+   - `PRICE_PER_CALL`: `1000` (1000 base units = $0.001 USDC)
+4. Click **Deploy**. Note your new service URL (e.g. `https://your-service.onrender.com`).
+
+### 2. Deploy frontend to Netlify
+
+1. On [Netlify](https://netlify.com), click **Add new site** > **Import an existing project** > Select `StephenOwo/ARCX`.
+2. Netlify reads settings automatically from [`netlify.toml`](netlify.toml):
+   - **Build Command**: `npm run build:netlify`
+   - **Publish Directory**: `dist`
+3. In **Site Configuration > Environment Variables**, add:
+   - `BACKEND_URL`: `https://your-service.onrender.com` (Your Render URL from step 1)
+4. Click **Deploy Site**. The frontend edge CDN will build and proxy all `/api/*` requests directly to your Render backend.
+
+---
+
+## On-chain contracts & settlement reference
+
+| Component | Target Network | Contract / Address | Status |
 | :--- | :--- | :--- | :--- |
-| **Web App & CDN Frontend** | Browser | [`https://arccx.netlify.app`](https://arccx.netlify.app) | Live on Netlify Edge CDN |
-| **API & Settlement Engine** | Arc Mainnet (5042) | [`https://arcx-v2fs.onrender.com`](https://arcx-v2fs.onrender.com) | Live Web Service on Render |
-| **Protocol Explorer GUI** | Browser | [`https://arccx.netlify.app/stats`](https://arccx.netlify.app/stats) | Live Telemetry Dashboard |
 | **USDC Contract** | Arc Mainnet (5042) | [`0x3600000000000000000000000000000000000000`](https://explorer.arc.io/address/0x3600000000000000000000000000000000000000) | Canonical Circle USDC |
 | **Settlement Recipient** | Arc Mainnet (5042) | [`0x461cd48D95993242bB04774cc68042795586BbAd`](https://explorer.arc.io/address/0x461cd48D95993242bB04774cc68042795586BbAd) | Active on Arc Mainnet |
 | **Facilitator Smart Contract** | Arc Mainnet (5042) | [`0xA4e01C4d7088110cCD289fAf4d39Ae4BC3010726`](https://explorer.arc.io/address/0xA4e01C4d7088110cCD289fAf4d39Ae4BC3010726) | Deployed via Arc Foundry |
 | **Agent Smart Contract** | Arc Mainnet (5042) | [`0xBd64b40865a6a148d43221F91fB791d08E559CAf`](https://explorer.arc.io/address/0xBd64b40865a6a148d43221F91fB791d08E559CAf) | Deployed via Arc Foundry |
+
 
 ---
 
