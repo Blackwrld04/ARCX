@@ -16,7 +16,7 @@ ArcX is an autonomous, machine-to-machine cybersecurity intelligence API built n
 
 **Challenge first with x402. Authorize off-chain with EIP-3009. Settle directly with Arc native USDC gas.**
 
-[x402 Telemetry GUI](/stats) · [Deployment Guide](#deployment-guide-render--netlify) · [Verify it yourself](#verify-it-yourself) · [Arc Explorer](https://explorer.arc.io/address/0x461cd48D95993242bB04774cc68042795586BbAd)
+[Live App (Netlify)](https://arccx.netlify.app) · [x402 Telemetry GUI](https://arccx.netlify.app/stats) · [Deployment Guide](#deployment-guide-render--netlify) · [Verify it yourself](#verify-it-yourself) · [Arc Explorer](https://explorer.arc.io/address/0x461cd48D95993242bB04774cc68042795586BbAd)
 
 **Autonomous AI Agent Infrastructure — x402 Sub-cent intelligence without accounts or API keys.**
 
