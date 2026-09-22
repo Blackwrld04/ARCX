@@ -454,6 +454,8 @@ Transparency is paramount for infrastructure software.
 | **Protocol Explorer GUI** | Browser | [`https://arccx.netlify.app/stats`](https://arccx.netlify.app/stats) | Live Telemetry Dashboard |
 | **USDC Contract** | Arc Mainnet (5042) | [`0x3600000000000000000000000000000000000000`](https://explorer.arc.io/address/0x3600000000000000000000000000000000000000) | Canonical Circle USDC |
 | **Settlement Recipient** | Arc Mainnet (5042) | [`0x461cd48D95993242bB04774cc68042795586BbAd`](https://explorer.arc.io/address/0x461cd48D95993242bB04774cc68042795586BbAd) | Active on Arc Mainnet |
+| **Facilitator Smart Contract** | Arc Mainnet (5042) | [`0xA4e01C4d7088110cCD289fAf4d39Ae4BC3010726`](https://explorer.arc.io/address/0xA4e01C4d7088110cCD289fAf4d39Ae4BC3010726) | Deployed via Arc Foundry |
+| **Agent Smart Contract** | Arc Mainnet (5042) | [`0xBd64b40865a6a148d43221F91fB791d08E559CAf`](https://explorer.arc.io/address/0xBd64b40865a6a148d43221F91fB791d08E559CAf) | Deployed via Arc Foundry |
 
 ---
 
@@ -465,7 +467,7 @@ Transparency is paramount for infrastructure software.
 
 ### 1. Installation
 ```bash
-git clone https://github.com/Blackwrld04/ARCX.git
+git clone https://github.com/StephenOwo/ARCX.git
 cd ARCX
 npm install --prefix server
 npm install --prefix client

@@ -183,7 +183,7 @@ async function fetchFromNvd(cveId) {
   }
 
   const res = await fetch(url, {
-    signal: AbortSignal.timeout(8000),
+    signal: AbortSignal.timeout(15000),
     headers
   });
 

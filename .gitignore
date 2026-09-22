@@ -14,3 +14,9 @@ Thumbs.db
 dist/
 *.log
 
+# Arc Foundry
+contracts/out/
+contracts/cache/
+contracts/broadcast/
+contracts/lib/
+
