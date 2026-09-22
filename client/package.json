@@ -5,7 +5,9 @@
   "type": "module",
   "main": "src/agent.js",
   "scripts": {
-    "start": "node src/agent.js"
+    "start": "node src/agent.js",
+    "build": "node ../scripts/build-netlify.js",
+    "build:netlify": "node ../scripts/build-netlify.js"
   },
   "dependencies": {
     "dotenv": "^16.4.0",

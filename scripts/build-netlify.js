@@ -1,15 +1,17 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const distDir = path.resolve('dist');
-const publicDir = path.resolve('server/public');
-const dashboardDir = path.resolve('server/dashboard');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const projectRoot = path.resolve(__dirname, '..');
 
-// Ensure dist directory exists
-fs.mkdirSync(distDir, { recursive: true });
-fs.mkdirSync(path.join(distDir, 'dashboard'), { recursive: true });
+const rootDistDir = path.resolve(projectRoot, 'dist');
+const clientDistDir = path.resolve(projectRoot, 'client', 'dist');
+const publicDir = path.resolve(projectRoot, 'server', 'public');
+const dashboardDir = path.resolve(projectRoot, 'server', 'dashboard');
 
-// Copy public assets to dist
+// Copy directory recursively
 function copyDir(src, dest) {
   fs.mkdirSync(dest, { recursive: true });
   for (const entry of fs.readdirSync(src, { withFileTypes: true })) {
@@ -22,9 +24,6 @@ function copyDir(src, dest) {
     }
   }
 }
-
-copyDir(publicDir, distDir);
-copyDir(dashboardDir, path.join(distDir, 'dashboard'));
 
 const backendUrl = (process.env.BACKEND_URL || process.env.API_URL || 'https://arcx-v2fs.onrender.com').replace(/\/$/, '');
 
@@ -40,5 +39,14 @@ const redirectsContent = `# Route rewrites for Netlify Edge CDN
 /health       ${backendUrl}/health        200!
 `;
 
-fs.writeFileSync(path.join(distDir, '_redirects'), redirectsContent);
+// Populate both root dist and client dist to guarantee Netlify succeeds regardless of Base directory setting
+for (const targetDist of [rootDistDir, clientDistDir]) {
+  fs.mkdirSync(targetDist, { recursive: true });
+  fs.mkdirSync(path.join(targetDist, 'dashboard'), { recursive: true });
+  copyDir(publicDir, targetDist);
+  copyDir(dashboardDir, path.join(targetDist, 'dashboard'));
+  fs.writeFileSync(path.join(targetDist, '_redirects'), redirectsContent);
+}
+
 console.log(`[build:netlify] Build complete. Proxy configured for backend: ${backendUrl}`);
+
