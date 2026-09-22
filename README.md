@@ -4,6 +4,7 @@
 
 ### Machine-payable cybersecurity threat intelligence powered by the x402 protocol on Arc Mainnet.
 
+[![Live Web App: arccx.netlify.app](https://img.shields.io/badge/live_app-arccx.netlify.app-00ff66?style=flat-square)](https://arccx.netlify.app/)
 [![x402 Protocol: v2 Standard](https://img.shields.io/badge/x402%20Protocol-v2%20Standard-00ff66?style=flat-square)](https://eips.ethereum.org/EIPS/eip-3009)
 [![x402 Micropayments: $0.001 USDC](https://img.shields.io/badge/x402%20Price-%240.001000%20USDC-2775ca?style=flat-square)](https://arc.io)
 [![Arc Mainnet: 5042](https://img.shields.io/badge/network-Arc_Mainnet_(5042)-4f46e5?style=flat-square)](https://arc.io)
@@ -16,7 +17,7 @@ ArcX is an autonomous, machine-to-machine cybersecurity intelligence API built n
 
 **Challenge first with x402. Authorize off-chain with EIP-3009. Settle directly with Arc native USDC gas.**
 
-[x402 Telemetry GUI](/stats) · [Deployment Guide](#deployment-guide-render--netlify) · [Verify it yourself](#verify-it-yourself) · [Arc Explorer](https://explorer.arc.io/address/0x461cd48D95993242bB04774cc68042795586BbAd)
+[🌐 Live Web App](https://arccx.netlify.app/) · [x402 Telemetry GUI](https://arccx.netlify.app/stats) · [Live API Health](https://arcx-v2fs.onrender.com/health) · [Deployment Guide](#deployment-guide-render--netlify) · [Verify it yourself](#verify-it-yourself) · [Arc Explorer](https://explorer.arc.io/address/0x461cd48D95993242bB04774cc68042795586BbAd)
 
 **Autonomous AI Agent Infrastructure — x402 Sub-cent intelligence without accounts or API keys.**
 
@@ -31,11 +32,11 @@ Arc Mainnet (Chain 5042) · Node.js & Viem · SQLite WAL · x402 v2 + EIP-3009
 
 | Route | Look for | What it establishes |
 | :--- | :--- | :--- |
-| **[`/`](#)** | Cyber-brutalist landing page, interactive x402 simulator, capability matrix | Public web interface and developer onboarding |
-| **[`/stats`](#)** | Live USDC volume, query count, active CISA zero-days, and latency | Real-time x402 protocol metrics without authentication |
-| **[`/api/v1/stats`](#)** | Machine-readable JSON telemetry and network constants | Automation telemetry for monitoring daemons |
-| **[`/dashboard`](#)** | Master Passkey challenge modal and live payment audit feed | Secure administrative visibility into x402 settlement records |
-| **[`/health`](#)** | JSON health report with Arc RPC connectivity and DB status | Operational liveness of x402 facilitator and RPC transport |
+| **[`https://arccx.netlify.app/`](https://arccx.netlify.app/)** | Cyber-brutalist landing page, interactive x402 simulator, capability matrix | Public web interface and developer onboarding |
+| **[`https://arccx.netlify.app/stats`](https://arccx.netlify.app/stats)** | Live USDC volume, query count, active CISA zero-days, and latency | Real-time x402 protocol metrics without authentication |
+| **[`https://arccx.netlify.app/api/v1/stats`](https://arccx.netlify.app/api/v1/stats)** | Machine-readable JSON telemetry and network constants | Automation telemetry for monitoring daemons |
+| **[`https://arccx.netlify.app/dashboard`](https://arccx.netlify.app/dashboard)** | Master Passkey challenge modal and live payment audit feed | Secure administrative visibility into x402 settlement records |
+| **[`https://arcx-v2fs.onrender.com/health`](https://arcx-v2fs.onrender.com/health)** | JSON health report with Arc RPC connectivity and DB status | Operational liveness of x402 facilitator and RPC transport |
 
 ---
 
@@ -44,6 +45,7 @@ Arc Mainnet (Chain 5042) · Node.js & Viem · SQLite WAL · x402 v2 + EIP-3009
 - [What is x402?](#what-is-x402)
 - [Why ArcX exists](#why-arcx-exists)
 - [How x402 works in ArcX](#how-x402-works-in-arcx)
+- [How It Was Built (Full Tech Stack & Tools)](#how-it-was-built-full-tech-stack--tools)
 - [Why Arc Mainnet is load-bearing for x402](#why-arc-mainnet-is-load-bearing-for-x402)
 - [Security properties & cryptographic invariants](#security-properties--cryptographic-invariants)
 - [Threat intelligence synthesis](#threat-intelligence-synthesis)
@@ -471,11 +473,13 @@ ArcX is ready for one-click deployment to **Render** (backend API) and **Netlify
 
 1. On [Netlify](https://netlify.com), click **Add new site** > **Import an existing project** > Select `Blackwrld04/ARCX`.
 2. Netlify reads settings automatically from [`netlify.toml`](netlify.toml):
-   - **Build Command**: `npm run build:netlify`
+   - **Build Command**: `npm run build`
    - **Publish Directory**: `dist`
 3. In **Site Configuration > Environment Variables**, add:
-   - `BACKEND_URL` (or `API_URL`): `https://your-service.onrender.com` *(Your Render URL from step 1)*
+   - `BACKEND_URL` (or `API_URL`): `https://arcx-v2fs.onrender.com` *(Your Render URL)*
 4. Click **Deploy Site**. The frontend edge CDN will build and proxy all `/api/*` requests directly to your Render backend.
+
+> **Production Deployment:** The frontend application is live at **[`https://arccx.netlify.app/`](https://arccx.netlify.app/)**.
 
 ---
 
@@ -483,6 +487,7 @@ ArcX is ready for one-click deployment to **Render** (backend API) and **Netlify
 
 | Component | Target Network | Contract / Address | Status |
 | :--- | :--- | :--- | :--- |
+| **Live Web App & Edge CDN** | Netlify Edge CDN | [`https://arccx.netlify.app`](https://arccx.netlify.app) | Live Frontend Application |
 | **API & Settlement Engine** | Arc Mainnet (5042) | [`https://arcx-v2fs.onrender.com`](https://arcx-v2fs.onrender.com) | Live Web Service on Render |
 | **USDC Contract** | Arc Mainnet (5042) | [`0x3600000000000000000000000000000000000000`](https://explorer.arc.io/address/0x3600000000000000000000000000000000000000) | Canonical Circle USDC |
 | **Settlement Recipient** | Arc Mainnet (5042) | [`0x461cd48D95993242bB04774cc68042795586BbAd`](https://explorer.arc.io/address/0x461cd48D95993242bB04774cc68042795586BbAd) | Active on Arc Mainnet |
@@ -544,6 +549,36 @@ npm start --prefix client
 - **Cryptographic Request Binding inside the Nonce**: Rather than trusting HTTP headers, the URI and HTTP method are packed and hashed into the 32-byte authorization nonce. This makes signature replay across different endpoints mathematically impossible.
 - **SQLite with WAL Mode & Triggers**: SQLite in WAL mode handles over 10,000 read operations per second. Database triggers guarantee ledger immutability without the operational overhead of running external heavy database infrastructure.
 - **Live Upstream Synthesis with Local Caching**: CISA KEV (1,716 records) is indexed locally at startup. On-demand NIST NVD lookups are persisted in SQLite, ensuring that identical CVE queries are served in 0ms without exhausting external rate limits.
+
+## How It Was Built (Full Tech Stack & Tools)
+
+### 1. Blockchain & Smart Contracts Layer
+- **Arc Mainnet (Chain ID: 5042)**: Purpose-built EVM Layer-1 by Circle with sub-second deterministic finality and native USDC gas token accounting.
+- **Arc Foundry (arc-forge, arc-cast)**: Used Arc's specialized Foundry fork to scaffold, fuzz-test, and broadcast smart contracts directly to Arc Mainnet.
+- **Solidity 0.8.20**: Smart contracts compiled targeting the Osaka/Shanghai EVM baseline.
+- **Circle USDC & EIP-3009**: Direct integration with Arc's canonical native USDC contract (`0x3600000000000000000000000000000000000000`), using `transferWithAuthorization` for gasless, atomic off-chain payment authorization.
+- **EIP-712**: Typed structured data hashing for secure, human-and-machine-readable signatures.
+
+### 2. Backend & Settlement Relayer Engine
+- **Node.js (ESM) & Express**: High-throughput HTTP microservice handling the x402 payment challenge-response pipeline.
+- **Viem**: High-performance, lightweight EVM library for cryptographic signature verification, request-binding nonce validation, and RPC communication with Arc Mainnet.
+- **SQLite (WAL Mode) & Database Triggers**: High-speed local database storing payment audit trails and cached CVE records. Built-in SQL triggers enforce ledger immutability (preventing any edits or deletions to settled transactions).
+- **Pino**: Production-grade structured JSON logger for real-time telemetry.
+
+### 3. Cybersecurity Intelligence & Synthesis Engine
+- **CISA KEV Catalog**: Automated background synchronization of 1,717+ actively exploited zero-days from the Cybersecurity and Infrastructure Security Agency.
+- **NIST NVD 2.0 API**: Live queries for CVSS v3.1 severity scores, metrics, and CWE classifications.
+- **OSV.dev API**: Google's Open Source Vulnerabilities database as a zero-rate-limit fallback layer.
+- **Automated Synthesis**: Proprietary normalization engine that maps raw vulnerability records into actionable MITRE ATT&CK hardening recommendations.
+
+### 4. Frontend & Edge CDN
+- **Netlify Edge CDN**: Global static asset hosting and dynamic rewrite proxy engine (`scripts/build-netlify.js` generating `_redirects`).
+- **Cyber-Brutalist Design System**: Vanilla HTML5, CSS3, Tailwind CSS, Google Fonts (Silkscreen, Inter, JetBrains Mono).
+- **Three.js & GSAP**: Interactive cryptographic particle canvas and smooth micro-animations for live telemetry visualization.
+
+### 5. Autonomous Client SDKs
+- **Autonomous Node.js Agent (`client/src/agent.js`)**: Fully autonomous bot script that listens for HTTP 402, computes the bound nonce, signs off-chain, and unlocks intelligence dossiers in under 1 second.
+- **LangChain / Python Tool Integration**: Drop-in `@tool` function for AI agent frameworks (CrewAI, AutoGen, LangGraph).
 
 ---
 
