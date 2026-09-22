@@ -16,7 +16,7 @@ ArcX is an autonomous, machine-to-machine cybersecurity intelligence API built n
 
 **Challenge first with x402. Authorize off-chain with EIP-3009. Settle directly with Arc native USDC gas.**
 
-[Live App (Netlify)](https://arccx.netlify.app) · [x402 Telemetry GUI](https://arccx.netlify.app/stats) · [Deployment Guide](#deployment-guide-render--netlify) · [Verify it yourself](#verify-it-yourself) · [Arc Explorer](https://explorer.arc.io/address/0x461cd48D95993242bB04774cc68042795586BbAd)
+[x402 Telemetry GUI](/stats) · [Deployment Guide](#deployment-guide-render--netlify) · [Verify it yourself](#verify-it-yourself) · [Arc Explorer](https://explorer.arc.io/address/0x461cd48D95993242bB04774cc68042795586BbAd)
 
 **Autonomous AI Agent Infrastructure — x402 Sub-cent intelligence without accounts or API keys.**
 
@@ -266,7 +266,7 @@ You can verify the entire cryptographic verification engine, request binding inv
 ### Run Verification Suite
 
 ```bash
-git clone https://github.com/StephenOwo/ARCX.git
+git clone https://github.com/Blackwrld04/ARCX.git
 cd ARCX
 npm test --prefix server
 ```
@@ -452,7 +452,7 @@ ArcX is ready for one-click deployment to **Render** (backend API) and **Netlify
 
 ### 1. Deploy backend API to Render
 
-1. On [Render](https://render.com), create a new **Web Service** from your `StephenOwo/ARCX` repository.
+1. On [Render](https://render.com), create a new **Web Service** from your `Blackwrld04/ARCX` repository.
 2. Render will automatically detect [`render.yaml`](render.yaml), or configure:
    - **Root Directory**: `server`
    - **Build Command**: `npm install`
@@ -469,7 +469,7 @@ ArcX is ready for one-click deployment to **Render** (backend API) and **Netlify
 
 ### 2. Deploy frontend to Netlify
 
-1. On [Netlify](https://netlify.com), click **Add new site** > **Import an existing project** > Select `StephenOwo/ARCX`.
+1. On [Netlify](https://netlify.com), click **Add new site** > **Import an existing project** > Select `Blackwrld04/ARCX`.
 2. Netlify reads settings automatically from [`netlify.toml`](netlify.toml):
    - **Build Command**: `npm run build:netlify`
    - **Publish Directory**: `dist`
@@ -499,7 +499,7 @@ ArcX is ready for one-click deployment to **Render** (backend API) and **Netlify
 
 ### 1. Installation
 ```bash
-git clone https://github.com/StephenOwo/ARCX.git
+git clone https://github.com/Blackwrld04/ARCX.git
 cd ARCX
 npm install --prefix server
 npm install --prefix client
